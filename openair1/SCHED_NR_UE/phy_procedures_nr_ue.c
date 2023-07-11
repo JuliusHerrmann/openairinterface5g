@@ -884,12 +884,15 @@ void pbch_pdcch_processing(PHY_VARS_NR_UE *ue,
 
           for (int i=1; i<4; i++) {
             nr_slot_fep(ue,
+                        fp,
                         proc,
                         (ssb_start_symbol+i)%(fp->symbols_per_slot),
-                        rxdataF);
+                        rxdataF,
+                        link_type_dl);
 
             start_meas(&ue->dlsch_channel_estimation_stats);
             nr_pbch_channel_estimation(ue,
+                                       &ue->frame_parms,
                                        estimateSz,
                                        dl_ch_estimates,
                                        dl_ch_estimates_time,
@@ -898,7 +901,9 @@ void pbch_pdcch_processing(PHY_VARS_NR_UE *ue,
                                        i-1,
                                        ssb_index&7,
                                        ssb_slot_2 == nr_slot_rx,
-                                       rxdataF);
+                                       rxdataF,
+                                       false,
+                                       fp->Nid_cell);
             stop_meas(&ue->dlsch_channel_estimation_stats);
           }
 
@@ -948,9 +953,11 @@ void pbch_pdcch_processing(PHY_VARS_NR_UE *ue,
           for(int j = prs_config->SymbolStart; j < (prs_config->SymbolStart+prs_config->NumPRSSymbols); j++)
           {
             nr_slot_fep(ue,
+                        fp,
                         proc,
                         (j%fp->symbols_per_slot),
-                        rxdataF);
+                        rxdataF,
+                        link_type_dl);
           }
           nr_prs_channel_estimation(gNB_id, rsc_id, i, ue, proc, fp, rxdataF);
         }
@@ -982,9 +989,11 @@ void pbch_pdcch_processing(PHY_VARS_NR_UE *ue,
 
     start_meas(&ue->ofdm_demod_stats);
     nr_slot_fep(ue,
+                fp,
                 proc,
                 l,
-                rxdataF);
+                rxdataF,
+                link_type_dl);
   }
 
     // Hold the channel estimates in frequency domain.
@@ -1044,9 +1053,11 @@ void pdsch_processing(PHY_VARS_NR_UE *ue,
 
     for (uint16_t m=start_symb_sch;m<(nb_symb_sch+start_symb_sch) ; m++){
       nr_slot_fep(ue,
+                  &ue->frame_parms,
                   proc,
                   m,  //to be updated from higher layer
-                  rxdataF);
+                  rxdataF,
+                  link_type_dl);
     }
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_SLOT_FEP_PDSCH, VCD_FUNCTION_OUT);
 
@@ -1134,7 +1145,7 @@ void pdsch_processing(PHY_VARS_NR_UE *ue,
       }
       l_csiim[symb_idx] = ue->csiim_vars[gNB_id]->csiim_config_pdu.l_csiim[symb_idx];
       if(nr_slot_fep_done == false) {
-        nr_slot_fep(ue, proc, ue->csiim_vars[gNB_id]->csiim_config_pdu.l_csiim[symb_idx], rxdataF);
+        nr_slot_fep(ue, &ue->frame_parms, proc, ue->csiim_vars[gNB_id]->csiim_config_pdu.l_csiim[symb_idx], rxdataF, link_type_dl);
       }
     }
     nr_ue_csi_im_procedures(ue, proc, rxdataF);
@@ -1145,7 +1156,7 @@ void pdsch_processing(PHY_VARS_NR_UE *ue,
   if ((ue->csirs_vars[gNB_id]) && (ue->csirs_vars[gNB_id]->active == 1)) {
     for(int symb = 0; symb < NR_SYMBOLS_PER_SLOT; symb++) {
       if(is_csi_rs_in_symbol(ue->csirs_vars[gNB_id]->csirs_config_pdu,symb)) {
-        nr_slot_fep(ue, proc, symb, rxdataF);
+        nr_slot_fep(ue, &ue->frame_parms, proc, symb, rxdataF, link_type_dl);
       }
     }
     nr_ue_csi_rs_procedures(ue, proc, rxdataF);
