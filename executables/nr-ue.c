@@ -1013,6 +1013,7 @@ void init_NR_UE(int nb_inst, char *uecap_file, char *reconfig_file, char *rbconf
         free_nr_noS1_bearer_config(&rbconfig, NULL);
       }
     }
+    start_sidelink(i);
   }
 }
 
