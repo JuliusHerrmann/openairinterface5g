@@ -236,8 +236,8 @@ int nr_rx_psbch(PHY_VARS_NR_UE *ue,
   uint32_t psbch_payload = tmp;
 
   if(decoderState) {
-    LOG_E(PHY,"%d:%d PSBCH RX: NOK \n",proc->frame_rx, proc->nr_slot_rx);
-     return(decoderState);
+    LOG_D(PHY,"%d:%d PSBCH RX: NOK \n",proc->frame_rx, proc->nr_slot_rx);
+    return(decoderState);
   }
 
   // Decoder reversal

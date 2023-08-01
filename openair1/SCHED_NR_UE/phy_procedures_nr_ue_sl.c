@@ -142,10 +142,13 @@ static int nr_ue_psbch_procedures(PHY_VARS_NR_UE *ue,
   uint16_t number_pdus = 1;
 
   uint8_t *result = NULL;
-  if (ret) sl_phy_params->psbch.rx_errors ++;
-  else {
+  if (ret) {
+    sl_phy_params->psbch.rx_errors ++;
+    LOG_E(PHY,"%d:%d PSBCH RX: NOK \n",proc->frame_rx, proc->nr_slot_rx);
+  } else {
     result = decoded_pdu;
     sl_phy_params->psbch.rx_ok ++;
+    LOG_I(PHY,"%d:%d PSBCH RX: OK \n",proc->frame_rx, proc->nr_slot_rx);
   }
 
   nr_fill_sl_indication(&sl_indication, &rx_ind, NULL, proc, ue, phy_data);
