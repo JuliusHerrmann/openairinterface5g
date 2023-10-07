@@ -269,7 +269,7 @@ int8_t nr_ue_decode_BCCH_DL_SCH(module_id_t module_id,
   NR_UE_MAC_INST_t *mac = get_mac_inst(module_id);
   if(ack_nack) {
     LOG_D(NR_MAC, "Decoding NR-BCCH-DL-SCH-Message (SIB1 or SI)\n");
-    nr_mac_rrc_data_ind_ue(module_id, cc_id, gNB_index, 0, 0, 0, NR_BCCH_DL_SCH, (uint8_t *) pduP, pdu_len);
+    nr_mac_rrc_data_ind_ue(module_id, cc_id, gNB_index, 0, 0, 0, mac->physCellId, NR_BCCH_DL_SCH, (uint8_t *) pduP, pdu_len);
     mac->get_sib1 = false;
     mac->get_otherSI = false;
   }
@@ -3606,7 +3606,7 @@ void nr_ue_process_mac_pdu(nr_downlink_indication_t *dl_info,
 
           mac_rlc_data_ind(module_idP,
                            mac->ue_id,
-                           module_idP,
+                           gNB_index,
                            frameP,
                            ENB_FLAG_NO,
                            MBMS_FLAG_NO,
@@ -3970,9 +3970,9 @@ int nr_write_ce_ulsch_pdu(uint8_t *mac_ce,
 // - optimize: mu_pusch, j and table_6_1_2_1_1_2_time_dom_res_alloc_A are already defined in nr_ue_procedures
 static void nr_ue_process_rar(nr_downlink_indication_t *dl_info, int pdu_id)
 {
-  module_id_t mod_id       = dl_info->module_id;
-  frame_t frame            = dl_info->frame;
-  int slot                 = dl_info->slot;
+  module_id_t mod_id = dl_info->module_id;
+  frame_t frame = dl_info->frame;
+  int slot = dl_info->slot;
 
   if(dl_info->rx_ind->rx_indication_body[pdu_id].pdsch_pdu.ack_nack == 0) {
     LOG_W(NR_MAC,"[UE %d][RAPROC][%d.%d] CRC check failed on RAR (NAK)\n", mod_id, frame, slot);
@@ -4155,7 +4155,7 @@ static void nr_ue_process_rar(nr_downlink_indication_t *dl_info, int pdu_id)
       if (!ra->cfra) {
         ra->t_crnti = rar->TCRNTI_2 + (rar->TCRNTI_1 << 8);
         rnti = ra->t_crnti;
-        nr_mac_rrc_msg3_ind(mod_id, rnti);
+        nr_mac_rrc_msg3_ind(mod_id, rnti, dl_info->gNB_index);
       }
       fapi_nr_ul_config_request_pdu_t *pdu = lockGet_ul_config(mac, frame_tx, slot_tx, FAPI_NR_UL_CONFIG_TYPE_PUSCH);
       if (!pdu)
