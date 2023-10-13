@@ -216,6 +216,28 @@ void release_mac_configuration(NR_UE_MAC_INST_t *mac);
 void nr_ue_ul_scheduler(nr_uplink_indication_t *ul_info);
 void nr_ue_dl_scheduler(nr_downlink_indication_t *dl_info);
 
+csi_payload_t nr_ue_aperiodic_csi_reporting(NR_UE_MAC_INST_t *mac, dci_field_t csi_request, int tda, long *K2);
+
+/**\brief fill nr_scheduled_response struct instance
+   @param nr_scheduled_response_t *    pointer to scheduled_response instance to fill
+   @param fapi_nr_dl_config_request_t* pointer to dl_config,
+   @param fapi_nr_ul_config_request_t* pointer to ul_config,
+   @param fapi_nr_tx_request_t*        pointer to tx_request;
+   @param module_id_t mod_id           module ID
+   @param int cc_id                    CC ID
+   @param frame_t frame                frame number
+   @param int slot                     reference number
+   @param void *phy_pata               pointer to a PHY specific structure to be filled in the scheduler response (can be null) */
+void fill_scheduled_response(nr_scheduled_response_t *scheduled_response,
+                             fapi_nr_dl_config_request_t *dl_config,
+                             fapi_nr_ul_config_request_t *ul_config,
+                             fapi_nr_tx_request_t *tx_request,
+                             module_id_t mod_id,
+                             int cc_id,
+                             frame_t frame,
+                             int slot,
+                             void *phy_data);
+
 /*! \fn int8_t nr_ue_get_SR(module_id_t module_idP, frame_t frameP, slot_t slotP);
    \brief Called by PHY to get sdu for PUSCH transmission.  It performs the following operations: Checks BSR for DCCH, DCCH1 and
 DTCH corresponding to previous values computed either in SR or BSR procedures.  It gets rlc status indications on DCCH,DCCH1 and
@@ -285,28 +307,26 @@ bool trigger_periodic_scheduling_request(NR_UE_MAC_INST_t *mac,
 
 int nr_get_csi_measurements(NR_UE_MAC_INST_t *mac, frame_t frame, int slot, PUCCH_sched_t *pucch);
 
-uint8_t get_ssb_rsrp_payload(NR_UE_MAC_INST_t *mac,
-                             PUCCH_sched_t *pucch,
-                             struct NR_CSI_ReportConfig *csi_reportconfig,
-                             NR_CSI_ResourceConfigId_t csi_ResourceConfigId,
-                             NR_CSI_MeasConfig_t *csi_MeasConfig);
+csi_payload_t get_ssb_rsrp_payload(NR_UE_MAC_INST_t *mac,
+                                   struct NR_CSI_ReportConfig *csi_reportconfig,
+                                   NR_CSI_ResourceConfigId_t csi_ResourceConfigId,
+                                   NR_CSI_MeasConfig_t *csi_MeasConfig);
 
-uint8_t get_csirs_RI_PMI_CQI_payload(NR_UE_MAC_INST_t *mac,
-                                     PUCCH_sched_t *pucch,
+csi_payload_t get_csirs_RI_PMI_CQI_payload(NR_UE_MAC_INST_t *mac,
+                                           struct NR_CSI_ReportConfig *csi_reportconfig,
+                                           NR_CSI_ResourceConfigId_t csi_ResourceConfigId,
+                                           NR_CSI_MeasConfig_t *csi_MeasConfig,
+                                           CSI_mapping_t mapping_type);
+
+csi_payload_t get_csirs_RSRP_payload(NR_UE_MAC_INST_t *mac,
                                      struct NR_CSI_ReportConfig *csi_reportconfig,
                                      NR_CSI_ResourceConfigId_t csi_ResourceConfigId,
                                      NR_CSI_MeasConfig_t *csi_MeasConfig);
 
-uint8_t get_csirs_RSRP_payload(NR_UE_MAC_INST_t *mac,
-                               PUCCH_sched_t *pucch,
-                               struct NR_CSI_ReportConfig *csi_reportconfig,
-                               NR_CSI_ResourceConfigId_t csi_ResourceConfigId,
-                               NR_CSI_MeasConfig_t *csi_MeasConfig);
-
-uint8_t nr_get_csi_payload(NR_UE_MAC_INST_t *mac,
-                           PUCCH_sched_t *pucch,
-                           int csi_report_id,
-                           NR_CSI_MeasConfig_t *csi_MeasConfig);
+csi_payload_t nr_get_csi_payload(NR_UE_MAC_INST_t *mac,
+                                 int csi_report_id,
+                                 CSI_mapping_t mapping_type,
+                                 NR_CSI_MeasConfig_t *csi_MeasConfig);
 
 uint8_t get_rsrp_index(int rsrp);
 uint8_t get_rsrp_diff_index(int best_rsrp,int current_rsrp);
@@ -524,6 +544,7 @@ int nr_config_pusch_pdu(NR_UE_MAC_INST_t *mac,
                         NR_tda_info_t *tda_info,
                         nfapi_nr_ue_pusch_pdu_t *pusch_config_pdu,
                         dci_pdu_rel15_t *dci,
+                        csi_payload_t *csi_report,
                         RAR_grant_t *rar_grant,
                         uint16_t rnti,
                         const nr_dci_format_t dci_format);
