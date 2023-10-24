@@ -94,10 +94,6 @@
  *
  */
 
-
-#define RX_JOB_ID 0x1010
-#define TX_JOB_ID 100
-
 typedef enum {
   pss = 0,
   pbch = 1,
@@ -507,7 +503,6 @@ static void RU_write(nr_rxtx_thread_data_t *rxtxD) {
   if (mac->phy_config_request_sent &&
       openair0_cfg[0].duplex_mode == duplex_mode_TDD &&
       !get_softmodem_params()->continuous_tx) {
-
     int slots_frame = UE->frame_parms.slots_per_frame;
     int curr_slot = nr_ue_slot_select(&UE->nrUE_config, slot);
     if (curr_slot != NR_DOWNLINK_SLOT) {
@@ -524,18 +519,17 @@ static void RU_write(nr_rxtx_thread_data_t *rxtxD) {
     flags = TX_BURST_MIDDLE;
   }
 
-  if (flags || IS_SOFTMODEM_RFSIM)
-    AssertFatal(rxtxD->writeBlockSize ==
-                UE->rfdevice.trx_write_func(&UE->rfdevice,
-                                            proc->timestamp_tx,
-                                            txp,
-                                            rxtxD->writeBlockSize,
-                                            UE->frame_parms.nb_antennas_tx,
-                                            flags),"");
+  AssertFatal(rxtxD->writeBlockSize
+                  == openair0_write_in_order(&UE->rfdevice,
+                                             proc->timestamp_tx,
+                                             txp,
+                                             rxtxD->writeBlockSize,
+                                             UE->frame_parms.nb_antennas_tx,
+                                             flags),
+              "");
 
   for (int i=0; i<UE->frame_parms.nb_antennas_tx; i++)
     memset(txp[i], 0, rxtxD->writeBlockSize);
-
 }
 
 void processSlotTX(void *arg) {
@@ -588,16 +582,16 @@ void processSlotTX(void *arg) {
     if(UE->if_inst != NULL && UE->if_inst->ul_indication != NULL) {
       start_meas(&UE->ue_ul_indication_stats);
       nr_uplink_indication_t ul_indication;
-      memset((void*)&ul_indication, 0, sizeof(ul_indication));
+      memset((void *)&ul_indication, 0, sizeof(ul_indication));
 
       ul_indication.module_id = UE->Mod_id;
       ul_indication.gNB_index = proc->gNB_id;
-      ul_indication.cc_id     = UE->CC_id;
-      ul_indication.frame_rx  = proc->frame_rx;
-      ul_indication.slot_rx   = proc->nr_slot_rx;
-      ul_indication.frame_tx  = proc->frame_tx;
-      ul_indication.slot_tx   = proc->nr_slot_tx;
-      ul_indication.phy_data      = &phy_data;
+      ul_indication.cc_id = UE->CC_id;
+      ul_indication.frame_rx = proc->frame_rx;
+      ul_indication.slot_rx = proc->nr_slot_rx;
+      ul_indication.frame_tx = proc->frame_tx;
+      ul_indication.slot_tx = proc->nr_slot_tx;
+      ul_indication.phy_data = &phy_data;
 
       UE->if_inst->ul_indication(&ul_indication);
       stop_meas(&UE->ue_ul_indication_stats);
@@ -872,7 +866,6 @@ void *UE_thread(void *arg)
       }
       continue;
     }
-
 
     absolute_slot++;
 
