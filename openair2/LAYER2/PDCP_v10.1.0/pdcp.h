@@ -47,14 +47,25 @@
 
 #include "openair3/SECU/secu_defs.h"
 
-typedef rlc_op_status_t  (*send_rlc_data_req_func_t)(const protocol_ctxt_t *const,
-						     const srb_flag_t, const MBMS_flag_t,
-						     const rb_id_t, const mui_t,
-    confirm_t, sdu_size_t, mem_block_t *,const uint32_t *const, const uint32_t *const);
+typedef rlc_op_status_t (*send_rlc_data_req_func_t)(const protocol_ctxt_t *const,
+                                                    const srb_flag_t,
+                                                    const MBMS_flag_t,
+                                                    const rb_id_t,
+                                                    const mui_t,
+                                                    confirm_t,
+                                                    sdu_size_t,
+                                                    mem_block_t *,
+                                                    const uint32_t *const,
+                                                    const uint32_t *const);
 
-typedef bool (pdcp_data_ind_t)( const protocol_ctxt_t *, const srb_flag_t,
-						 const MBMS_flag_t, const rb_id_t, const sdu_size_t,
-						 mem_block_t *,const uint32_t *const, const uint32_t *const);
+typedef bool(pdcp_data_ind_t)(const protocol_ctxt_t *,
+                              const srb_flag_t,
+                              const MBMS_flag_t,
+                              const rb_id_t,
+                              const sdu_size_t,
+                              mem_block_t *,
+                              const uint32_t *const,
+                              const uint32_t *const);
 typedef pdcp_data_ind_t* pdcp_data_ind_func_t;
 
 #define MAX_NUMBER_NETIF                 1 //16

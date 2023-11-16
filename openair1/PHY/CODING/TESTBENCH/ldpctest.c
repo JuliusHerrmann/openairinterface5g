@@ -211,41 +211,41 @@ int test_ldpc(short max_iterations,
   }
 
   if (nom_rate == 1)
-	  if (denom_rate == 5)
-		  if (BG == 2)
-			  R_ind = 0;
-		  else
-			  printf("Not supported");
-	  else if (denom_rate == 3)
-		  R_ind = 1;
-	  else if (denom_rate == 2)
-		  //R_ind = 3;
-  	  	  printf("Not supported");
-	  else
-		  printf("Not supported");
+    if (denom_rate == 5)
+      if (BG == 2)
+        R_ind = 0;
+      else
+        printf("Not supported");
+    else if (denom_rate == 3)
+      R_ind = 1;
+    else if (denom_rate == 2)
+      // R_ind = 3;
+      printf("Not supported");
+    else
+      printf("Not supported");
 
   else if (nom_rate == 2)
-	  if (denom_rate == 5)
-		  //R_ind = 2;
-  	  	  printf("Not supported");
-	  else if (denom_rate == 3)
-		  R_ind = 4;
-	  else
-		  printf("Not supported");
+    if (denom_rate == 5)
+      // R_ind = 2;
+      printf("Not supported");
+    else if (denom_rate == 3)
+      R_ind = 4;
+    else
+      printf("Not supported");
 
   else if ((nom_rate == 22) && (denom_rate == 30))
-		  //R_ind = 5;
-  	  	  printf("Not supported");
+    // R_ind = 5;
+    printf("Not supported");
   else if ((nom_rate == 22) && (denom_rate == 27))
-		  //R_ind = 6;
-  	  	  printf("Not supported");
+    // R_ind = 6;
+    printf("Not supported");
   else if ((nom_rate == 22) && (denom_rate == 25))
-	  if (BG == 1)
-		  R_ind = 7;
-	  else
-		  printf("Not supported");
+    if (BG == 1)
+      R_ind = 7;
+    else
+      printf("Not supported");
   else
-	  printf("Not supported");
+    printf("Not supported");
 
   //find minimum value in all sets of lifting size
   Zc=0;
@@ -274,7 +274,7 @@ int test_ldpc(short max_iterations,
   init_abort(&dec_abort);
   for (int trial=0; trial < ntrials; trial++)
   {
-	segment_bler = 0;
+    segment_bler = 0;
     //// encoder
     start_meas(&time);
     for(int j=0;j<n_segments;j++) {
@@ -290,10 +290,10 @@ int test_ldpc(short max_iterations,
     stop_meas(time_optim);*/
     impp.n_segments=n_segments;
     for(int j=0;j<(n_segments/8+1);j++) {
-    	start_meas(time_optim);
-    	impp.macro_num=j;
-    	nrLDPC_encoder(test_input,channel_input_optim,Zc,Kb,block_length, BG, &impp);
-    	stop_meas(time_optim);
+      start_meas(time_optim);
+      impp.macro_num = j;
+      nrLDPC_encoder(test_input, channel_input_optim, Zc, Kb, block_length, BG, &impp);
+      stop_meas(time_optim);
     }
     
     if (ntrials==1)    
@@ -480,7 +480,7 @@ int main(int argc, char *argv[])
       case 'l':
         block_length = atoi(optarg);
         break;
-		
+
       case 'G':
         ldpc_version="_cuda";
         break;
@@ -521,7 +521,7 @@ int main(int argc, char *argv[])
               printf("-r Nominator rate, (1, 2, 22), Default: 1\n");
               printf("-d Denominator rate, (3, 5, 25), Default: 1\n");
               printf("-l Block length (l > 3840 -> BG1, rest BG2 ), Default: 8448\n");
-			  printf("-G give 1 to run cuda for LDPC, Default: 0\n");
+              printf("-G give 1 to run cuda for LDPC, Default: 0\n");
               printf("-n Number of simulation trials, Default: 1\n");
               //printf("-M MCS2 for TB 2\n");
               printf("-s SNR per information bit (EbNo) in dB, Default: -2\n");
@@ -589,13 +589,13 @@ int main(int argc, char *argv[])
   fprintf(fd,"SNR BLER BER UNCODED_BER ENCODER_MEAN ENCODER_STD ENCODER_MAX DECODER_TIME_MEAN DECODER_TIME_STD DECODER_TIME_MAX DECODER_ITER_MEAN DECODER_ITER_STD DECODER_ITER_MAX\n");
 
   for (SNR=SNR0;SNR<SNR0+20.0;SNR+=SNR_step) {
-	  //reset_meas(&time_optim);
-	  //reset_meas(&time_decoder);
-	  //n_iter_stats_t dec_iter = {0, 0, 0};
+    // reset_meas(&time_optim);
+    // reset_meas(&time_decoder);
+    // n_iter_stats_t dec_iter = {0, 0, 0};
     if (test_uncoded == 1)
-    	SNR_lin = pow(10,SNR/10.0);
+      SNR_lin = pow(10, SNR / 10.0);
     else
-    	SNR_lin = pow(10,SNR/10.0)*nom_rate/denom_rate;
+      SNR_lin = pow(10, SNR / 10.0) * nom_rate / denom_rate;
     printf("Linear SNR: %f\n", SNR_lin);
     decoded_errors[i]=test_ldpc(max_iterations,
                                 nom_rate,
@@ -632,21 +632,23 @@ int main(int argc, char *argv[])
     printf("Decoding time std: %15.3f us\n",sqrt((double)time_decoder->diff_square/time_decoder->trials/pow(1000,2)/pow(get_cpu_freq_GHz(),2)-pow((double)time_decoder->diff/time_decoder->trials/1000.0/get_cpu_freq_GHz(),2)));
     printf("Decoding time max: %15.3f us\n",(double)time_decoder->max/1000.0/get_cpu_freq_GHz());
 
-    fprintf(fd,"%f %f %f %f %f %f %f %f %f %f %f %f %d \n",
-    		SNR,
-    		(double)decoded_errors[i]/(double)n_trials ,
-    		(double)errors_bit/(double)n_trials/(double)block_length/(double)n_segments ,
-    		errors_bit_uncoded/(double)n_trials/(double)n_segments ,
-    		(double)time_optim->diff/time_optim->trials/1000.0/get_cpu_freq_GHz(),
-    		sqrt((double)time_optim->diff_square/time_optim->trials/pow(1000,2)/pow(get_cpu_freq_GHz(),2)-pow((double)time_optim->diff/time_optim->trials/1000.0/get_cpu_freq_GHz(),2)),
-    		(double)time_optim->max/1000.0/get_cpu_freq_GHz(),
-    		(double)time_decoder->diff/time_decoder->trials/1000.0/get_cpu_freq_GHz(),
-    		sqrt((double)time_decoder->diff_square/time_decoder->trials/pow(1000,2)/pow(get_cpu_freq_GHz(),2)-pow((double)time_decoder->diff/time_decoder->trials/1000.0/get_cpu_freq_GHz(),2)),
-    		(double)time_decoder->max/1000.0/get_cpu_freq_GHz(),
-    		dec_iter.n_iter_mean[i],
-    		dec_iter.n_iter_std[i],
-    		dec_iter.n_iter_max[i]
-    		);
+    fprintf(fd,
+            "%f %f %f %f %f %f %f %f %f %f %f %f %d \n",
+            SNR,
+            (double)decoded_errors[i] / (double)n_trials,
+            (double)errors_bit / (double)n_trials / (double)block_length / (double)n_segments,
+            errors_bit_uncoded / (double)n_trials / (double)n_segments,
+            (double)time_optim->diff / time_optim->trials / 1000.0 / get_cpu_freq_GHz(),
+            sqrt((double)time_optim->diff_square / time_optim->trials / pow(1000, 2) / pow(get_cpu_freq_GHz(), 2)
+                 - pow((double)time_optim->diff / time_optim->trials / 1000.0 / get_cpu_freq_GHz(), 2)),
+            (double)time_optim->max / 1000.0 / get_cpu_freq_GHz(),
+            (double)time_decoder->diff / time_decoder->trials / 1000.0 / get_cpu_freq_GHz(),
+            sqrt((double)time_decoder->diff_square / time_decoder->trials / pow(1000, 2) / pow(get_cpu_freq_GHz(), 2)
+                 - pow((double)time_decoder->diff / time_decoder->trials / 1000.0 / get_cpu_freq_GHz(), 2)),
+            (double)time_decoder->max / 1000.0 / get_cpu_freq_GHz(),
+            dec_iter.n_iter_mean[i],
+            dec_iter.n_iter_std[i],
+            dec_iter.n_iter_max[i]);
 
     i=i+1;
     if (decoded_errors[i-1] == 0) break;

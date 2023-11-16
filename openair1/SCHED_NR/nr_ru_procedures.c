@@ -164,10 +164,13 @@ void nr_feptx_ofdm(RU_t *ru,int frame_tx,int tti_tx) {
 
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_PHY_PROCEDURES_RU_FEPTX_OFDM , 0 );
 
-  LOG_D(PHY,"feptx_ofdm (TXPATH): frame %d, slot %d: txp (time %p) %d dB, txp (freq) %d dB\n",
-	frame_tx,slot,txdata,dB_fixed(signal_energy((int32_t*)txdata,fp->get_samples_per_slot(
-  slot,fp))),dB_fixed(signal_energy_nodc(ru->common.txdataF_BF[aa],2*slot_sizeF)));
-
+  LOG_D(PHY,
+        "feptx_ofdm (TXPATH): frame %d, slot %d: txp (time %p) %d dB, txp (freq) %d dB\n",
+        frame_tx,
+        slot,
+        txdata,
+        dB_fixed(signal_energy((int32_t *)txdata, fp->get_samples_per_slot(slot, fp))),
+        dB_fixed(signal_energy_nodc(ru->common.txdataF_BF[aa], 2 * slot_sizeF)));
 }
 
 void nr_feptx_prec(RU_t *ru,int frame_tx,int tti_tx) {
@@ -193,9 +196,9 @@ void nr_feptx_prec(RU_t *ru,int frame_tx,int tti_tx) {
            (void*)&gNB->common_vars.txdataF[i][txdataF_offset],
            fp->samples_per_slot_wCP*sizeof(int32_t));
       if (ru->do_precoding == 1)
-	memcpy((void*)&ru->common.beam_id[i][slot_tx*fp->symbols_per_slot],
-	       (void*)&gNB->common_vars.beam_id[i][slot_tx*fp->symbols_per_slot],
-	       fp->symbols_per_slot*sizeof(uint8_t));
+        memcpy((void *)&ru->common.beam_id[i][slot_tx * fp->symbols_per_slot],
+               (void *)&gNB->common_vars.beam_id[i][slot_tx * fp->symbols_per_slot],
+               fp->symbols_per_slot * sizeof(uint8_t));
     }
 
     if (ru->nb_tx == 1 && ru->nb_log_antennas == 1) {
@@ -367,8 +370,8 @@ void nr_feptx_tp(RU_t *ru, int frame_tx, int slot) {
 }
 
 // core RX FEP routine, called by threads in RU thread-pool
-void nr_fep(void* arg) {
-	
+void nr_fep(void *arg)
+{
   feprx_cmd_t *feprx_cmd = (feprx_cmd_t *)arg;
 
   RU_t *ru         = feprx_cmd->ru;
@@ -415,7 +418,7 @@ void nr_fep_tp(RU_t *ru, int slot) {
          feprx_cmd->aid          = aid;
          feprx_cmd->ru           = ru;
          feprx_cmd->slot         = ru->proc.tti_rx;
-	 feprx_cmd->startSymbol  = ru->nr_frame_parms->symbols_per_slot>>1;
+         feprx_cmd->startSymbol = ru->nr_frame_parms->symbols_per_slot >> 1;
          feprx_cmd->endSymbol    = ru->nr_frame_parms->symbols_per_slot-1;
          pushTpool(ru->threadPool,req);
          nbfeprx++;

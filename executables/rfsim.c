@@ -423,7 +423,7 @@ void update_ocm(double snr_dB,double sinr_dB) {
           sim.RU2UE[ru_id][UE_id][CC_id]->path_loss_dB = -132.24 + sinr_dB - RC.ru[ru_id]->frame_parms->pdsch_config_common.referenceSignalPower;
           sim.UE2RU[UE_id][ru_id][CC_id]->path_loss_dB = -132.24 + sinr_dB - RC.ru[ru_id]->frame_parms->pdsch_config_common.referenceSignalPower;
         }
-	    
+
         LOG_D(OCM,"Path loss from eNB %d to UE %d (CCid %d)=> %f dB (eNB TX %d, SNR %f)\n",ru_id,UE_id,CC_id,
               sim.RU2UE[ru_id][UE_id][CC_id]->path_loss_dB,
               RC.ru[ru_id]->frame_parms->pdsch_config_common.referenceSignalPower,

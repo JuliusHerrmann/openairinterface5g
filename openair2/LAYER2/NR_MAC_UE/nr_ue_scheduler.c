@@ -2631,12 +2631,12 @@ typedef struct {
 nr_ue_get_sdu_mac_ce_pre finds length in various mac_ce field
 Need nothing from mac_ce_p:
 Update the following in mac_ce_p:
-	bsr_len;
-	bsr_ce_len;
-	bsr_header_len;
-	phr_len; TBD
-	phr_ce_len; TBD
-	phr_header_len; TBD
+    bsr_len;
+    bsr_ce_len;
+    bsr_header_len;
+    phr_len; TBD
+    phr_ce_len; TBD
+    phr_header_len; TBD
 */
 int nr_ue_get_sdu_mac_ce_pre(module_id_t module_idP,
                       int CC_id,
@@ -2703,19 +2703,19 @@ int nr_ue_get_sdu_mac_ce_pre(module_id_t module_idP,
 /*
 nr_ue_get_sdu_mac_ce_post recalculates length and prepares the mac_ce field
 Need the following from mac_ce_p:
-	bsr_ce_len
-	bsr_len
-	sdu_length_total
-	total_mac_pdu_header_len
+    bsr_ce_len
+    bsr_len
+    sdu_length_total
+    total_mac_pdu_header_len
 Update the following in mac_ce_p:
-	bsr_ce_len
-	bsr_header_len
-	bsr_len
-	tot_mac_ce_len
-	total_mac_pdu_header_len
-	bsr_s
-	bsr_l
-	bsr_t
+    bsr_ce_len
+    bsr_header_len
+    bsr_len
+    tot_mac_ce_len
+    total_mac_pdu_header_len
+    bsr_s
+    bsr_l
+    bsr_t
 */
 void nr_ue_get_sdu_mac_ce_post(module_id_t module_idP,
                                int CC_id,

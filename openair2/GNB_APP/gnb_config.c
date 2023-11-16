@@ -174,8 +174,8 @@ void prepare_scc(NR_ServingCellConfigCommon_t *scc) {
   dl_frequencyBandList              = CALLOC(1,sizeof(NR_FreqBandIndicatorNR_t));
   dl_scs_SpecificCarrierList        = CALLOC(1,sizeof(struct NR_SCS_SpecificCarrier));
 
-  asn1cSeqAdd(&scc->downlinkConfigCommon->frequencyInfoDL->frequencyBandList.list,dl_frequencyBandList);  
-  asn1cSeqAdd(&scc->downlinkConfigCommon->frequencyInfoDL->scs_SpecificCarrierList.list,dl_scs_SpecificCarrierList);		   		   
+  asn1cSeqAdd(&scc->downlinkConfigCommon->frequencyInfoDL->frequencyBandList.list, dl_frequencyBandList);
+  asn1cSeqAdd(&scc->downlinkConfigCommon->frequencyInfoDL->scs_SpecificCarrierList.list, dl_scs_SpecificCarrierList);
   //  scc->downlinkConfigCommon->initialDownlinkBWP->genericParameters.cyclicPrefix    = CALLOC(1,sizeof(long));
   scc->downlinkConfigCommon->initialDownlinkBWP->pdcch_ConfigCommon                = CALLOC(1,sizeof(struct NR_SetupRelease_PDCCH_ConfigCommon));
   scc->downlinkConfigCommon->initialDownlinkBWP->pdcch_ConfigCommon->present=NR_SetupRelease_PDCCH_ConfigCommon_PR_setup; 
@@ -261,9 +261,7 @@ void prepare_scc(NR_ServingCellConfigCommon_t *scc) {
 }
 
 void fill_scc_sim(NR_ServingCellConfigCommon_t *scc,uint64_t *ssb_bitmap,int N_RB_DL,int N_RB_UL,int mu_dl,int mu_ul) {
-
-  *scc->physCellId=0;							\
-  //  *scc->n_TimingAdvanceOffset=NR_ServingCellConfigCommon__n_TimingAdvanceOffset_n0;
+  *scc->physCellId = 0; //  *scc->n_TimingAdvanceOffset=NR_ServingCellConfigCommon__n_TimingAdvanceOffset_n0;
   *scc->ssb_periodicityServingCell=NR_ServingCellConfigCommon__ssb_periodicityServingCell_ms20;
   scc->dmrs_TypeA_Position=NR_ServingCellConfigCommon__dmrs_TypeA_Position_pos2;
   *scc->ssbSubcarrierSpacing=mu_dl;
@@ -447,7 +445,7 @@ void fix_scc(NR_ServingCellConfigCommon_t *scc,uint64_t ssbmap) {
 
   // check pucch_ResourceConfig
   AssertFatal(*scc->uplinkConfigCommon->initialUplinkBWP->pucch_ConfigCommon->choice.setup->pucch_ResourceCommon < 2,
-	      "pucch_ResourceConfig should be 0 or 1 for now\n");
+              "pucch_ResourceConfig should be 0 or 1 for now\n");
 }
 
 /* Function to allocate dedicated serving cell config strutures */
@@ -735,7 +733,7 @@ void RCconfig_nr_prs(void)
         RC.gNB[j]                       = (PHY_VARS_gNB *)malloc(sizeof(PHY_VARS_gNB));
         LOG_I(NR_PHY,"RC.gNB[%d] = %p\n",j,RC.gNB[j]);
         memset(RC.gNB[j],0,sizeof(PHY_VARS_gNB));
-	      RC.gNB[j]->Mod_id  = j;
+        RC.gNB[j]->Mod_id = j;
       }
 
       RC.gNB[j]->prs_vars.NumPRSResources = *(PRS_ParamList.paramarray[j][NUM_PRS_RESOURCES].uptr);
@@ -1591,12 +1589,10 @@ void RCconfig_NRRRC(gNB_RRC_INST *rrc)
     
     gNB_RrcConfigurationReq nrrrc_config = {0};
     for (k=0; k <num_gnbs ; k++) {
-      if (strcmp(GNBSParams[GNB_ACTIVE_GNBS_IDX].strlistptr[k], *(GNBParamList.paramarray[i][GNB_GNB_NAME_IDX].strptr) )== 0) {
-	
+      if (strcmp(GNBSParams[GNB_ACTIVE_GNBS_IDX].strlistptr[k], *(GNBParamList.paramarray[i][GNB_GNB_NAME_IDX].strptr)) == 0) {
         char gnbpath[MAX_OPTNAME_SIZE + 8];
         sprintf(gnbpath,"%s.[%i]",GNB_CONFIG_STRING_GNB_LIST,k);
 
-	
         paramdef_t PLMNParams[] = GNBPLMNPARAMS_DESC;
 
         paramlist_def_t PLMNParamList = {GNB_CONFIG_STRING_PLMN_LIST, NULL, 0};
@@ -1625,13 +1621,12 @@ void RCconfig_NRRRC(gNB_RRC_INST *rrc)
         nrrrc_config.num_plmn = PLMNParamList.numelt;
 
         for (int l = 0; l < PLMNParamList.numelt; ++l) {
-	
-	  nrrrc_config.mcc[l]               = *PLMNParamList.paramarray[l][GNB_MOBILE_COUNTRY_CODE_IDX].uptr;
-	  nrrrc_config.mnc[l]               = *PLMNParamList.paramarray[l][GNB_MOBILE_NETWORK_CODE_IDX].uptr;
-	  nrrrc_config.mnc_digit_length[l]  = *PLMNParamList.paramarray[l][GNB_MNC_DIGIT_LENGTH].u8ptr;
-	  AssertFatal((nrrrc_config.mnc_digit_length[l] == 2) ||
-		      (nrrrc_config.mnc_digit_length[l] == 3),"BAD MNC DIGIT LENGTH %d",
-		      nrrrc_config.mnc_digit_length[l]);
+          nrrrc_config.mcc[l] = *PLMNParamList.paramarray[l][GNB_MOBILE_COUNTRY_CODE_IDX].uptr;
+          nrrrc_config.mnc[l] = *PLMNParamList.paramarray[l][GNB_MOBILE_NETWORK_CODE_IDX].uptr;
+          nrrrc_config.mnc_digit_length[l] = *PLMNParamList.paramarray[l][GNB_MNC_DIGIT_LENGTH].u8ptr;
+          AssertFatal((nrrrc_config.mnc_digit_length[l] == 2) || (nrrrc_config.mnc_digit_length[l] == 3),
+                      "BAD MNC DIGIT LENGTH %d",
+                      nrrrc_config.mnc_digit_length[l]);
         }
         nrrrc_config.enable_sdap = *GNBParamList.paramarray[i][GNB_ENABLE_SDAP_IDX].iptr;
         LOG_I(GNB_APP, "SDAP layer is %s\n", nrrrc_config.enable_sdap ? "enabled" : "disabled");
@@ -1639,7 +1634,7 @@ void RCconfig_NRRRC(gNB_RRC_INST *rrc)
         nrrrc_config.um_on_default_drb = *(GNBParamList.paramarray[i][GNB_UMONDEFAULTDRB_IDX].uptr);
         LOG_I(GNB_APP, "Data Radio Bearer count %d\n", nrrrc_config.drbs);
 
-      }//
+      } //
     }//End for (k=0; k <num_gnbs ; k++)
     openair_rrc_gNB_configuration(rrc, &nrrrc_config);
   }//End if (num_gnbs>0)
@@ -1986,10 +1981,10 @@ int RCconfig_NR_X2(MessageDef *msg_p, uint32_t i) {
             paramdef_t X2Params[]  = X2PARAMS_DESC;
             paramlist_def_t X2ParamList = {ENB_CONFIG_STRING_TARGET_ENB_X2_IP_ADDRESS,NULL,0};
             paramdef_t SCTPParams[]  = GNBSCTPPARAMS_DESC;
-	    char*             gnb_ipv4_address_for_NGU      = NULL;
-	    uint32_t          gnb_port_for_NGU              = 0;
-	    char*             gnb_ipv4_address_for_S1U      = NULL;
-	    uint32_t          gnb_port_for_S1U              = 0;
+            char *gnb_ipv4_address_for_NGU = NULL;
+            uint32_t gnb_port_for_NGU = 0;
+            char *gnb_ipv4_address_for_S1U = NULL;
+            uint32_t gnb_port_for_S1U = 0;
 
             paramdef_t NETParams[]  =  GNBNETPARAMS_DESC;
             /* TODO: fix the size - if set lower we have a crash (MAX_OPTNAME_SIZE was 64 when this code was written) */

@@ -106,16 +106,41 @@ typedef enum { SIMU_ROLE_SERVER = 1, SIMU_ROLE_CLIENT } simuRole;
 /*   optname                     helpstr                     paramflags           XXXptr                               defXXXval                          type         numelt  */
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 #define simOpt PARAMFLAG_NOFREE|PARAMFLAG_CMDLINE_NOPREFIXENABLED
-#define RFSIMULATOR_PARAMS_DESC {					\
-    {"serveraddr",             "<ip address to connect to>\n",        simOpt,  .strptr=&rfsimulator->ip,               .defstrval="127.0.0.1",           TYPE_STRING,    0 },\
-    {"serverport",             "<port to connect to>\n",              simOpt,  .u16ptr=&(rfsimulator->port),           .defuintval=PORT,                 TYPE_UINT16,    0 },\
-    {RFSIMU_OPTIONS_PARAMNAME, RFSIM_CONFIG_HELP_OPTIONS,             0,       .strlistptr=NULL,                       .defstrlistval=NULL,              TYPE_STRINGLIST,0 },\
-    {"IQfile",                 "<file path to use when saving IQs>\n",simOpt,  .strptr=&saveF,                         .defstrval="/tmp/rfsimulator.iqs",TYPE_STRING,    0 },\
-    {"modelname",              "<channel model name>\n",              simOpt,  .strptr=&modelname,                     .defstrval="AWGN",                TYPE_STRING,    0 },\
-    {"ploss",                  "<channel path loss in dB>\n",         simOpt,  .dblptr=&(rfsimulator->chan_pathloss),  .defdblval=0,                     TYPE_DOUBLE,    0 },\
-    {"forgetfact",             "<channel forget factor ((0 to 1)>\n", simOpt,  .dblptr=&(rfsimulator->chan_forgetfact),.defdblval=0,                     TYPE_DOUBLE,    0 },\
-    {"offset",                 "<channel offset in samps>\n",         simOpt,  .iptr=&(rfsimulator->chan_offset),      .defintval=0,                     TYPE_INT,       0 },\
-    {"wait_timeout",           "<wait timeout if no UE connected>\n", simOpt,  .iptr=&(rfsimulator->wait_timeout),     .defintval=1,                     TYPE_INT,       0 },\
+#define RFSIMULATOR_PARAMS_DESC                                                                                                  \
+  {                                                                                                                              \
+      {"serveraddr",                                                                                                             \
+       "<ip address to connect to>\n",                                                                                           \
+       simOpt,                                                                                                                   \
+       .strptr = &rfsimulator->ip,                                                                                               \
+       .defstrval = "127.0.0.1",                                                                                                 \
+       TYPE_STRING,                                                                                                              \
+       0},                                                                                                                       \
+      {"serverport", "<port to connect to>\n", simOpt, .u16ptr = &(rfsimulator->port), .defuintval = PORT, TYPE_UINT16, 0},      \
+      {RFSIMU_OPTIONS_PARAMNAME, RFSIM_CONFIG_HELP_OPTIONS, 0, .strlistptr = NULL, .defstrlistval = NULL, TYPE_STRINGLIST, 0},   \
+      {"IQfile",                                                                                                                 \
+       "<file path to use when saving IQs>\n",                                                                                   \
+       simOpt,                                                                                                                   \
+       .strptr = &saveF,                                                                                                         \
+       .defstrval = "/tmp/rfsimulator.iqs",                                                                                      \
+       TYPE_STRING,                                                                                                              \
+       0},                                                                                                                       \
+      {"modelname", "<channel model name>\n", simOpt, .strptr = &modelname, .defstrval = "AWGN", TYPE_STRING, 0},                \
+      {"ploss", "<channel path loss in dB>\n", simOpt, .dblptr = &(rfsimulator->chan_pathloss), .defdblval = 0, TYPE_DOUBLE, 0}, \
+      {"forgetfact",                                                                                                             \
+       "<channel forget factor ((0 to 1)>\n",                                                                                    \
+       simOpt,                                                                                                                   \
+       .dblptr = &(rfsimulator->chan_forgetfact),                                                                                \
+       .defdblval = 0,                                                                                                           \
+       TYPE_DOUBLE,                                                                                                              \
+       0},                                                                                                                       \
+      {"offset", "<channel offset in samps>\n", simOpt, .iptr = &(rfsimulator->chan_offset), .defintval = 0, TYPE_INT, 0},       \
+      {"wait_timeout",                                                                                                           \
+       "<wait timeout if no UE connected>\n",                                                                                    \
+       simOpt,                                                                                                                   \
+       .iptr = &(rfsimulator->wait_timeout),                                                                                     \
+       .defintval = 1,                                                                                                           \
+       TYPE_INT,                                                                                                                 \
+       0},                                                                                                                       \
   };
 
 static void getset_currentchannels_type(char *buf, int debug, webdatadef_t *tdata, telnet_printfunc_t prnt);

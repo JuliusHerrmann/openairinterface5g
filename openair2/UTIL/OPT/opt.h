@@ -118,9 +118,16 @@ extern int opt_enabled;
 void trace_pdu_implementation(int nr, int direction, uint8_t *pdu_buffer, unsigned int pdu_buffer_size,
                               int ueid, int rntiType, int rnti, uint16_t sysFrame, uint8_t subframe,
                               int oob_event, int oob_event_value);
-void nr_trace_pdu_implementation(int nr, int direction, uint8_t *pdu_buffer, unsigned int pdu_buffer_size,
-				 int rntiType, int rnti, uint16_t sysFrame, uint8_t subframe,
-				 int oob_event, int oob_event_value);
+void nr_trace_pdu_implementation(int nr,
+                                 int direction,
+                                 uint8_t *pdu_buffer,
+                                 unsigned int pdu_buffer_size,
+                                 int rntiType,
+                                 int rnti,
+                                 uint16_t sysFrame,
+                                 uint8_t subframe,
+                                 int oob_event,
+                                 int oob_event_value);
 
 int init_opt(void);
 

@@ -148,13 +148,13 @@ void nr_generate_pdsch(processingData_L1tx_t *msgTx,
     printf("PDSCH encoding:\nPayload:\n");
     for (int i=0; i<harq->B>>7; i++) {
       for (int j=0; j<16; j++)
-	printf("0x%02x\t", harq->pdu[(i<<4)+j]);
+        printf("0x%02x\t", harq->pdu[(i << 4) + j]);
       printf("\n");
     }
     printf("\nEncoded payload:\n");
     for (int i=0; i<encoded_length>>3; i++) {
       for (int j=0; j<8; j++)
-	printf("%d", output[(i<<3)+j]);
+        printf("%d", output[(i << 3) + j]);
       printf("\t");
     }
     printf("\n");
@@ -258,7 +258,16 @@ void nr_generate_pdsch(processingData_L1tx_t *msgTx,
 #ifdef DEBUG_DLSCH_MAPPING
       uint8_t dmrs_symbol = l0+l_prime;
       printf("DMRS Type %d params for nl %d: Wt %d %d \t Wf %d %d \t delta %d \t l_prime %d \t l0 %d\tDMRS symbol %d\n",
-	     1+dmrs_Type,nl, Wt[0], Wt[1], Wf[0], Wf[1], delta, l_prime, l0, dmrs_symbol);
+             1 + dmrs_Type,
+             nl,
+             Wt[0],
+             Wt[1],
+             Wf[0],
+             Wf[1],
+             delta,
+             l_prime,
+             l0,
+             dmrs_symbol);
 #endif
 
       uint32_t m=0, dmrs_idx=0;
@@ -581,8 +590,9 @@ void nr_generate_pdsch(processingData_L1tx_t *msgTx,
 
     // first check if this slot has not already been allocated to another beam
     if (gNB->common_vars.beam_id[0][slot*frame_parms->symbols_per_slot]==255) {
-      for (int j=0;j<frame_parms->symbols_per_slot;j++) 
-	gNB->common_vars.beam_id[0][slot*frame_parms->symbols_per_slot+j] = rel15->precodingAndBeamforming.prgs_list[0].dig_bf_interface_list[0].beam_idx;
+      for (int j = 0; j < frame_parms->symbols_per_slot; j++)
+        gNB->common_vars.beam_id[0][slot * frame_parms->symbols_per_slot + j] =
+            rel15->precodingAndBeamforming.prgs_list[0].dig_bf_interface_list[0].beam_idx;
     }
     else {
       LOG_D(PHY,"beam index for PDSCH allocation already taken\n");

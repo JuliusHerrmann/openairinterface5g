@@ -13,7 +13,7 @@ int f_read(char *calibF_fname, int nb_antM, int nb_freq, int16_t (*calibF_mtx)[n
   
     for(i=0;i<nb_antM;i++){
       for(j=0;j<nb_freq*2;j++){
-	fscanf(calibF_fd, "%d", &calibF_e);
+        fscanf(calibF_fd, "%d", &calibF_e);
         calibF_mtx[i][j] = (int16_t)calibF_e;
       }
     }

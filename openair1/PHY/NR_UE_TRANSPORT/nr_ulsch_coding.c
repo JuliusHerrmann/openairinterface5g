@@ -231,13 +231,15 @@ int nr_ulsch_encoding(PHY_VARS_NR_UE *ue,
       }
     }
 
-
-    LOG_D(PHY,"Rate Matching, Code segment %d (coded bits (G) %u, unpunctured/repeated bits per code segment %d, mod_order %d, nb_rb %d, rvidx %d)...\n",
-	  r,
-	  G,
-	  Kr*3,
-	  mod_order,nb_rb,
-	  ulsch->pusch_pdu.pusch_data.rv_index);
+    LOG_D(PHY,
+          "Rate Matching, Code segment %d (coded bits (G) %u, unpunctured/repeated bits per code segment %d, mod_order %d, nb_rb "
+          "%d, rvidx %d)...\n",
+          r,
+          G,
+          Kr * 3,
+          mod_order,
+          nb_rb,
+          ulsch->pusch_pdu.pusch_data.rv_index);
 
     //start_meas(rm_stats);
 ///////////////////////// d---->| Rate matching bit selection |---->e /////////////////////////

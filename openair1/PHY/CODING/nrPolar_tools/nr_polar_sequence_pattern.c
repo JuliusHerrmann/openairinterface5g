@@ -45,5 +45,5 @@ static const uint16_t* const Q_0_Nminus1[11] = {NULL,
                                                 Q_0_Nminus1_10};
 
 const uint16_t* nr_polar_sequence_pattern(uint8_t n){
-	return Q_0_Nminus1[n];
+  return Q_0_Nminus1[n];
 }

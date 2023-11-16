@@ -889,37 +889,39 @@ eNB_dlsch_ulsch_scheduler(module_id_t module_idP,
           }
 
           /* Note: This should not be done in the MAC! */
-	  /*
-          for (int ii=0; ii<MAX_MOBILES_PER_ENB; ii++) {
-            LTE_eNB_ULSCH_t *ulsch = RC.eNB[module_idP][CC_id]->ulsch[ii];
+          /*
+              for (int ii=0; ii<MAX_MOBILES_PER_ENB; ii++) {
+                LTE_eNB_ULSCH_t *ulsch = RC.eNB[module_idP][CC_id]->ulsch[ii];
 
-            if((ulsch != NULL) && (ulsch->rnti == rnti)) {
-              void clean_eNb_ulsch(LTE_eNB_ULSCH_t *ulsch);
-              LOG_I(MAC, "clean_eNb_ulsch UE %x \n", rnti);
-              clean_eNb_ulsch(ulsch);
-            }
-          }
+                if((ulsch != NULL) && (ulsch->rnti == rnti)) {
+                  void clean_eNb_ulsch(LTE_eNB_ULSCH_t *ulsch);
+                  LOG_I(MAC, "clean_eNb_ulsch UE %x \n", rnti);
+                  clean_eNb_ulsch(ulsch);
+                }
+              }
 
-          for (int ii=0; ii<MAX_MOBILES_PER_ENB; ii++) {
-            LTE_eNB_DLSCH_t *dlsch = RC.eNB[module_idP][CC_id]->dlsch[ii][0];
+              for (int ii=0; ii<MAX_MOBILES_PER_ENB; ii++) {
+                LTE_eNB_DLSCH_t *dlsch = RC.eNB[module_idP][CC_id]->dlsch[ii][0];
 
-            if((dlsch != NULL) && (dlsch->rnti == rnti)) {
-              void clean_eNb_dlsch(LTE_eNB_DLSCH_t *dlsch);
-              LOG_I(MAC, "clean_eNb_dlsch UE %x \n", rnti);
-              clean_eNb_dlsch(dlsch);
-            }
-          }
-	  */
+                if((dlsch != NULL) && (dlsch->rnti == rnti)) {
+                  void clean_eNb_dlsch(LTE_eNB_DLSCH_t *dlsch);
+                  LOG_I(MAC, "clean_eNb_dlsch UE %x \n", rnti);
+                  clean_eNb_dlsch(dlsch);
+                }
+              }
+          */
 
-	int id;
+          int id;
 
-	// clean ULSCH entries for rnti
-	id = find_ulsch(rnti,RC.eNB[module_idP][CC_id],SEARCH_EXIST);
-        if (id>=0) clean_eNb_ulsch(RC.eNB[module_idP][CC_id]->ulsch[id]);
+          // clean ULSCH entries for rnti
+          id = find_ulsch(rnti, RC.eNB[module_idP][CC_id], SEARCH_EXIST);
+          if (id >= 0)
+            clean_eNb_ulsch(RC.eNB[module_idP][CC_id]->ulsch[id]);
 
-	// clean DLSCH entries for rnti
-	id = find_dlsch(rnti,RC.eNB[module_idP][CC_id],SEARCH_EXIST);
-        if (id>=0) clean_eNb_dlsch(RC.eNB[module_idP][CC_id]->dlsch[id][0]);
+          // clean DLSCH entries for rnti
+          id = find_dlsch(rnti, RC.eNB[module_idP][CC_id], SEARCH_EXIST);
+          if (id >= 0)
+            clean_eNb_dlsch(RC.eNB[module_idP][CC_id]->dlsch[id][0]);
 
           for (int j = 0; j < 10; j++) {
             nfapi_ul_config_request_body_t *ul_req_tmp = NULL;
@@ -969,12 +971,12 @@ eNB_dlsch_ulsch_scheduler(module_id_t module_idP,
       int(*schedule_mch)(module_id_t module_idP, uint8_t CC_id, frame_t frameP, sub_frame_t subframe) = NULL;
       schedule_mch = schedule_MBMS_NFAPI;
       if(schedule_mch){
-      	mbsfn_status[CC_id] = schedule_mch(module_idP, CC_id, frameP, subframeP);
+        mbsfn_status[CC_id] = schedule_mch(module_idP, CC_id, frameP, subframeP);
       }
       stop_meas(&RC.mac[module_idP]->schedule_mch);
     }
     if (cc[CC_id].FeMBMS_flag > 0) {
-	do_fembms_si = 1;
+      do_fembms_si = 1;
     }
 
   }

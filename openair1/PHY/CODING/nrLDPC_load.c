@@ -84,16 +84,8 @@ int load_nrLDPClib_offload(void) {
   p_decParams->Z = 384;
   p_decParams->BG = 1;
 
-  AssertFatal(nrLDPC_decoder_offload(p_decParams,0, 0,
-				     1,
-				     0,
-				     0,
-				     25344,
-				     8,
-				     l, 
-				     llrProcBuf, 0)>=0,
-	      "error loading LDPC decoder offload library\n");
-
+  AssertFatal(nrLDPC_decoder_offload(p_decParams, 0, 0, 1, 0, 0, 25344, 8, l, llrProcBuf, 0) >= 0,
+              "error loading LDPC decoder offload library\n");
 
   return 0;
 }
@@ -119,12 +111,12 @@ return 0;
 }
 
 int load_nrLDPClib_ref(char *libversion, nrLDPC_encoderfunc_t * nrLDPC_encoder_ptr) {
-	loader_shlibfunc_t shlib_encoder_fdesc;
+loader_shlibfunc_t shlib_encoder_fdesc;
 
-     shlib_encoder_fdesc.fname = "nrLDPC_encod";
-     int ret=load_module_version_shlib("ldpc",libversion,&shlib_encoder_fdesc,1,NULL);
-     AssertFatal( (ret >= 0),"Error loading ldpc encoder %s\n",(libversion==NULL)?"":libversion);
-     *nrLDPC_encoder_ptr = (nrLDPC_encoderfunc_t)shlib_encoder_fdesc.fptr;
+shlib_encoder_fdesc.fname = "nrLDPC_encod";
+int ret = load_module_version_shlib("ldpc", libversion, &shlib_encoder_fdesc, 1, NULL);
+AssertFatal((ret >= 0), "Error loading ldpc encoder %s\n", (libversion == NULL) ? "" : libversion);
+*nrLDPC_encoder_ptr = (nrLDPC_encoderfunc_t)shlib_encoder_fdesc.fptr;
 return 0;
 }
 

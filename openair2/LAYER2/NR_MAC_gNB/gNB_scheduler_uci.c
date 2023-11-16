@@ -58,8 +58,11 @@ static void nr_fill_nfapi_pucch(gNB_MAC_INST *nrmac,
 
   // n_pdus is number of pdus, so, in the array, it is the index of the next free element
   if (future_ul_tti_req->n_pdus >= sizeofArray(future_ul_tti_req->pdus_list) ) {
-    LOG_E(NR_MAC,"future_ul_tti_req->n_pdus %d is full, slot: %d, sr flag %d dropping request\n",
-	  future_ul_tti_req->n_pdus, pucch->ul_slot, pucch->sr_flag);
+    LOG_E(NR_MAC,
+          "future_ul_tti_req->n_pdus %d is full, slot: %d, sr flag %d dropping request\n",
+          future_ul_tti_req->n_pdus,
+          pucch->ul_slot,
+          pucch->sr_flag);
     return;
   }
   future_ul_tti_req->pdus_list[future_ul_tti_req->n_pdus].pdu_type = NFAPI_NR_UL_CONFIG_PUCCH_PDU_TYPE;
@@ -765,9 +768,9 @@ static void evaluate_cqi_report(uint8_t *payload,
 
   uint8_t temp_cqi = pickandreverse_bits(payload, 4, cumul_bits);
 
-  // NR_CSI_ReportConfig__cqi_Table_table1	= 0
-  // NR_CSI_ReportConfig__cqi_Table_table2	= 1
-  // NR_CSI_ReportConfig__cqi_Table_table3	= 2
+  // NR_CSI_ReportConfig__cqi_Table_table1    = 0
+  // NR_CSI_ReportConfig__cqi_Table_table2    = 1
+  // NR_CSI_ReportConfig__cqi_Table_table3    = 2
   sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.cqi_table = cqi_Table;
   sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.wb_cqi_1tb = temp_cqi;
   LOG_D(MAC,"Wide-band CQI for the first TB %d\n", temp_cqi);

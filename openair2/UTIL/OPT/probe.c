@@ -400,11 +400,21 @@ static void SendFrame(guint8 radioType, guint8 direction, guint8 rntiType,
   }
 }
 
-static void SendFrameNR(guint8 radioType, guint8 direction, guint8 rntiType,
-			guint16 rnti, guint16 ueid,  guint16 frame, guint16 subframe,
-			guint8 isPredefinedData, guint8 retx, guint8 crcStatus,
-			guint8 oob_event, guint8 oob_event_value,
-			uint8_t *pdu_buffer, unsigned int pdu_buffer_size) {
+static void SendFrameNR(guint8 radioType,
+                        guint8 direction,
+                        guint8 rntiType,
+                        guint16 rnti,
+                        guint16 ueid,
+                        guint16 frame,
+                        guint16 subframe,
+                        guint8 isPredefinedData,
+                        guint8 retx,
+                        guint8 crcStatus,
+                        guint8 oob_event,
+                        guint8 oob_event_value,
+                        uint8_t *pdu_buffer,
+                        unsigned int pdu_buffer_size)
+{
   unsigned char frameBuffer[32000];
   unsigned int frameOffset;
   ssize_t bytesSent;
@@ -476,12 +486,28 @@ static void SendFrameNR(guint8 radioType, guint8 direction, guint8 rntiType,
 extern RAN_CONTEXT_t RC;
 #include <openair1/PHY/phy_extern_ue.h>
 /* Remote serveraddress (where Wireshark is running) */
-void nr_trace_pdu_implementation(int nr, int direction, uint8_t *pdu_buffer, unsigned int pdu_buffer_size,
-				 int rntiType, int rnti, uint16_t sysFrameNumber, uint8_t subFrameNumber, int oob_event,
-				 int oob_event_value) {
-  trace_pdu_implementation(nr, direction, pdu_buffer, pdu_buffer_size,
-			   rnti, rntiType, rnti, sysFrameNumber, subFrameNumber, oob_event,
-			   oob_event_value);
+void nr_trace_pdu_implementation(int nr,
+                                 int direction,
+                                 uint8_t *pdu_buffer,
+                                 unsigned int pdu_buffer_size,
+                                 int rntiType,
+                                 int rnti,
+                                 uint16_t sysFrameNumber,
+                                 uint8_t subFrameNumber,
+                                 int oob_event,
+                                 int oob_event_value)
+{
+  trace_pdu_implementation(nr,
+                           direction,
+                           pdu_buffer,
+                           pdu_buffer_size,
+                           rnti,
+                           rntiType,
+                           rnti,
+                           sysFrameNumber,
+                           subFrameNumber,
+                           oob_event,
+                           oob_event_value);
 }
 
 void trace_pdu_implementation(int nr, int direction, uint8_t *pdu_buffer, unsigned int pdu_buffer_size,
@@ -523,12 +549,20 @@ void trace_pdu_implementation(int nr, int direction, uint8_t *pdu_buffer, unsign
   }
 
   if (nr)
-  SendFrameNR( radioType,
-             (direction == DIRECTION_DOWNLINK) ? DIRECTION_DOWNLINK : DIRECTION_UPLINK,
-	       rntiType, rnti, ueid, sysFrameNumber, subFrameNumber,
-             1, 0, 1,  //guint8 isPredefinedData, guint8 retx, guint8 crcStatus
-             oob_event,oob_event_value,
-             pdu_buffer, pdu_buffer_size);
+    SendFrameNR(radioType,
+                (direction == DIRECTION_DOWNLINK) ? DIRECTION_DOWNLINK : DIRECTION_UPLINK,
+                rntiType,
+                rnti,
+                ueid,
+                sysFrameNumber,
+                subFrameNumber,
+                1,
+                0,
+                1, // guint8 isPredefinedData, guint8 retx, guint8 crcStatus
+                oob_event,
+                oob_event_value,
+                pdu_buffer,
+                pdu_buffer_size);
   else 
   SendFrame( radioType,
              (direction == DIRECTION_DOWNLINK) ? DIRECTION_DOWNLINK : DIRECTION_UPLINK,

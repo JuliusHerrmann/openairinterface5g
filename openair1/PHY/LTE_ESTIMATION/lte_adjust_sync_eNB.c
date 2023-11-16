@@ -55,25 +55,17 @@ int lte_est_timing_advance(LTE_DL_FRAME_PARMS *frame_parms,
       // do ifft of channel estimate
       switch(frame_parms->N_RB_DL) {
       case 6:
-	dft(DFT_128,(int16_t*) &lte_eNB_srs->srs_ch_estimates[aa][0],
-	       (int16_t*) lte_eNB_srs->srs_ch_estimates_time[aa],
-	       1);
-	break;
+        dft(DFT_128, (int16_t *)&lte_eNB_srs->srs_ch_estimates[aa][0], (int16_t *)lte_eNB_srs->srs_ch_estimates_time[aa], 1);
+        break;
       case 25:
-	dft(DFT_512,(int16_t*) &lte_eNB_srs->srs_ch_estimates[aa][0],
-	       (int16_t*) lte_eNB_srs->srs_ch_estimates_time[aa],
-	       1);
-	break;
+        dft(DFT_512, (int16_t *)&lte_eNB_srs->srs_ch_estimates[aa][0], (int16_t *)lte_eNB_srs->srs_ch_estimates_time[aa], 1);
+        break;
       case 50:
-	dft(DFT_1024,(int16_t*) &lte_eNB_srs->srs_ch_estimates[aa][0],
-		(int16_t*) lte_eNB_srs->srs_ch_estimates_time[aa],
-		1);
-	break;
+        dft(DFT_1024, (int16_t *)&lte_eNB_srs->srs_ch_estimates[aa][0], (int16_t *)lte_eNB_srs->srs_ch_estimates_time[aa], 1);
+        break;
       case 100:
-	dft(DFT_2048,(int16_t*) &lte_eNB_srs->srs_ch_estimates[aa][0],
-	       (int16_t*) lte_eNB_srs->srs_ch_estimates_time[aa],
-	       1);
-	break;
+        dft(DFT_2048, (int16_t *)&lte_eNB_srs->srs_ch_estimates[aa][0], (int16_t *)lte_eNB_srs->srs_ch_estimates_time[aa], 1);
+        break;
       }
 #ifdef DEBUG_PHY
       sprintf(fname,"srs_ch_estimates_time_%d%d.m",ind,aa);
@@ -121,8 +113,10 @@ int lte_est_timing_advance_pusch(LTE_DL_FRAME_PARMS *frame_parms,
   int sync_pos = 0;//(frame_parms->ofdm_symbol_size-cyclic_shift*frame_parms->ofdm_symbol_size/12)%(frame_parms->ofdm_symbol_size);
   
   AssertFatal(frame_parms->ofdm_symbol_size > 127,"frame_parms->ofdm_symbol_size %d<128\n",frame_parms->ofdm_symbol_size);
-  AssertFatal(frame_parms->nb_antennas_rx >0 && frame_parms->nb_antennas_rx<=4,"frame_parms->nb_antennas_rx %d not in [1...%d]\n",
-	      frame_parms->nb_antennas_rx,4);
+  AssertFatal(frame_parms->nb_antennas_rx > 0 && frame_parms->nb_antennas_rx <= 4,
+              "frame_parms->nb_antennas_rx %d not in [1...%d]\n",
+              frame_parms->nb_antennas_rx,
+              4);
   for (i = 0; i < frame_parms->ofdm_symbol_size; i++) {
     temp = 0;
 

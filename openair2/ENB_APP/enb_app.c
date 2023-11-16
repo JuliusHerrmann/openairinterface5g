@@ -286,9 +286,12 @@ void *eNB_app_task(void *args_p) {
 
     case S1AP_DEREGISTERED_ENB_IND:
       if (EPC_MODE_ENABLED) {
-  	LOG_W(ENB_APP, "[eNB %ld] Received %s: associated MME %d\n", instance, ITTI_MSG_NAME (msg_p),
-  	      S1AP_DEREGISTERED_ENB_IND(msg_p).nb_mme);
-  	/* TODO handle recovering of registration */
+          LOG_W(ENB_APP,
+                "[eNB %ld] Received %s: associated MME %d\n",
+                instance,
+                ITTI_MSG_NAME(msg_p),
+                S1AP_DEREGISTERED_ENB_IND(msg_p).nb_mme);
+          /* TODO handle recovering of registration */
       }
 
       break;
@@ -305,18 +308,19 @@ void *eNB_app_task(void *args_p) {
 
       if (TIMER_HAS_EXPIRED (msg_p).timer_id == x2_enb_register_retry_timer_id) {
         /* Restart the registration process */
-	x2_registered_enb = 0;
+        x2_registered_enb = 0;
         x2_register_enb_pending = eNB_app_register_x2 (enb_id_start, enb_id_end);
       }
         } /* if (EPC_MODE_ENABLED) */
 
-//      if(TIMER_HAS_EXPIRED (msg_p).timer_id == m2_enb_register_retry_timer_id) {
-//
-//               LOG_I(ENB_APP, " Received %s: timer_id %ld M2 register\n", ITTI_MSG_NAME (msg_p), TIMER_HAS_EXPIRED(msg_p).timer_id);
-//               m2_register_enb_pending = eNB_app_register_m2 (enb_id_start, enb_id_end);
-//	}
+        //      if(TIMER_HAS_EXPIRED (msg_p).timer_id == m2_enb_register_retry_timer_id) {
+        //
+        //               LOG_I(ENB_APP, " Received %s: timer_id %ld M2 register\n", ITTI_MSG_NAME (msg_p),
+        //               TIMER_HAS_EXPIRED(msg_p).timer_id); m2_register_enb_pending = eNB_app_register_m2 (enb_id_start,
+        //               enb_id_end);
+        //    }
 
-      break;
+        break;
 
     case X2AP_DEREGISTERED_ENB_IND:
       LOG_W(ENB_APP, "[eNB %ld] Received %s: associated eNB %d\n", instance, ITTI_MSG_NAME (msg_p),
@@ -344,16 +348,21 @@ void *eNB_app_task(void *args_p) {
           LOG_W(ENB_APP, " %d eNB %s not associated with the target\n",
                 x2_not_associated, x2_not_associated > 1 ? "are" : "is");
 
-	  // timer to retry
-	  /* Restart the eNB registration process in ENB_REGISTER_RETRY_DELAY seconds */
-          if (timer_setup (X2AP_ENB_REGISTER_RETRY_DELAY, 0, TASK_ENB_APP,
-			   INSTANCE_DEFAULT, TIMER_ONE_SHOT, NULL,
-			   &x2_enb_register_retry_timer_id) < 0) {
-            LOG_E(ENB_APP, " Can not start eNB X2AP register: retry timer, use \"sleep\" instead!\n");
-            sleep(X2AP_ENB_REGISTER_RETRY_DELAY);
-            /* Restart the registration process */
-            x2_registered_enb = 0;
-            x2_register_enb_pending = eNB_app_register_x2 (enb_id_start, enb_id_end);
+          // timer to retry
+          /* Restart the eNB registration process in ENB_REGISTER_RETRY_DELAY seconds */
+          if (timer_setup(X2AP_ENB_REGISTER_RETRY_DELAY,
+                          0,
+                          TASK_ENB_APP,
+                          INSTANCE_DEFAULT,
+                          TIMER_ONE_SHOT,
+                          NULL,
+                          &x2_enb_register_retry_timer_id)
+              < 0) {
+              LOG_E(ENB_APP, " Can not start eNB X2AP register: retry timer, use \"sleep\" instead!\n");
+              sleep(X2AP_ENB_REGISTER_RETRY_DELAY);
+              /* Restart the registration process */
+              x2_registered_enb = 0;
+              x2_register_enb_pending = eNB_app_register_x2(enb_id_start, enb_id_end);
           }
         }
       }

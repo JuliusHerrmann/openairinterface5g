@@ -642,11 +642,11 @@ int main(int argc, char **argv)
 
   printf("Decoding NR_RRCReconfiguration (%d bytes)\n",msg_len);
   asn_dec_rval_t dec_rval = uper_decode_complete( NULL,
-						  &asn_DEF_NR_RRCReconfiguration,
-						  (void **)&NR_RRCReconfiguration,
-						  (uint8_t *)buffer,
-						  msg_len); 
-  
+                          &asn_DEF_NR_RRCReconfiguration,
+                          (void **)&NR_RRCReconfiguration,
+                          (uint8_t *)buffer,
+                          msg_len);
+
   if ((dec_rval.code != RC_OK) && (dec_rval.consumed == 0)) {
     AssertFatal(1==0,"NR_RRCReConfiguration decode error\n");
     // free the memory
@@ -655,23 +655,24 @@ int main(int argc, char **argv)
   }
   fclose(scg_fd);
 
-  AssertFatal(NR_RRCReconfiguration->criticalExtensions.present == NR_RRCReconfiguration__criticalExtensions_PR_rrcReconfiguration,"wrong NR_RRCReconfiguration->criticalExstions.present type\n");
+  AssertFatal(NR_RRCReconfiguration->criticalExtensions.present ==
+  NR_RRCReconfiguration__criticalExtensions_PR_rrcReconfiguration,"wrong NR_RRCReconfiguration->criticalExstions.present type\n");
 
   NR_RRCReconfiguration_IEs_t *reconfig_ies = NR_RRCReconfiguration->criticalExtensions.choice.rrcReconfiguration;
   NR_CellGroupConfig_t *secondaryCellGroup = NULL;
   dec_rval = uper_decode_complete( NULL,
-				   &asn_DEF_NR_CellGroupConfig,
-				   (void **)&secondaryCellGroup,
-				   (uint8_t *)reconfig_ies->secondaryCellGroup->buf,
-				   reconfig_ies->secondaryCellGroup->size); 
-  
+                   &asn_DEF_NR_CellGroupConfig,
+                   (void **)&secondaryCellGroup,
+                   (uint8_t *)reconfig_ies->secondaryCellGroup->buf,
+                   reconfig_ies->secondaryCellGroup->size);
+
   if ((dec_rval.code != RC_OK) && (dec_rval.consumed == 0)) {
     AssertFatal(1==0,"NR_CellGroupConfig decode error\n");
     // free the memory
     SEQUENCE_free( &asn_DEF_NR_CellGroupConfig, secondaryCellGroup, 1 );
     exit(-1);
   }
-  
+
   NR_ServingCellConfigCommon_t *scc = secondaryCellGroup->spCellConfig->reconfigurationWithSync->spCellConfigCommon;
   */
 
@@ -1146,23 +1147,21 @@ int main(int argc, char **argv)
       } // round
 
       for (i = 0; i < TBS; i++) {
+        estimated_output_bit[i] = (UE->phy_sim_dlsch_b[i / 8] & (1 << (i & 7))) >> (i & 7);
+        test_input_bit[i] = (gNB_dlsch->harq_process.b[i / 8] & (1 << (i & 7))) >> (i & 7); // Further correct for multiple segments
 
-	estimated_output_bit[i] = (UE->phy_sim_dlsch_b[i/8] & (1 << (i & 7))) >> (i & 7);
-	test_input_bit[i]       = (gNB_dlsch->harq_process.b[i / 8] & (1 << (i & 7))) >> (i & 7); // Further correct for multiple segments
-	
-	if (estimated_output_bit[i] != test_input_bit[i]) {
-	  if(errors_bit == 0)
-	    LOG_D(PHY,"First bit in error in decoding = %d\n",i);
-	  errors_bit++;
-	}
-	
+        if (estimated_output_bit[i] != test_input_bit[i]) {
+          if (errors_bit == 0)
+            LOG_D(PHY, "First bit in error in decoding = %d\n", i);
+          errors_bit++;
+        }
       }
       ////////////////////////////////////////////////////////////
 
       if (errors_bit > 0) {
-	n_false_positive++;
-	if (n_trials == 1)
-	  printf("errors_bit = %u (trial %d)\n", errors_bit, trial);
+        n_false_positive++;
+        if (n_trials == 1)
+          printf("errors_bit = %u (trial %d)\n", errors_bit, trial);
       }
       roundStats += ((float)round);
       if (UE_harq_process->ack==1) effRate += ((float)TBS)/round;
@@ -1237,13 +1236,13 @@ int main(int argc, char **argv)
       printStatIndent(&UE->dlsch_unscrambling_stats,"DLSCH unscrambling time");
       printStatIndent(&UE->dlsch_rate_unmatching_stats,"DLSCH Rate Unmatching");
       printf("|__ DLSCH Turbo Decoding(%d bits), avg iterations: %.1f       %.2f us (%d cycles, %d trials)\n",
-	     UE->dlsch[0][0]->harq_processes[0]->Cminus ?
-	     UE->dlsch[0][0]->harq_processes[0]->Kminus :
-	     UE->dlsch[0][0]->harq_processes[0]->Kplus,
-	     UE->dlsch_tc_intl1_stats.trials/(double)UE->dlsch_tc_init_stats.trials,
-	     (double)UE->dlsch_turbo_decoding_stats.diff/UE->dlsch_turbo_decoding_stats.trials*timeBase,
-	     (int)((double)UE->dlsch_turbo_decoding_stats.diff/UE->dlsch_turbo_decoding_stats.trials),
-	     UE->dlsch_turbo_decoding_stats.trials);
+         UE->dlsch[0][0]->harq_processes[0]->Cminus ?
+         UE->dlsch[0][0]->harq_processes[0]->Kminus :
+         UE->dlsch[0][0]->harq_processes[0]->Kplus,
+         UE->dlsch_tc_intl1_stats.trials/(double)UE->dlsch_tc_init_stats.trials,
+         (double)UE->dlsch_turbo_decoding_stats.diff/UE->dlsch_turbo_decoding_stats.trials*timeBase,
+         (int)((double)UE->dlsch_turbo_decoding_stats.diff/UE->dlsch_turbo_decoding_stats.trials),
+         UE->dlsch_turbo_decoding_stats.trials);
       printStatIndent2(&UE->dlsch_tc_init_stats,"init");
       printStatIndent2(&UE->dlsch_tc_alpha_stats,"alpha");
       printStatIndent2(&UE->dlsch_tc_beta_stats,"beta");
@@ -1258,7 +1257,7 @@ int main(int argc, char **argv)
 
       LOG_M("rxsig0.m","rxs0", UE->common_vars.rxdata[0], frame_length_complex_samples, 1, 1);
       if (UE->frame_parms.nb_antennas_rx>1)
-	LOG_M("rxsig1.m","rxs1", UE->common_vars.rxdata[1], frame_length_complex_samples, 1, 1);
+        LOG_M("rxsig1.m", "rxs1", UE->common_vars.rxdata[1], frame_length_complex_samples, 1, 1);
       LOG_M("rxF0.m","rxF0", UE->phy_sim_rxdataF, frame_parms->samples_per_slot_wCP, 1, 1);
       LOG_M("rxF_ext.m","rxFe",UE->phy_sim_pdsch_rxdataF_ext,g_rbSize*12*14,1,1);
       LOG_M("chestF0.m","chF0",UE->phy_sim_pdsch_dl_ch_estimates_ext,g_rbSize*12*14,1,1);
@@ -1425,9 +1424,10 @@ void update_dmrs_config(NR_CellGroupConfig_t *scg, int8_t* dmrs_arg)
     printf("DLSIM: Allocated Mapping TypeB in RRC reconfig message\n");
   }
 
-  struct NR_SetupRelease_DMRS_DownlinkConfig	*dmrs_MappingtypeA = bwp->bwp_Dedicated->pdsch_Config->choice.setup->dmrs_DownlinkForPDSCH_MappingTypeA;
-  struct NR_SetupRelease_DMRS_DownlinkConfig	*dmrs_MappingtypeB = bwp->bwp_Dedicated->pdsch_Config->choice.setup->dmrs_DownlinkForPDSCH_MappingTypeB;
-
+  struct NR_SetupRelease_DMRS_DownlinkConfig *dmrs_MappingtypeA =
+      bwp->bwp_Dedicated->pdsch_Config->choice.setup->dmrs_DownlinkForPDSCH_MappingTypeA;
+  struct NR_SetupRelease_DMRS_DownlinkConfig *dmrs_MappingtypeB =
+      bwp->bwp_Dedicated->pdsch_Config->choice.setup->dmrs_DownlinkForPDSCH_MappingTypeB;
 
   NR_DMRS_DownlinkConfig_t *dmrs_config = (mapping_type == typeA) ? dmrs_MappingtypeA->choice.setup : dmrs_MappingtypeB->choice.setup;
 

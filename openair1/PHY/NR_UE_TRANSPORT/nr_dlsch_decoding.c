@@ -112,7 +112,7 @@ static bool nr_ue_postDecode(PHY_VARS_NR_UE *phy_vars_ue,
       if (harq_process->C > 1) {
         int A = dlsch->dlsch_config.TBS;
         /* check global CRC */
-	// we have regrouped the transport block, so it is "1" segment
+        // we have regrouped the transport block, so it is "1" segment
         if (!check_crc(b, lenWithCrc(1, A), crcType(1, A))) {
           harq_process->ack = 0;
           dlsch->last_iteration_cnt = dlsch->max_ldpc_iterations + 1;

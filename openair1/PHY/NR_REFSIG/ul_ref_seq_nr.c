@@ -205,10 +205,10 @@ void generate_lowpapr_typ1_refsig_sequences(unsigned int scaling)
   if (already_called) return;
   already_called = true;
 
-	unsigned int u,Msc_RS;
+  unsigned int u, Msc_RS;
   unsigned int v = 0; // sequence hopping and group hopping are not supported yet
 
-  for (Msc_RS=0; Msc_RS <= INDEX_SB_LESS_32; Msc_RS++) {  	
+  for (Msc_RS = 0; Msc_RS <= INDEX_SB_LESS_32; Msc_RS++) {
     for (u=0; u < U_GROUP_NUMBER; u++) {
       gNB_dmrs_lowpaprtype1_sequence[u][v][Msc_RS] = base_sequence_less_than_36(ul_allocated_re[Msc_RS], u, scaling);
     }
@@ -240,7 +240,7 @@ void generate_ul_reference_signal_sequences(unsigned int scaling)
 
   
   for (Msc_RS=0; Msc_RS <= INDEX_SB_LESS_32; Msc_RS++) {
-  	v = 0;
+    v = 0;
     for (u=0; u < U_GROUP_NUMBER; u++) {
       rv_ul_ref_sig[u][v][Msc_RS] = base_sequence_less_than_36(ul_allocated_re[Msc_RS], u, scaling);
       dmrs_lowpaprtype1_ul_ref_sig[u][v][Msc_RS] = base_sequence_less_than_36(ul_allocated_re[Msc_RS], u, scaling);

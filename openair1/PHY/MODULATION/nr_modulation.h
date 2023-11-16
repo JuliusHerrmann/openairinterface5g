@@ -98,15 +98,14 @@ int nr_slot_fep_ul(NR_DL_FRAME_PARMS *frame_parms,
 void nr_dft(int32_t *z,int32_t *d, uint32_t Msc_PUSCH);
 
 int nr_beam_precoding(c16_t **txdataF,
-	              c16_t **txdataF_BF,
+                      c16_t **txdataF_BF,
                       NR_DL_FRAME_PARMS *frame_parms,
-	              int32_t ***beam_weights,
+                      int32_t ***beam_weights,
                       int slot,
                       int symbol,
                       int aa,
                       int nb_antenna_ports,
-                      int offset
-);
+                      int offset);
 
 void apply_nr_rotation_TX(const NR_DL_FRAME_PARMS *fp,
                           c16_t *txdataF,
@@ -121,13 +120,13 @@ void init_symbol_rotation(NR_DL_FRAME_PARMS *fp);
 void init_timeshift_rotation(NR_DL_FRAME_PARMS *fp);
 
 void apply_nr_rotation_RX(NR_DL_FRAME_PARMS *frame_parms,
-			  c16_t *rxdataF,
+                          c16_t *rxdataF,
                           c16_t *rot,
-			  int slot,
+                          int slot,
                           int nb_rb,
                           int soffset,
-			  int first_symbol,
-			  int nsymb);
+                          int first_symbol,
+                          int nsymb);
 
 /*! \brief Perform NR precoding. TS 38.211 V15.4.0 subclause 6.3.1.5
   @param[in] datatx_F_precoding, Pointer to n_layers*re data array

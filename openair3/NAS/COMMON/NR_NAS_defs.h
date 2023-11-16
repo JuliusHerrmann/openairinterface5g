@@ -250,12 +250,12 @@ typedef enum {
 static const text_info_t cause_secu_text_info[] = {
   FOREACH_CAUSE_SECU(TO_TEXT)
 };
-								
+
 //! Tasks id of each task
 typedef enum {
   FOREACH_CAUSE_SECU(TO_ENUM)
 } cause_secu_id_t;
-								
+
 // IEI (information element identifier) are spread in each message definition
 #define IEI_RAND 0x21
 #define IEI_AUTN 0x20

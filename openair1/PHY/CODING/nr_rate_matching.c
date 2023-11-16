@@ -229,13 +229,13 @@ void nr_interleaving_ldpc(uint32_t E, uint8_t Qm, uint8_t *e,uint8_t *f)
 
 #else
   //original unoptimized loops
-    /*
-    for (int j = 0; j< EQm; j++,j2+=2){
-      for (int i = 0; i< Qm; i++){
-		  f[(i+j*Qm)] = e[(i*EQm + j)];
-	  }
+  /*
+  for (int j = 0; j< EQm; j++,j2+=2){
+    for (int i = 0; i< Qm; i++){
+        f[(i+j*Qm)] = e[(i*EQm + j)];
     }
-    */
+  }
+  */
 
   fp=f;
   switch (Qm) {
@@ -427,8 +427,8 @@ int nr_rate_matching_ldpc(uint32_t Tbslbrm,
                           uint8_t *w,
                           uint8_t *e,
                           uint8_t C,
-			  uint32_t F,
-			  uint32_t Foffset,
+                          uint32_t F,
+                          uint32_t Foffset,
                           uint8_t rvidx,
                           uint32_t E)
 {

@@ -146,8 +146,7 @@ void init_nr_gold_prs(PHY_VARS_NR_UE* ue)
           for (uint8_t n=0; n<NR_MAX_PRS_INIT_LENGTH_DWORD; n++) {
             ue->nr_gold_prs[gnb][rsc][slotNum][symNum][n] = lte_gold_generic(&x1, &x2, reset);      
             reset = 0;
-            //printf("%d \n",gNB->nr_gold_prs[slotNum][symNum][n]); 
-	    
+            // printf("%d \n",gNB->nr_gold_prs[slotNum][symNum][n]);
           }
         }
       }

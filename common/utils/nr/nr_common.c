@@ -459,11 +459,11 @@ int get_nr_table_idx(int nr_bandP, uint8_t scs_index) {
 int get_subband_size(int NPRB,int size) {
   // implements table  5.2.1.4-2 from 36.214
   //
-  //Bandwidth part (PRBs)	Subband size (PRBs)
-  // < 24	                   N/A
-  //24 – 72	                   4, 8
-  //73 – 144	                   8, 16
-  //145 – 275	                  16, 32
+  // Bandwidth part (PRBs)    Subband size (PRBs)
+  // < 24                       N/A
+  // 24 – 72                       4, 8
+  // 73 – 144                       8, 16
+  // 145 – 275                      16, 32
 
   if (NPRB<24) return(1);
   if (NPRB<72) return (size==0 ? 4 : 8);
@@ -611,7 +611,7 @@ void get_samplerate_and_bw(int mu,
 
     case 133 :
       if (threequarter_fs) {
-	AssertFatal(1==0,"N_RB %d cannot use 3/4 sampling\n",n_rb);
+        AssertFatal(1 == 0, "N_RB %d cannot use 3/4 sampling\n", n_rb);
       }
       else {
         *sample_rate=61.44e6;

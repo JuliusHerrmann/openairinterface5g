@@ -172,8 +172,8 @@ void *pdcp_stats_thread(void *param) {
    int old_byte_cnt[MAX_MOBILES_PER_ENB][NB_RB_MAX],old_byte_cnt_rx[MAX_MOBILES_PER_ENB][NB_RB_MAX];
    for (int i=0;i<MAX_MOBILES_PER_ENB;i++)
      for (int j=0;j<NB_RB_MAX;j++) {
-	old_byte_cnt[i][j]=0;
-	old_byte_cnt_rx[i][j]=0;
+       old_byte_cnt[i][j] = 0;
+       old_byte_cnt_rx[i][j] = 0;
      }
    while (!oai_exit) {
      sleep(1);
@@ -1054,12 +1054,12 @@ pdcp_data_ind(
             }
           } // nfapi_mode
         } else {
-	  if (UE_NAS_USE_TUN) {
-	    pdcpHead->inst  = ctxt_pP->module_id;
-	  } else if (ENB_NAS_USE_TUN) {
-	    pdcpHead->inst  = 0;
-	  }
-	}
+          if (UE_NAS_USE_TUN) {
+            pdcpHead->inst = ctxt_pP->module_id;
+          } else if (ENB_NAS_USE_TUN) {
+            pdcpHead->inst = 0;
+          }
+        }
       } else {
         pdcpHead->rb_id = rb_id + (ctxt_pP->module_id * LTE_maxDRB);
         pdcpHead->inst  = ctxt_pP->module_id;
@@ -1075,8 +1075,11 @@ pdcp_data_ind(
              &sdu_buffer_pP->data[payload_offset],
              sdu_buffer_sizeP - payload_offset);
       if( LOG_DEBUGFLAG(DEBUG_PDCP) )
-	log_dump(PDCP, pdcpHead+1, min(sdu_buffer_sizeP - payload_offset,30) , LOG_DUMP_CHAR,
-	         "Printing first bytes of PDCP SDU before adding it to the list: \n");
+        log_dump(PDCP,
+                 pdcpHead + 1,
+                 min(sdu_buffer_sizeP - payload_offset, 30),
+                 LOG_DUMP_CHAR,
+                 "Printing first bytes of PDCP SDU before adding it to the list: \n");
       pushNotifiedFIFO(&pdcp_sdu_list, new_sdu_p); 
 
     /* Print octets of incoming data in hexadecimal form */
@@ -2310,8 +2313,8 @@ uint64_t pdcp_module_init( uint64_t pdcp_optmask, int id) {
       nas_config(1, 1, 1, "enb");
       if(pdcp_optmask & ENB_NAS_USE_TUN_W_MBMS_BIT){
         netlink_init_mbms_tun("enm", 0);
-      	nas_config_mbms(1, 2, 1, "enm"); 
-      	LOG_I(PDCP, "ENB pdcp will use mbms tun interface\n");
+        nas_config_mbms(1, 2, 1, "enm");
+        LOG_I(PDCP, "ENB pdcp will use mbms tun interface\n");
       }
       LOG_I(PDCP, "ENB pdcp will use tun interface\n");
     } else {

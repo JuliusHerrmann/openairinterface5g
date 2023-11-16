@@ -528,7 +528,7 @@ typedef enum {
 
 #define ENB_CONFIG_STRING_PUSCH_MAX_NUM_REPETITION_CE_MODE_A_R13        "pusch_maxNumRepetitionCEmodeA_r13"
 #define ENB_CONFIG_STRING_PUSCH_MAX_NUM_REPETITION_CE_MODE_B_R13        "pusch_maxNumRepetitionCEmodeB_r13"
-#define ENB_CONFIG_STRING_PUSCH_REPETITION_LEVEL_CE_MODE_A_R13			"pusch_repetitionLevelCEmodeA_r13"
+#define ENB_CONFIG_STRING_PUSCH_REPETITION_LEVEL_CE_MODE_A_R13 "pusch_repetitionLevelCEmodeA_r13"
 #define ENB_CONFIG_STRING_PUSCH_HOPPING_OFFSET_V1310                    "pusch_HoppingOffset_v1310"
 
 
@@ -672,131 +672,37 @@ typedef struct ccparams_lte_s {
   int32_t           nr_scg_ssb_freq;
 } ccparams_lte_t;
 
-#define CCPARAMS_CHECK {                             \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,                             \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { { NULL } } ,						     \
-    { .s1a= { config_check_modify_integer, UETIMER_T300_OKVALUES, UETIMER_T300_MODVALUES,8}} ,\
-    { .s1a= { config_check_modify_integer, UETIMER_T301_OKVALUES, UETIMER_T301_MODVALUES,8}} ,\
-    { .s1a= { config_check_modify_integer, UETIMER_T310_OKVALUES, UETIMER_T310_MODVALUES,7}} ,\
-    { .s1a= { config_check_modify_integer, UETIMER_T311_OKVALUES, UETIMER_T311_MODVALUES,7}} ,\
-    { .s1a= { config_check_modify_integer, UETIMER_N310_OKVALUES, UETIMER_N310_MODVALUES,8}} ,\
-    { .s1a= { config_check_modify_integer, UETIMER_N311_OKVALUES, UETIMER_N311_MODVALUES,8}} ,\
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } } ,						     \
-    {  { NULL } }                               \
-}
+#define CCPARAMS_CHECK                                                                                                          \
+  {                                                                                                                             \
+    {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}},     \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}},                               \
+        {.s1a = {config_check_modify_integer, UETIMER_T300_OKVALUES, UETIMER_T300_MODVALUES, 8}},                               \
+        {.s1a = {config_check_modify_integer, UETIMER_T301_OKVALUES, UETIMER_T301_MODVALUES, 8}},                               \
+        {.s1a = {config_check_modify_integer, UETIMER_T310_OKVALUES, UETIMER_T310_MODVALUES, 7}},                               \
+        {.s1a = {config_check_modify_integer, UETIMER_T311_OKVALUES, UETIMER_T311_MODVALUES, 7}},                               \
+        {.s1a = {config_check_modify_integer, UETIMER_N310_OKVALUES, UETIMER_N310_MODVALUES, 8}},                               \
+        {.s1a = {config_check_modify_integer, UETIMER_N311_OKVALUES, UETIMER_N311_MODVALUES, 8}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, {{NULL}}, \
+        {{NULL}},                                                                                                               \
+    {                                                                                                                           \
+      {                                                                                                                         \
+        NULL                                                                                                                    \
+      }                                                                                                                         \
+    }                                                                                                                           \
+  }
 
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*                                     component carriers configuration parameters                                                                                                               */
 /*   optname                                                    helpstr    paramflags   XXXptr                                                   defXXXval                  type        numelt   */
 /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 // clang-format off
-#define CCPARAMS_DESC(ccparams) {					\
+#define CCPARAMS_DESC(ccparams) {                    \
   {ENB_CONFIG_STRING_FRAME_TYPE,                                   NULL,   0,           .strptr=&ccparams.frame_type,                             .defstrval="FDD",           TYPE_STRING,     0},  \
   {ENB_CONFIG_STRING_TDD_CONFIG,                                   NULL,   0,           .iptr=&ccparams.tdd_config,                               .defintval=3,               TYPE_UINT,       0},  \
   {ENB_CONFIG_STRING_TDD_CONFIG_S,                                 NULL,   0,           .iptr=&ccparams.tdd_config_s,                             .defintval=0,               TYPE_UINT,       0},  \
@@ -1193,17 +1099,17 @@ typedef struct srb1_params_s {
 /*----------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------------------------------*/
 /* CU/DU configuration section names*/
-#define CONFIG_STRING_DU_LIST			            "DU"
-#define CONFIG_STRING_CU_LIST			            "CU"
+#define CONFIG_STRING_DU_LIST "DU"
+#define CONFIG_STRING_CU_LIST "CU"
 #define DU_TYPE_LTE                                 0
 #define DU_TYPE_WIFI                                1
-#define ENB_CONFIG_STRING_CU_INTERFACES_CONFIG		"CU_INTERFACES"
+#define ENB_CONFIG_STRING_CU_INTERFACES_CONFIG "CU_INTERFACES"
 #define ENB_CONFIG_STRING_CU_INTERFACE_NAME_FOR_F1U "CU_INTERFACE_NAME_FOR_F1U"
 #define ENB_CONFIG_STRING_CU_IPV4_ADDRESS_FOR_F1U   "CU_IPV4_ADDRESS_FOR_F1U"
 #define ENB_CONFIG_STRING_CU_PORT_FOR_F1U           "CU_PORT_FOR_F1U"
-#define ENB_CONFIG_STRING_DU_TYPE	                "DU_TYPE"
+#define ENB_CONFIG_STRING_DU_TYPE "DU_TYPE"
 #define ENB_CONFIG_STRING_F1_U_CU_TRANSPORT_TYPE    "F1_U_CU_TRANSPORT_TYPE"
-#define ENB_CONFIG_STRING_DU_INTERFACES_CONFIG		"DU_INTERFACES"
+#define ENB_CONFIG_STRING_DU_INTERFACES_CONFIG "DU_INTERFACES"
 #define ENB_CONFIG_STRING_DU_INTERFACE_NAME_FOR_F1U "DU_INTERFACE_NAME_FOR_F1U"
 #define ENB_CONFIG_STRING_DU_IPV4_ADDRESS_FOR_F1U   "DU_IPV4_ADDRESS_FOR_F1U"
 #define ENB_CONFIG_STRING_DU_PORT_FOR_F1U           "DU_PORT_FOR_F1U"
@@ -1236,10 +1142,10 @@ typedef struct srb1_params_s {
 }
 // clang-format on
 
-#define CU_INTERFACE_F1U 	                     0
+#define CU_INTERFACE_F1U 0
 #define CU_ADDRESS_F1U                           1
-#define CU_PORT_F1U 	              		     2
-#define CU_TYPE_F1U 	              		     3
+#define CU_PORT_F1U 2
+#define CU_TYPE_F1U 3
 
 #define DU_INTERFACE_F1U                         0
 #define DU_ADDRESS_F1U                           1

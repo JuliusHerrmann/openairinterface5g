@@ -129,10 +129,7 @@ void set_tdd_config_nr_ue(fapi_nr_tdd_table_t *tdd_table,
   }
 }
 
-void config_common_ue_sa(NR_UE_MAC_INST_t *mac,
-                         NR_ServingCellConfigCommonSIB_t *scc,
-		         module_id_t module_id,
-		         int cc_idP)
+void config_common_ue_sa(NR_UE_MAC_INST_t *mac, NR_ServingCellConfigCommonSIB_t *scc, module_id_t module_id, int cc_idP)
 {
   fapi_nr_config_request_t *cfg = &mac->phy_config.config_req;
   mac->phy_config.Mod_id = module_id;
@@ -280,10 +277,7 @@ void config_common_ue_sa(NR_UE_MAC_INST_t *mac,
 
 }
 
-void config_common_ue(NR_UE_MAC_INST_t *mac,
-                      NR_ServingCellConfigCommon_t *scc,
-		      module_id_t module_id,
-		      int cc_idP)
+void config_common_ue(NR_UE_MAC_INST_t *mac, NR_ServingCellConfigCommon_t *scc, module_id_t module_id, int cc_idP)
 {
   fapi_nr_config_request_t *cfg = &mac->phy_config.config_req;
 

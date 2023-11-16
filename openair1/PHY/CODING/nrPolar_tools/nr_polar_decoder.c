@@ -42,14 +42,14 @@
 //#define POLAR_CODING_DEBUG
 
 static inline void updateCrcChecksum2(int xlen,
-				      int ylen,
-				      uint8_t crcChecksum[xlen][ylen],
-				      int gxlen,
-				      int gylen,
-				      uint8_t crcGen[gxlen][gylen],
-				      uint8_t listSize,
-				      uint32_t i2,
-				      uint8_t len)
+                                      int ylen,
+                                      uint8_t crcChecksum[xlen][ylen],
+                                      int gxlen,
+                                      int gylen,
+                                      uint8_t crcGen[gxlen][gylen],
+                                      uint8_t listSize,
+                                      uint32_t i2,
+                                      uint8_t len)
 {
   for (uint8_t i = 0; i < listSize; i++) {
     for (uint8_t j = 0; j < len; j++) {
@@ -148,24 +148,30 @@ int8_t polar_decoder(double *input,
 
       for (int i = 0; i < currentListSize; i++) {
       for (int j = 0; j < polarParams->N; j++) {
-	for (int k = 0; k < (polarParams->n+1); k++) {
-            bit[j][k][i+currentListSize]=bit[j][k][i];
-            llr[j][k][i+currentListSize]=llr[j][k][i];
-          }
-	}
+        for (int k = 0; k < (polarParams->n + 1); k++) {
+          bit[j][k][i + currentListSize] = bit[j][k][i];
+          llr[j][k][i + currentListSize] = llr[j][k][i];
+        }
+      }
       }
 
-	for (int i = 0; i < currentListSize; i++) {
-	  bit[currentBit][0][i]=0;
-	  crcState[i+currentListSize]=crcState[i];
-	}
+      for (int i = 0; i < currentListSize; i++) {
+      bit[currentBit][0][i] = 0;
+      crcState[i + currentListSize] = crcState[i];
+      }
 
       for (int i = currentListSize; i < 2*currentListSize; i++) bit[currentBit][0][i]=1;
 
       bitUpdated[currentBit][0]=1;
-      updateCrcChecksum2(polarParams->crcParityBits, 2*listSize, crcChecksum,
-			 polarParams->K, polarParams->crcParityBits, extended_crc_generator_matrix, 
-                         currentListSize, nonFrozenBit, polarParams->crcParityBits);
+      updateCrcChecksum2(polarParams->crcParityBits,
+                         2 * listSize,
+                         crcChecksum,
+                         polarParams->K,
+                         polarParams->crcParityBits,
+                         extended_crc_generator_matrix,
+                         currentListSize,
+                         nonFrozenBit,
+                         polarParams->crcParityBits);
       currentListSize*=2;
 
       //Keep only the best "listSize" number of entries.
@@ -427,9 +433,15 @@ int8_t polar_decoder_dci(double *input,
       for (int i = currentListSize; i < 2*currentListSize; i++) bit[currentBit][0][i]=1;
 
       bitUpdated[currentBit][0]=1;
-      updateCrcChecksum2(polarParams->crcParityBits, 2*listSize, crcChecksum,
-			 polarParams->K, polarParams->crcParityBits, extended_crc_generator_matrix,
-			 currentListSize, nonFrozenBit, polarParams->crcParityBits);
+      updateCrcChecksum2(polarParams->crcParityBits,
+                         2 * listSize,
+                         crcChecksum,
+                         polarParams->K,
+                         polarParams->crcParityBits,
+                         extended_crc_generator_matrix,
+                         currentListSize,
+                         nonFrozenBit,
+                         polarParams->crcParityBits);
       currentListSize*=2;
 
       //Keep only the best "listSize" number of entries.
@@ -531,7 +543,7 @@ int8_t polar_decoder_dci(double *input,
       }
 
       for (uint8_t i = 0; i < currentListSize; i++)
-	decoderIterationCheck+=crcState[i];
+        decoderIterationCheck += crcState[i];
 
       if (decoderIterationCheck==0) {
         //perror("[SCL polar decoder] All list entries have failed the CRC checks.");

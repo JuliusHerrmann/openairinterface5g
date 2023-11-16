@@ -204,8 +204,13 @@ int nr_slot_fep_init_sync(PHY_VARS_NR_UE *ue,
 
 #ifdef DEBUG_FEP
     //  if (ue->frame <100)
-    printf("slot_fep: slot %d, symbol %d rx_offset %u, rotation symbol %d %d.%d\n", Ns,symbol, rx_offset,
-	   symbol+symb_offset,rot2.r,rot2.i);
+    printf("slot_fep: slot %d, symbol %d rx_offset %u, rotation symbol %d %d.%d\n",
+           Ns,
+           symbol,
+           rx_offset,
+           symbol + symb_offset,
+           rot2.r,
+           rot2.i);
 #endif
 
     c16_t *this_symbol = &rxdataF[aa][frame_parms->ofdm_symbol_size*symbol];
@@ -280,13 +285,13 @@ int nr_slot_fep_ul(NR_DL_FRAME_PARMS *frame_parms,
 }
 
 void apply_nr_rotation_RX(NR_DL_FRAME_PARMS *frame_parms,
-			  c16_t *rxdataF,
+                          c16_t *rxdataF,
                           c16_t *rot,
-			  int slot,
+                          int slot,
                           int nb_rb,
                           int soffset,
-			  int first_symbol,
-			  int nsymb)
+                          int first_symbol,
+                          int nsymb)
 {
   AssertFatal(first_symbol + nsymb <= NR_NUMBER_OF_SYMBOLS_PER_SLOT,
               "First symbol %d and number of symbol %d not compatible with number of symbols in a slot %d\n",

@@ -123,7 +123,7 @@ harq_result_t uplink_harq_process(NR_UE_ULSCH_t *ulsch, int harq_pid, NR_UL_UE_H
 
   if (rnti_type == _CS_RNTI_) {
     LOG_E(PHY, "Fatal error in HARQ entity due to not supported CS_RNTI at line %d in function %s of file %s \n", __LINE__ , __func__, __FILE__);
- 	return(NEW_TRANSMISSION_HARQ);
+    return (NEW_TRANSMISSION_HARQ);
   }
   else if ((rnti_type != _C_RNTI_) && (rnti_type != _TC_RNTI_)) {
     /* harq mechanism is not relevant for other rnti */
@@ -214,8 +214,14 @@ void downlink_harq_process(NR_DL_UE_HARQ_t *dl_harq, int harq_pid, int dci_ndi, 
     dl_harq->status = ACTIVE;
     dl_harq->first_rx = 1;
   }  else {
-    LOG_D(PHY,"receive harq process: %p harqPid=%d, rv=%d, ndi=%d, rntiType=%d new transmission= %s\n",
-	  dl_harq, harq_pid, rv, dci_ndi, rnti_type, dl_harq->Ndi != dci_ndi ? "yes":"no");
+    LOG_D(PHY,
+          "receive harq process: %p harqPid=%d, rv=%d, ndi=%d, rntiType=%d new transmission= %s\n",
+          dl_harq,
+          harq_pid,
+          rv,
+          dci_ndi,
+          rnti_type,
+          dl_harq->Ndi != dci_ndi ? "yes" : "no");
     AssertFatal(rv<4 && rv>=0, "invalid redondancy version %d\n", rv);
     if (dci_ndi!=dl_harq->Ndi) {
       if (dl_harq->ack == DL_NACK)

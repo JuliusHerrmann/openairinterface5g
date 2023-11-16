@@ -54,44 +54,40 @@ int16_t find_nr_prach(PHY_VARS_gNB *gNB,int frame, int slot, find_type_t type) {
 
   AssertFatal(gNB!=NULL,"gNB is null\n");
   for (uint16_t i=0; i<NUMBER_OF_NR_PRACH_MAX; i++) {
-    LOG_D(PHY,"searching for PRACH in %d.%d prach_index %d=> %d.%d\n", frame,slot,i,
-	  gNB->prach_vars.list[i].frame,gNB->prach_vars.list[i].slot);
-		if((type == SEARCH_EXIST_OR_FREE) &&
-		  (gNB->prach_vars.list[i].frame == -1) &&
-		  (gNB->prach_vars.list[i].slot == -1)) {
-		  return i;
-		}
-    else if ((type == SEARCH_EXIST) &&
-		  (gNB->prach_vars.list[i].frame == frame) &&
-                  (gNB->prach_vars.list[i].slot  == slot)) {
-		  return i;
-		}
+    LOG_D(PHY,
+          "searching for PRACH in %d.%d prach_index %d=> %d.%d\n",
+          frame,
+          slot,
+          i,
+          gNB->prach_vars.list[i].frame,
+          gNB->prach_vars.list[i].slot);
+    if ((type == SEARCH_EXIST_OR_FREE) && (gNB->prach_vars.list[i].frame == -1) && (gNB->prach_vars.list[i].slot == -1)) {
+      return i;
+    } else if ((type == SEARCH_EXIST) && (gNB->prach_vars.list[i].frame == frame) && (gNB->prach_vars.list[i].slot == slot)) {
+      return i;
+    }
   }
   return -1;
 }
 
-void nr_fill_prach(PHY_VARS_gNB *gNB,
-		   int SFN,
-		   int Slot,
-		   nfapi_nr_prach_pdu_t *prach_pdu) {
-
+void nr_fill_prach(PHY_VARS_gNB *gNB, int SFN, int Slot, nfapi_nr_prach_pdu_t *prach_pdu)
+{
   int prach_id = find_nr_prach(gNB,SFN,Slot,SEARCH_EXIST_OR_FREE);
   AssertFatal( ((prach_id>=0) && (prach_id<NUMBER_OF_NR_PRACH_MAX)) || (prach_id < 0),
               "illegal or no prach_id found!!! prach_id %d\n",prach_id);
 
   gNB->prach_vars.list[prach_id].frame=SFN;
   gNB->prach_vars.list[prach_id].slot=Slot;
-  memcpy((void*)&gNB->prach_vars.list[prach_id].pdu,(void*)prach_pdu,sizeof(*prach_pdu));
-
+  memcpy((void *)&gNB->prach_vars.list[prach_id].pdu, (void *)prach_pdu, sizeof(*prach_pdu));
 }
 
 void init_prach_ru_list(RU_t *ru) {
 
   AssertFatal(ru!=NULL,"ruis null\n");
   for (int i=0; i<NUMBER_OF_NR_RU_PRACH_MAX; i++) {
-			ru->prach_list[i].frame = -1;
-			ru->prach_list[i].slot  = -1;
-	}		
+    ru->prach_list[i].frame = -1;
+    ru->prach_list[i].slot = -1;
+  }
   pthread_mutex_init(&ru->prach_list_mutex,NULL);
 }
 
@@ -100,30 +96,29 @@ int16_t find_nr_prach_ru(RU_t *ru,int frame,int slot, find_type_t type) {
   AssertFatal(ru!=NULL,"ru is null\n");
   pthread_mutex_lock(&ru->prach_list_mutex);
   for (uint16_t i=0; i<NUMBER_OF_NR_RU_PRACH_MAX; i++) {
-    LOG_D(PHY,"searching for PRACH in %d.%d : prach_index %d=> %d.%d\n", frame,slot,i,
-	  ru->prach_list[i].frame,ru->prach_list[i].slot);
+    LOG_D(PHY,
+          "searching for PRACH in %d.%d : prach_index %d=> %d.%d\n",
+          frame,
+          slot,
+          i,
+          ru->prach_list[i].frame,
+          ru->prach_list[i].slot);
     if((type == SEARCH_EXIST_OR_FREE) &&
        (ru->prach_list[i].frame == -1) &&
        (ru->prach_list[i].slot == -1)) {
           pthread_mutex_unlock(&ru->prach_list_mutex);
           return i;
-    }	
-    else if ((type == SEARCH_EXIST) &&
-             (ru->prach_list[i].frame == frame) &&
-             (ru->prach_list[i].slot  == slot)) {
-      pthread_mutex_unlock(&ru->prach_list_mutex);
-      return i;
+    } else if ((type == SEARCH_EXIST) && (ru->prach_list[i].frame == frame) && (ru->prach_list[i].slot == slot)) {
+          pthread_mutex_unlock(&ru->prach_list_mutex);
+          return i;
     }
   }
   pthread_mutex_unlock(&ru->prach_list_mutex);
   return -1;
 }
 
-void nr_fill_prach_ru(RU_t *ru,
-		      int SFN,
-		      int Slot,
-		      nfapi_nr_prach_pdu_t *prach_pdu) {
-
+void nr_fill_prach_ru(RU_t *ru, int SFN, int Slot, nfapi_nr_prach_pdu_t *prach_pdu)
+{
   int prach_id = find_nr_prach_ru(ru,SFN,Slot,SEARCH_EXIST_OR_FREE);
   AssertFatal( ((prach_id>=0) && (prach_id<NUMBER_OF_NR_PRACH_MAX)) || (prach_id < 0) ,
               "illegal or no prach_id found!!! prach_id %d\n",prach_id);
@@ -135,29 +130,19 @@ void nr_fill_prach_ru(RU_t *ru,
   ru->prach_list[prach_id].numRA              = prach_pdu->num_ra;
   ru->prach_list[prach_id].prachStartSymbol   = prach_pdu->prach_start_symbol;
   ru->prach_list[prach_id].num_prach_ocas     = prach_pdu->num_prach_ocas;
-  pthread_mutex_unlock(&ru->prach_list_mutex);  
-
+  pthread_mutex_unlock(&ru->prach_list_mutex);
 }
 
-void free_nr_ru_prach_entry(RU_t *ru,
-			    int prach_id) {
-
+void free_nr_ru_prach_entry(RU_t *ru, int prach_id)
+{
   pthread_mutex_lock(&ru->prach_list_mutex);
   ru->prach_list[prach_id].frame = -1;
-	ru->prach_list[prach_id].slot  = -1;
+  ru->prach_list[prach_id].slot = -1;
   pthread_mutex_unlock(&ru->prach_list_mutex);
-
 }
 
-
-void rx_nr_prach_ru(RU_t *ru,
-		    int prachFormat,
-		    int numRA,
-		    int prachStartSymbol,
-		    int prachOccasion,
-		    int frame,
-		    int slot) {
-
+void rx_nr_prach_ru(RU_t *ru, int prachFormat, int numRA, int prachStartSymbol, int prachOccasion, int frame, int slot)
+{
   AssertFatal(ru!=NULL,"ru is null\n");
 
   int16_t            **rxsigF=NULL;
@@ -202,8 +187,13 @@ void rx_nr_prach_ru(RU_t *ru,
   int mu = fp->numerology_index;
 
   if (prach_sequence_length == 0) {
-    LOG_D(PHY,"PRACH (ru %d) in %d.%d, format %d, msg1_frequencyStart %d\n",
-	  ru->idx,frame,slot2,prachFormat,msg1_frequencystart);
+    LOG_D(PHY,
+          "PRACH (ru %d) in %d.%d, format %d, msg1_frequencyStart %d\n",
+          ru->idx,
+          frame,
+          slot2,
+          prachFormat,
+          msg1_frequencystart);
     switch (prachFormat) {
     case 0:
       reps = 1;
@@ -235,8 +225,14 @@ void rx_nr_prach_ru(RU_t *ru,
     }
   }
   else {
-    LOG_D(PHY,"PRACH (ru %d) in %d.%d, format %s, msg1_frequencyStart %d,startSymbol %d\n",
-	  ru->idx,frame,slot,prachfmt[prachFormat],msg1_frequencystart,prachStartSymbol);
+    LOG_D(PHY,
+          "PRACH (ru %d) in %d.%d, format %s, msg1_frequencyStart %d,startSymbol %d\n",
+          ru->idx,
+          frame,
+          slot,
+          prachfmt[prachFormat],
+          msg1_frequencystart,
+          prachStartSymbol);
     switch (prachFormat) {
     case 4: //A1
       reps = 2;
@@ -408,7 +404,6 @@ void rx_nr_prach_ru(RU_t *ru,
     }
     memcpy((void*)rxsigF2,(void *)rxsigF_tmp,N_ZC<<2);
   }
-
 }
 
 void rx_nr_prach(PHY_VARS_gNB *gNB,
@@ -539,30 +534,30 @@ void rx_nr_prach(PHY_VARS_gNB *gNB,
           // current root depending on rootSequenceIndex
           int index = (rootSequenceIndex + preamble_offset) % N_ZC;
 
-	  u = prach_root_sequence_map[index];
-	  
-	  uint16_t n_group_ra = 0;
-	  
-	  if ( (nr_du[u]<(N_ZC/3)) && (nr_du[u]>=NCS) ) {
-	    n_shift_ra     = nr_du[u]/NCS;
-	    d_start        = (nr_du[u]<<1) + (n_shift_ra * NCS);
-	    n_group_ra     = N_ZC/d_start;
-	    n_shift_ra_bar = max(0,(N_ZC-(nr_du[u]<<1)-(n_group_ra*d_start))/N_ZC);
-	  } else if  ( (nr_du[u]>=(N_ZC/3)) && (nr_du[u]<=((N_ZC - NCS)>>1)) ) {
-	    n_shift_ra     = (N_ZC - (nr_du[u]<<1))/NCS;
-	    d_start        = N_ZC - (nr_du[u]<<1) + (n_shift_ra * NCS);
-	    n_group_ra     = nr_du[u]/d_start;
-	    n_shift_ra_bar = min(n_shift_ra,max(0,(nr_du[u]- (n_group_ra*d_start))/NCS));
-	  } else {
-	    n_shift_ra     = 0;
-	    n_shift_ra_bar = 0;
-	  }
-	  
-	  // This is the number of cyclic shifts for the current root u
-	  numshift = (n_shift_ra*n_group_ra) + n_shift_ra_bar;
-	  // skip to next root and recompute parameters if numshift==0
-	  (numshift>0) ? (not_found = 0) : (preamble_offset++);
-	}
+          u = prach_root_sequence_map[index];
+
+          uint16_t n_group_ra = 0;
+
+          if ((nr_du[u] < (N_ZC / 3)) && (nr_du[u] >= NCS)) {
+            n_shift_ra = nr_du[u] / NCS;
+            d_start = (nr_du[u] << 1) + (n_shift_ra * NCS);
+            n_group_ra = N_ZC / d_start;
+            n_shift_ra_bar = max(0, (N_ZC - (nr_du[u] << 1) - (n_group_ra * d_start)) / N_ZC);
+          } else if ((nr_du[u] >= (N_ZC / 3)) && (nr_du[u] <= ((N_ZC - NCS) >> 1))) {
+            n_shift_ra = (N_ZC - (nr_du[u] << 1)) / NCS;
+            d_start = N_ZC - (nr_du[u] << 1) + (n_shift_ra * NCS);
+            n_group_ra = nr_du[u] / d_start;
+            n_shift_ra_bar = min(n_shift_ra, max(0, (nr_du[u] - (n_group_ra * d_start)) / NCS));
+          } else {
+            n_shift_ra = 0;
+            n_shift_ra_bar = 0;
+          }
+
+          // This is the number of cyclic shifts for the current root u
+          numshift = (n_shift_ra * n_group_ra) + n_shift_ra_bar;
+          // skip to next root and recompute parameters if numshift==0
+          (numshift > 0) ? (not_found = 0) : (preamble_offset++);
+        }
       }        
       
       
@@ -583,8 +578,17 @@ void rx_nr_prach(PHY_VARS_gNB *gNB,
     // Compute DFT of RX signal (conjugate input, results in conjugate output) for each new rootSequenceIndex
     if (LOG_DEBUGFLAG(PRACH)) {
       int en = dB_fixed(signal_energy((int32_t*)&rxsigF[0][0],840));
-      if (en>60) LOG_D(PHY,"frame %d, slot %d : preamble index %d, NCS %d, N_ZC/NCS %d: offset %d, preamble shift %d , en %d)\n",
-		       frame,slot,preamble_index,NCS,N_ZC/NCS,preamble_offset,preamble_shift,en);
+      if (en > 60)
+        LOG_D(PHY,
+              "frame %d, slot %d : preamble index %d, NCS %d, N_ZC/NCS %d: offset %d, preamble shift %d , en %d)\n",
+              frame,
+              slot,
+              preamble_index,
+              NCS,
+              N_ZC / NCS,
+              preamble_offset,
+              preamble_shift,
+              en);
     }
 
     LOG_D(PHY,"PRACH RX preamble_index %d, preamble_offset %d\n",preamble_index,preamble_offset);
@@ -608,26 +612,30 @@ void rx_nr_prach(PHY_VARS_gNB *gNB,
       }
    
       for (aa=0;aa<nb_rx; aa++) {
-	// Do componentwise product with Xu* on each antenna 
+        // Do componentwise product with Xu* on each antenna
 
-	       for (offset=0; offset<(N_ZC<<1); offset+=2) {
-	          prachF[offset]   = (int16_t)(((int32_t)Xu[offset]*rxsigF[aa][offset]   + (int32_t)Xu[offset+1]*rxsigF[aa][offset+1])>>15);
-	          prachF[offset+1] = (int16_t)(((int32_t)Xu[offset]*rxsigF[aa][offset+1] - (int32_t)Xu[offset+1]*rxsigF[aa][offset])>>15);
-	       }
-	
-	       // Now do IFFT of size 1024 (N_ZC=839) or 256 (N_ZC=139)
-	       if (N_ZC == 839) {
-	         idft(IDFT_1024,prachF,prach_ifft_tmp,1);
-	         // compute energy and accumulate over receive antennas
-	         for (i=0;i<1024;i++)
-	           prach_ifft[i] += (int32_t)prach_ifft_tmp[i<<1]*(int32_t)prach_ifft_tmp[i<<1] + (int32_t)prach_ifft_tmp[1+(i<<1)]*(int32_t)prach_ifft_tmp[1+(i<<1)];
-	       } else {
-	         idft(IDFT_256,prachF,prach_ifft_tmp,1);
-	         log2_ifft_size = 8;
-           // compute energy and accumulate over receive antennas and repetitions for BR
-           for (i=0;i<256;i++)
-             prach_ifft[i] += (int32_t)prach_ifft_tmp[i<<1]*(int32_t)prach_ifft_tmp[(i<<1)] + (int32_t)prach_ifft_tmp[1+(i<<1)]*(int32_t)prach_ifft_tmp[1+(i<<1)];
-         }
+        for (offset = 0; offset < (N_ZC << 1); offset += 2) {
+          prachF[offset] =
+              (int16_t)(((int32_t)Xu[offset] * rxsigF[aa][offset] + (int32_t)Xu[offset + 1] * rxsigF[aa][offset + 1]) >> 15);
+          prachF[offset + 1] =
+              (int16_t)(((int32_t)Xu[offset] * rxsigF[aa][offset + 1] - (int32_t)Xu[offset + 1] * rxsigF[aa][offset]) >> 15);
+        }
+
+        // Now do IFFT of size 1024 (N_ZC=839) or 256 (N_ZC=139)
+        if (N_ZC == 839) {
+          idft(IDFT_1024, prachF, prach_ifft_tmp, 1);
+          // compute energy and accumulate over receive antennas
+          for (i = 0; i < 1024; i++)
+            prach_ifft[i] += (int32_t)prach_ifft_tmp[i << 1] * (int32_t)prach_ifft_tmp[i << 1]
+                             + (int32_t)prach_ifft_tmp[1 + (i << 1)] * (int32_t)prach_ifft_tmp[1 + (i << 1)];
+        } else {
+          idft(IDFT_256, prachF, prach_ifft_tmp, 1);
+          log2_ifft_size = 8;
+          // compute energy and accumulate over receive antennas and repetitions for BR
+          for (i = 0; i < 256; i++)
+            prach_ifft[i] += (int32_t)prach_ifft_tmp[i << 1] * (int32_t)prach_ifft_tmp[(i << 1)]
+                             + (int32_t)prach_ifft_tmp[1 + (i << 1)] * (int32_t)prach_ifft_tmp[1 + (i << 1)];
+        }
 
         if (LOG_DUMPFLAG(PRACH)) {
           if (aa==0) LOG_M("prach_rxF_comp0.m","prach_rxF_comp0",prachF,1024,1,1);

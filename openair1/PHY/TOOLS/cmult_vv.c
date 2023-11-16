@@ -31,12 +31,7 @@ static const int16_t conjug2[8]__attribute__((aligned(16))) = {1,-1,1,-1,1,-1,1,
 #define set1_int16(a) simde_mm_set1_epi16(a)
 #define setr_int16(a0, a1, a2, a3, a4, a5, a6, a7) simde_mm_setr_epi16(a0, a1, a2, a3, a4, a5, a6, a7 )
 
-int mult_cpx_conj_vector(int16_t *x1,
-                         int16_t *x2,
-                         int16_t *y,
-                         uint32_t N,
-                         int output_shift,
-			 int madd)
+int mult_cpx_conj_vector(int16_t *x1, int16_t *x2, int16_t *y, uint32_t N, int output_shift, int madd)
 {
   // Multiply elementwise the complex conjugate of x1 with x2.
   // x1       - input 1    in the format  |Re0 Im0 Re1 Im1|,......,|Re(N-2)  Im(N-2) Re(N-1) Im(N-1)|

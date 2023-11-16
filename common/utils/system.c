@@ -245,10 +245,11 @@ void threadCreate(pthread_t* t, void * (*func)(void*), void * param, char* name,
     ret=pthread_attr_setschedpolicy(&attr, SCHED_OAI);
     AssertFatal(ret==0,"ret: %d, errno: %d\n",ret, errno);
     if(priority<sched_get_priority_min(SCHED_OAI) || priority>sched_get_priority_max(SCHED_OAI)) {
-      LOG_E(UTIL,"Prio not possible: %d, min is %d, max: %d, forced in the range\n",
-	    priority,
-	    sched_get_priority_min(SCHED_OAI),
-	    sched_get_priority_max(SCHED_OAI));
+      LOG_E(UTIL,
+            "Prio not possible: %d, min is %d, max: %d, forced in the range\n",
+            priority,
+            sched_get_priority_min(SCHED_OAI),
+            sched_get_priority_max(SCHED_OAI));
       if(priority<sched_get_priority_min(SCHED_OAI))
         priority=sched_get_priority_min(SCHED_OAI);
       if(priority>sched_get_priority_max(SCHED_OAI))
@@ -276,12 +277,8 @@ void threadCreate(pthread_t* t, void * (*func)(void*), void * param, char* name,
 
 // Legacy, pthread_create + thread_top_init() should be replaced by threadCreate
 // threadCreate encapsulates the posix pthread api
-void thread_top_init(char *thread_name,
-		     int affinity,
-		     uint64_t runtime,
-		     uint64_t deadline,
-		     uint64_t period) {
-  
+void thread_top_init(char *thread_name, int affinity, uint64_t runtime, uint64_t deadline, uint64_t period)
+{
   int policy, s, j;
   struct sched_param sparam;
   char cpu_affinity[1024];
@@ -345,7 +342,6 @@ void thread_top_init(char *thread_name,
   }
 }
 
-
 // Block CPU C-states deep sleep
 void set_latency_target(void) {
   int ret;
@@ -355,10 +351,10 @@ void set_latency_target(void) {
     if ( (latency_target_fd = open("/dev/cpu_dma_latency", O_RDWR)) != -1 ) {
       ret = write(latency_target_fd, &latency_target_value, sizeof(latency_target_value));
       if (ret == 0) {
-	printf("# error setting cpu_dma_latency to %u!: %s\n", latency_target_value, strerror(errno));
-	close(latency_target_fd);
-	latency_target_fd=-1;
-	return;
+        printf("# error setting cpu_dma_latency to %u!: %s\n", latency_target_value, strerror(errno));
+        close(latency_target_fd);
+        latency_target_fd = -1;
+        return;
       }
     }
   }

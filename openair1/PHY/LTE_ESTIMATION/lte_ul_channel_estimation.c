@@ -68,13 +68,14 @@ static const int16_t ru_90c[2 * 128] = {
 
 int32_t lte_ul_channel_estimation(LTE_DL_FRAME_PARMS *frame_parms,
                                   L1_rxtx_proc_t *proc,
-				  LTE_eNB_ULSCH_t * ulsch,
-				  int32_t **ul_ch_estimates,
-				  int32_t **ul_ch_estimates_time,
-				  int32_t **rxdataF_ext,
+                                  LTE_eNB_ULSCH_t *ulsch,
+                                  int32_t **ul_ch_estimates,
+                                  int32_t **ul_ch_estimates_time,
+                                  int32_t **rxdataF_ext,
                                   module_id_t UE_id,
                                   unsigned char l,
-                                  unsigned char Ns) {
+                                  unsigned char Ns)
+{
   AssertFatal(ul_ch_estimates != NULL, "ul_ch_estimates is null ");
   AssertFatal(ul_ch_estimates_time != NULL, "ul_ch_estimates_time is null\n");
   int subframe = proc->subframe_rx;

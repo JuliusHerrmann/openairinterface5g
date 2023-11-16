@@ -100,7 +100,7 @@ void init_context_sss_nr(int amp)
       /* Modulation of SSS is a BPSK TS 36.211 chapter 5.1.2 BPSK */
 #if 1
         d_sss[N_ID_2][N_ID_1][n]   = dss_current;// * amp;
-	(void) amp;
+        (void)amp;
 #else
         (void) amp;
         d_sss[N_ID_2][N_ID_1][n]   = (dss_current * SHRT_MAX)>>SCALING_PSS_NR;
@@ -487,7 +487,13 @@ bool rx_sss_nr(PHY_VARS_NR_UE *ue,
 
 #ifdef DEBUG_SSS_NR
 
-	LOG_D(PHY,"(phase,Nid1) (%d,%d), metric_phase %d tot_metric %d, phase_max %d \n",phase, Nid1, metric, *tot_metric, *phase_max);
+        LOG_D(PHY,
+              "(phase,Nid1) (%d,%d), metric_phase %d tot_metric %d, phase_max %d \n",
+              phase,
+              Nid1,
+              metric,
+              *tot_metric,
+              *phase_max);
 
 #endif
       }
@@ -497,7 +503,7 @@ bool rx_sss_nr(PHY_VARS_NR_UE *ue,
 //#ifdef DEBUG_SSS_NR
   
 #define SSS_METRIC_FLOOR_NR   (30000)
-  if (*tot_metric > SSS_METRIC_FLOOR_NR) {	
+  if (*tot_metric > SSS_METRIC_FLOOR_NR) {
     Nid2 = GET_NID2(frame_parms->Nid_cell);
     Nid1 = GET_NID1(frame_parms->Nid_cell);
     LOG_D(PHY,"Nid2 %d Nid1 %d tot_metric %d, phase_max %d \n", Nid2, Nid1, *tot_metric, *phase_max);

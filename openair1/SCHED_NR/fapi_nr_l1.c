@@ -69,32 +69,34 @@ void handle_nr_nfapi_ssb_pdu(processingData_L1tx_t *msgTx,int frame,int slot,
                             uint8_t *sdu)
 {
 
-	int UE_id = 0; //Hardcode UE_id for now
-	int harq_pid;
+    int UE_id = 0; //Hardcode UE_id for now
+    int harq_pid;
 
-	NR_gNB_DLSCH_t *dlsch0=NULL, *dlsch1=NULL;
-	NR_DL_gNB_HARQ_t *dlsch0_harq=NULL,*dlsch1_harq=NULL;
+    NR_gNB_DLSCH_t *dlsch0=NULL, *dlsch1=NULL;
+    NR_DL_gNB_HARQ_t *dlsch0_harq=NULL,*dlsch1_harq=NULL;
 
     // Based on nr_fill_dci_and_dlsch only gNB->dlsch[0][0] gets filled now. So maybe we do not need dlsch1.
-	dlsch0 = gNB->dlsch[UE_id][0];
-	dlsch1 = gNB->dlsch[UE_id][1];
+    dlsch0 = gNB->dlsch[UE_id][0];
+    dlsch1 = gNB->dlsch[UE_id][1];
 
-	harq_pid        = dlsch0->harq_ids[subframe];
-	dlsch0_harq     = dlsch0->harq_processes[harq_pid];
-	dlsch1_harq     = dlsch1->harq_processes[harq_pid];
+    harq_pid        = dlsch0->harq_ids[subframe];
+    dlsch0_harq     = dlsch0->harq_processes[harq_pid];
+    dlsch1_harq     = dlsch1->harq_processes[harq_pid];
 
 
-	//if (dlsch0_harq->round==0) {  //get pointer to SDU if this a new SDU
+    //if (dlsch0_harq->round==0) {  //get pointer to SDU if this a new SDU
     if(sdu == NULL) {
       LOG_E(PHY,"NFAPI: SFN/SF:%04d%d proc:TX:[frame %d subframe %d]: programming dlsch for round 0 \n",
             frame,subframe,
             proc->frame_tx,proc->slot_tx);
       return;
     }
-    //AssertFatal(sdu!=NULL,"NFAPI: SFN/SF:%04d%d proc:TX:[frame %d subframe %d]: programming dlsch for round 0, rnti %x, UE_id %d, harq_pid %d : sdu is null for pdu_index %d dlsch0_harq[round:%d SFN/SF:%d%d pdu:%p mcs:%d ndi:%d pdschstart:%d]\n",
+    //AssertFatal(sdu!=NULL,"NFAPI: SFN/SF:%04d%d proc:TX:[frame %d subframe %d]: programming dlsch for round 0, rnti %x, UE_id %d,
+harq_pid %d : sdu is null for pdu_index %d dlsch0_harq[round:%d SFN/SF:%d%d pdu:%p mcs:%d ndi:%d pdschstart:%d]\n",
     //            frame,subframe,
     //            proc->frame_tx,proc->subframe_tx,rel8->rnti,UE_id,harq_pid,
-    //            dl_tti_pdu->pdsch_pdu.pdsch_pdu_rel8.pdu_index,dlsch0_harq->round,dlsch0_harq->frame,dlsch0_harq->subframe,dlsch0_harq->pdu,dlsch0_harq->mcs,dlsch0_harq->ndi,dlsch0_harq->pdsch_start);
+    //
+dl_tti_pdu->pdsch_pdu.pdsch_pdu_rel8.pdu_index,dlsch0_harq->round,dlsch0_harq->frame,dlsch0_harq->subframe,dlsch0_harq->pdu,dlsch0_harq->mcs,dlsch0_harq->ndi,dlsch0_harq->pdsch_start);
     if (codeword_index == 0) dlsch0_harq->pdu                    = sdu;
     else                     dlsch1_harq->pdu                    = sdu;
     LOG_I(PHY, "SFN/SF: %d/%d DLSCH PDU filled \n",frame, subframe);
@@ -223,7 +225,7 @@ void nr_schedule_response(NR_Sched_Rsp_t *Sched_INFO)
        */
       inc_ref_sched_response(Sched_INFO->sched_response_id);
       if (!gNB->reorder_thread_disable)
-	pushNotifiedFIFO(&gNB->L1_tx_filled,res);
+        pushNotifiedFIFO(&gNB->L1_tx_filled, res);
     }
 
     for (int i = 0; i < number_ul_tti_pdu; i++) {

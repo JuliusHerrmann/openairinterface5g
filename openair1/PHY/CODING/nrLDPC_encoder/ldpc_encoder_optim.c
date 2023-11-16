@@ -59,17 +59,14 @@ int nrLDPC_encod(unsigned char **test_input,unsigned char **channel_input,int Zc
        nrows=46; //parity check bits
        ncols=22; //info bits
        rate=3;
-     }
-     //else if (block_length<=3840)
-    else if	(BG==2)
-     {
-       //BG=2;
-       nrows=42; //parity check bits
-       ncols=10; // info bits
-       rate=5;
-
-       }
-
+   }
+   // else if (block_length<=3840)
+   else if (BG == 2) {
+       // BG=2;
+       nrows = 42; // parity check bits
+       ncols = 10; // info bits
+       rate = 5;
+   }
 
 #ifdef DEBUG_LDPC
   LOG_D(PHY,"ldpc_encoder_optim_8seg: BG %d, Zc %d, Kb %d, block_length %d\n",BG,Zc,Kb,block_length);

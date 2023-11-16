@@ -224,7 +224,7 @@ int nr_pbch_dmrs_rx(int symbol,
 #ifdef DEBUG_PBCH
     if (m<16)
       {printf("nr_gold_pbch[(m<<1)>>5] %x\n",nr_gold_pbch[(m<<1)>>5]);
-	printf("m %d  output %d %d addr %p\n", m, ((int16_t*)output)[m<<1], ((int16_t*)output)[(m<<1)+1],&output[0]);
+      printf("m %d  output %d %d addr %p\n", m, ((int16_t *)output)[m << 1], ((int16_t *)output)[(m << 1) + 1], &output[0]);
       }
 #endif
   }

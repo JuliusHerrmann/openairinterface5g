@@ -351,23 +351,22 @@ int nr_initial_sync(UE_nr_rxtx_proc_t *proc,
         }
         else
           ue->rx_offset = ue->ssb_offset - sync_pos_frame;
-      }   
+      }
 
-    /*
-    int nb_prefix_samples0 = fp->nb_prefix_samples0;
-    fp->nb_prefix_samples0 = fp->nb_prefix_samples;
-	  
-    nr_slot_fep(ue, proc, 0, 0, ue->ssb_offset, 0, NR_PDCCH_EST);
-    nr_slot_fep(ue, proc, 1, 0, ue->ssb_offset, 0, NR_PDCCH_EST);
-    fp->nb_prefix_samples0 = nb_prefix_samples0;	
+      /*
+      int nb_prefix_samples0 = fp->nb_prefix_samples0;
+      fp->nb_prefix_samples0 = fp->nb_prefix_samples;
 
-    LOG_I(PHY,"[UE  %d] AUTOTEST Cell Sync : frame = %d, rx_offset %d, freq_offset %d \n",
-              ue->Mod_id,
-              ue->proc.proc_rxtx[0].frame_rx,
-              ue->rx_offset,
-              ue->common_vars.freq_offset );
-    */
+      nr_slot_fep(ue, proc, 0, 0, ue->ssb_offset, 0, NR_PDCCH_EST);
+      nr_slot_fep(ue, proc, 1, 0, ue->ssb_offset, 0, NR_PDCCH_EST);
+      fp->nb_prefix_samples0 = nb_prefix_samples0;
 
+      LOG_I(PHY,"[UE  %d] AUTOTEST Cell Sync : frame = %d, rx_offset %d, freq_offset %d \n",
+                ue->Mod_id,
+                ue->proc.proc_rxtx[0].frame_rx,
+                ue->rx_offset,
+                ue->common_vars.freq_offset );
+      */
 
 #ifdef DEBUG_INITIAL_SYNCH
       LOG_I(PHY,"TDD Normal prefix: CellId %d metric %d, phase %d, pbch %d\n",
@@ -387,12 +386,12 @@ int nr_initial_sync(UE_nr_rxtx_proc_t *proc,
     ret = -1;
   }
 
-  /* Consider this is a false detection if the offset is > 1000 Hz 
+  /* Consider this is a false detection if the offset is > 1000 Hz
      Not to be used now that offest estimation is in place
   if( (abs(ue->common_vars.freq_offset) > 150) && (ret == 0) )
   {
-	  ret=-1;
-	  LOG_E(HW, "Ignore MIB with high freq offset [%d Hz] estimation \n",ue->common_vars.freq_offset);
+      ret=-1;
+      LOG_E(HW, "Ignore MIB with high freq offset [%d Hz] estimation \n",ue->common_vars.freq_offset);
   }*/
 
   if (ret==0) {  // PBCH found so indicate sync to higher layers and configure frame parameters
@@ -436,15 +435,15 @@ int nr_initial_sync(UE_nr_rxtx_proc_t *proc,
     rx_power = 0;
 
     // do a measurement on the best guess of the PSS
-    //for (aarx=0; aarx<frame_parms->nb_antennas_rx; aarx++)
+    // for (aarx=0; aarx<frame_parms->nb_antennas_rx; aarx++)
     //  rx_power += signal_energy(&ue->common_vars.rxdata[aarx][sync_pos2],
-	//			frame_parms->ofdm_symbol_size+frame_parms->nb_prefix_samples);
+    //            frame_parms->ofdm_symbol_size+frame_parms->nb_prefix_samples);
 
     /*
     // do a measurement on the full frame
     for (aarx=0; aarx<frame_parms->nb_antennas_rx; aarx++)
       rx_power += signal_energy(&ue->common_vars.rxdata[aarx][0],
-				frame_parms->samples_per_subframe*10);
+                frame_parms->samples_per_subframe*10);
     */
 
     // we might add a low-pass filter here later

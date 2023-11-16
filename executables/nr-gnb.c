@@ -493,7 +493,7 @@ void init_gNB_Tpool(int inst) {
   initNotifiedFIFO(&gNB->L1_tx_out);
  
   if (get_softmodem_params()->reorder_thread_disable) {
-    // create the RX thread responsible for triggering RX processing and then TX processing if a single thread is used	  
+    // create the RX thread responsible for triggering RX processing and then TX processing if a single thread is used
     threadCreate(&gNB->L1_rx_thread, L1_rx_thread, (void *)gNB, "L1_rx_thread",
                  gNB->L1_rx_thread_core, OAI_PRIORITY_RT_MAX);
     // if separate threads are used for RX and TX, create the TX thread
@@ -605,13 +605,9 @@ void init_eNB_afterRU(void) {
     LOG_I(PHY,"gNB->num_RU:%d\n", gNB->num_RU);
 
     for (ru_id=0,aa=0; ru_id<gNB->num_RU; ru_id++) {
-      AssertFatal(gNB->RU_list[ru_id]->common.rxdataF!=NULL,
-		  "RU %d : common.rxdataF is NULL\n",
-		  gNB->RU_list[ru_id]->idx);
-      AssertFatal(gNB->RU_list[ru_id]->prach_rxsigF!=NULL,
-		  "RU %d : prach_rxsigF is NULL\n",
-		  gNB->RU_list[ru_id]->idx);
-      
+      AssertFatal(gNB->RU_list[ru_id]->common.rxdataF != NULL, "RU %d : common.rxdataF is NULL\n", gNB->RU_list[ru_id]->idx);
+      AssertFatal(gNB->RU_list[ru_id]->prach_rxsigF != NULL, "RU %d : prach_rxsigF is NULL\n", gNB->RU_list[ru_id]->idx);
+
       for (i=0; i<gNB->RU_list[ru_id]->nb_rx; aa++,i++) {
         LOG_I(PHY,"Attaching RU %d antenna %d to gNB antenna %d\n",gNB->RU_list[ru_id]->idx,i,aa);
         gNB->prach_vars.rxsigF[aa]    =  gNB->RU_list[ru_id]->prach_rxsigF[0][i];

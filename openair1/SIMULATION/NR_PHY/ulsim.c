@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
         i+=2;
       } while (optarg[i-1] == ',');
       break;
-	
+
     case 'k':
       printf("Setting threequarter_fs_flag\n");
       openair0_cfg[0].threequarter_fs= 1;
@@ -787,8 +787,13 @@ int main(int argc, char *argv[])
 
   nb_re_dmrs = nb_re_dmrs * num_dmrs_cdm_grps_no_data;
   unsigned int TBS = nr_compute_tbs(mod_order, code_rate, nb_rb, nb_symb_sch, nb_re_dmrs * number_dmrs_symbols, 0, 0, precod_nbr_layers);
-  
-  printf("[ULSIM]: length_dmrs: %u, l_prime_mask: %u	number_dmrs_symbols: %u, mapping_type: %u add_pos: %d \n", length_dmrs, l_prime_mask, number_dmrs_symbols, mapping_type, add_pos);
+
+  printf("[ULSIM]: length_dmrs: %u, l_prime_mask: %u    number_dmrs_symbols: %u, mapping_type: %u add_pos: %d \n",
+         length_dmrs,
+         l_prime_mask,
+         number_dmrs_symbols,
+         mapping_type,
+         add_pos);
   printf("[ULSIM]: CDM groups: %u, dmrs_config_type: %d, num_rbs: %u, nb_symb_sch: %u\n", num_dmrs_cdm_grps_no_data, dmrs_config_type, nb_rb, nb_symb_sch);
   printf("[ULSIM]: MCS: %d, mod order: %u, code_rate: %u\n", Imcs, mod_order, code_rate);
 
@@ -851,7 +856,7 @@ int main(int argc, char *argv[])
   int slot_offset = frame_parms->get_samples_slot_timestamp(slot,frame_parms,0);
   int slot_length = slot_offset - frame_parms->get_samples_slot_timestamp(slot-1,frame_parms,0);
 
-  if (input_fd != NULL)	{
+  if (input_fd != NULL) {
     // 800 samples is N_TA_OFFSET for FR1 @ 30.72 Ms/s,
     AssertFatal(frame_parms->subcarrier_spacing==30000,"only 30 kHz for file input for now (%d)\n",frame_parms->subcarrier_spacing);
   
@@ -1488,7 +1493,13 @@ int main(int argc, char *argv[])
       if (errors_decoding > 0 && error_flag == 0) {
         n_false_positive++;
         if (n_trials==1)
-	  printf("\x1B[31m""[frame %d][trial %d]\tnumber of errors in decoding     = %u\n" "\x1B[0m", frame, trial, errors_decoding);
+          printf(
+              "\x1B[31m"
+              "[frame %d][trial %d]\tnumber of errors in decoding     = %u\n"
+              "\x1B[0m",
+              frame,
+              trial,
+              errors_decoding);
       } 
       roundStats += ((float)round);
       if (!crc_status)

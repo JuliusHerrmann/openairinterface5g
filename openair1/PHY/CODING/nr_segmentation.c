@@ -88,7 +88,7 @@ else
   Z = (Kprime/Kb);
 
  LOG_D(PHY,"nr segmentation B %u Bprime %u Kprime %u z %u \n", B, Bprime, Kprime, Z);
-	  
+
   if (Z <= 2) {
     *K = 2;
   } else if (Z<=16) { // increase by 1 byte til here
@@ -154,7 +154,7 @@ else
 
       while (k<((Kprime - L)>>3)) {
         output_buffers[r][k] = input_buffer[s];
-		//printf("encoding segment %d : byte %d (%d) => %d\n",r,k,(Kprime-L)>>3,input_buffer[s]);
+        // printf("encoding segment %d : byte %d (%d) => %d\n",r,k,(Kprime-L)>>3,input_buffer[s]);
         k++;
         s++;
       }

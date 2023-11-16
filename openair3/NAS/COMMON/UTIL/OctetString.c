@@ -59,13 +59,13 @@ void free_octet_string(OctetString *octetstring)
 int encode_octet_string(OctetString *octetstring, uint8_t *buffer, uint32_t buflen)
 {
   if (octetstring != NULL) {
-	if ((octetstring->value != NULL) && (octetstring->length > 0)) {
+    if ((octetstring->value != NULL) && (octetstring->length > 0)) {
       CHECK_PDU_POINTER_AND_LENGTH_ENCODER(buffer, (int)octetstring->length, buflen);
       memcpy((void*)buffer, (void*)octetstring->value, octetstring->length);
       return octetstring->length;
-	} else {
-	  return 0;
-	}
+    } else {
+      return 0;
+    }
   } else {
     return 0;
   }
@@ -99,8 +99,8 @@ char* dump_octet_string_xml( const OctetString * const octetstring)
   remaining_size -= size_print;
 
   for (i = 0; i < octetstring->length; i++) {
-	size_print = snprintf(&_dump_output[size], remaining_size, "0x%x ", octetstring->value[i]);
-	size += size_print;
+    size_print = snprintf(&_dump_output[size], remaining_size, "0x%x ", octetstring->value[i]);
+    size += size_print;
     remaining_size -= size_print;
   }
 
@@ -116,8 +116,8 @@ char* dump_octet_string( const OctetString * const octetstring)
   int size_print     = 0;
 
   for (i = 0; i < octetstring->length; i++) {
-	size_print = snprintf(&_dump_output[size], remaining_size, "0x%x ", octetstring->value[i]);
-	size += size_print;
+    size_print = snprintf(&_dump_output[size], remaining_size, "0x%x ", octetstring->value[i]);
+    size += size_print;
     remaining_size -= size_print;
   }
 

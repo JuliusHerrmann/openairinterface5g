@@ -356,8 +356,8 @@ int main(int argc, char **argv){
       input_file = optarg;
       
       if (input_fd==NULL) {
-	printf("Problem with filename %s\n",optarg);
-	exit(-1);
+        printf("Problem with filename %s\n", optarg);
+        exit(-1);
       }
       
       break;
@@ -428,9 +428,9 @@ int main(int argc, char **argv){
   nr_phy_config_request_sim(gNB, N_RB_UL, N_RB_UL, mu, Nid_cell, SSB_positions);
 
   uint64_t absoluteFrequencyPointA = to_nrarfcn(frame_parms->nr_band,
-				       frame_parms->dl_CarrierFreq,
-				       frame_parms->numerology_index,
-				       frame_parms->N_RB_UL*(180e3)*(1 << frame_parms->numerology_index));
+                                                frame_parms->dl_CarrierFreq,
+                                                frame_parms->numerology_index,
+                                                frame_parms->N_RB_UL * (180e3) * (1 << frame_parms->numerology_index));
 
   uint8_t frame = 1;
   uint8_t subframe = 9;
@@ -474,18 +474,18 @@ int main(int argc, char **argv){
   gNB->proc.slot_rx       = slot;
 
   int ret = get_nr_prach_info_from_index(config_index,
-					 (int)frame,
-					 (int)slot,
-					 absoluteFrequencyPointA,
-					 mu,
-					 frame_parms->frame_type,
-					 &format,
-					 &start_symbol,
-					 &N_t_slot,
-					 &N_dur,
-					 &RA_sfn_index,
-					 &N_RA_slot,
-					 &config_period);
+                                         (int)frame,
+                                         (int)slot,
+                                         absoluteFrequencyPointA,
+                                         mu,
+                                         frame_parms->frame_type,
+                                         &format,
+                                         &start_symbol,
+                                         &N_t_slot,
+                                         &N_dur,
+                                         &RA_sfn_index,
+                                         &N_RA_slot,
+                                         &config_period);
 
   if (ret == 0) {printf("No prach in %d.%d, mu %d, config_index %d\n",frame,slot,mu,config_index); exit(-1);}
   format0 = format&0xff;      // first column of format from table
@@ -716,8 +716,7 @@ int main(int argc, char **argv){
       prach_errors=0;
 
       for (trial=0; trial<n_frames; trial++) {
-
-	if (input_fd==NULL) {
+        if (input_fd == NULL) {
           sigma2_dB = 10*log10((double)tx_lev) - SNR - 10*log10(N_RB_UL*12/N_ZC);
 
           if (n_frames==1)
@@ -743,34 +742,37 @@ int main(int argc, char **argv){
               ((short*) &ru->common.rxdata[aa][rx_prach_start])[2*i+1] = (short) (.167*(r_im[aa][i] + (iqim*r_re[aa][i]) + sqrt(sigma2/2)*gaussdouble(0.0,1.0)));
             }
           }
-	} else {
-	  n_bytes = fread(&ru->common.rxdata[0][rx_prach_start],sizeof(int32_t),frame_parms->samples_per_subframe,input_fd);
-	  printf("fread %d bytes from file %s\n",n_bytes,input_file);
-	  if (n_bytes!=frame_parms->samples_per_subframe) {
-	    printf("expected %d bytes\n",frame_parms->samples_per_subframe);
-	    exit(-1);
-	  }
-	}
+        } else {
+          n_bytes = fread(&ru->common.rxdata[0][rx_prach_start], sizeof(int32_t), frame_parms->samples_per_subframe, input_fd);
+          printf("fread %d bytes from file %s\n", n_bytes, input_file);
+          if (n_bytes != frame_parms->samples_per_subframe) {
+            printf("expected %d bytes\n", frame_parms->samples_per_subframe);
+            exit(-1);
+          }
+        }
 
-	for (l = 0; l < frame_parms->symbols_per_slot; l++) {
-	  for (aa = 0; aa < frame_parms->nb_antennas_rx; aa++) {
-	    nr_slot_fep_ul(frame_parms,
-			   (int32_t *)ru->common.rxdata[aa],
-			   (int32_t *)ru->common.rxdataF[aa],
-			   l,
-			   slot,
-			   ru->N_TA_offset);
-	  }
-	}
-	
+        for (l = 0; l < frame_parms->symbols_per_slot; l++) {
+          for (aa = 0; aa < frame_parms->nb_antennas_rx; aa++) {
+            nr_slot_fep_ul(frame_parms,
+                           (int32_t *)ru->common.rxdata[aa],
+                           (int32_t *)ru->common.rxdataF[aa],
+                           l,
+                           slot,
+                           ru->N_TA_offset);
+          }
+        }
+
         rx_nr_prach_ru(ru, prach_format, numRA, prachStartSymbol, prachOccasion, frame, slot);
 
         for (int i = 0; i < ru->nb_rx; ++i)
           gNB->prach_vars.rxsigF[i] = ru->prach_rxsigF[prachOccasion][i];
-	if (n_frames == 1) printf("ncs %d,num_seq %d\n",prach_pdu->num_cs,  prach_config->num_prach_fd_occasions_list[fd_occasion].num_root_sequences.value);
+        if (n_frames == 1)
+          printf("ncs %d,num_seq %d\n",
+                 prach_pdu->num_cs,
+                 prach_config->num_prach_fd_occasions_list[fd_occasion].num_root_sequences.value);
         rx_nr_prach(gNB, prach_pdu, prachOccasion, frame, subframe, &preamble_rx, &preamble_energy, &preamble_delay);
 
-	//        printf(" preamble_energy %d preamble_rx %d preamble_tx %d \n", preamble_energy, preamble_rx, preamble_tx);
+        //        printf(" preamble_energy %d preamble_rx %d preamble_tx %d \n", preamble_energy, preamble_rx, preamble_tx);
 
         if (preamble_rx != preamble_tx)
           prach_errors++;
@@ -782,21 +784,36 @@ int main(int argc, char **argv){
         if (n_frames==1) {
           printf("preamble %d (tx %d) : energy %d, delay %d\n",preamble_rx,preamble_tx,preamble_energy,preamble_delay);
           #ifdef NR_PRACH_DEBUG
-	  LOG_M("prach0.m","prach0", &txdata[0][prach_start], frame_parms->samples_per_subframe, 1, 1);
-            LOG_M("prachF0.m","prachF0", &gNB->prach_vars.prachF[0], N_ZC, 1, 1);
-            LOG_M("rxsig0.m","rxs0", &ru->common.rxdata[0][subframe*frame_parms->samples_per_subframe], frame_parms->samples_per_subframe, 1, 1);
-            LOG_M("ru_rxsig0.m","rxs0", &ru->common.rxdata[0][subframe*frame_parms->samples_per_subframe], frame_parms->samples_per_subframe, 1, 1);
-            LOG_M("ru_rxsigF0.m","rxsF0", ru->common.rxdataF[0], frame_parms->ofdm_symbol_size*frame_parms->symbols_per_slot, 1, 1);
-            LOG_M("ru_prach_rxsigF0.m","rxsF0", ru->prach_rxsigF[0][0], N_ZC, 1, 1);
-            LOG_M("prach_preamble.m","prachp", &gNB->X_u[0], N_ZC, 1, 1);
-            LOG_M("ue_prach_preamble.m","prachp", &UE->X_u[0], N_ZC, 1, 1);
-          #endif
+          LOG_M("prach0.m", "prach0", &txdata[0][prach_start], frame_parms->samples_per_subframe, 1, 1);
+          LOG_M("prachF0.m", "prachF0", &gNB->prach_vars.prachF[0], N_ZC, 1, 1);
+          LOG_M("rxsig0.m",
+                "rxs0",
+                &ru->common.rxdata[0][subframe * frame_parms->samples_per_subframe],
+                frame_parms->samples_per_subframe,
+                1,
+                1);
+          LOG_M("ru_rxsig0.m",
+                "rxs0",
+                &ru->common.rxdata[0][subframe * frame_parms->samples_per_subframe],
+                frame_parms->samples_per_subframe,
+                1,
+                1);
+          LOG_M("ru_rxsigF0.m",
+                "rxsF0",
+                ru->common.rxdataF[0],
+                frame_parms->ofdm_symbol_size * frame_parms->symbols_per_slot,
+                1,
+                1);
+          LOG_M("ru_prach_rxsigF0.m", "rxsF0", ru->prach_rxsigF[0][0], N_ZC, 1, 1);
+          LOG_M("prach_preamble.m", "prachp", &gNB->X_u[0], N_ZC, 1, 1);
+          LOG_M("ue_prach_preamble.m", "prachp", &UE->X_u[0], N_ZC, 1, 1);
+#endif
         }
       }
 
       printf("SNR %f dB, UE Speed %f km/h: errors %u/%d (delay %f)\n", SNR, ue_speed, prach_errors, n_frames, delay_avg/(double)(n_frames-prach_errors));
       if (input_fd)
-	break;
+        break;
       if (prach_errors)
         break;
 

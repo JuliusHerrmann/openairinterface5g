@@ -116,7 +116,7 @@ int nrLDPC_encod(unsigned char **input,unsigned char **output,int Zc,int Kb,shor
   if(impp->tinput != NULL) start_meas(impp->tinput);
 #if 0
   for (i=0; i<block_length; i++) {
-	//for (j=0; j<n_segments; j++) {
+    //for (j=0; j<n_segments; j++) {
     for (j=macro_segment; j < macro_segment_end; j++) {
 
       temp = (input[j][i/8]&(1<<(i&7)))>>(i&7);
@@ -136,9 +136,8 @@ int nrLDPC_encod(unsigned char **input,unsigned char **output,int Zc,int Kb,shor
 
   for (int i=(block_length>>5)<<5;i<block_length;i++) {
     //for (j=0; j<n_segments; j++) {
-	  for (int j=macro_segment; j < macro_segment_end; j++) {
-
-	    temp = (input[j][i/8]&(128>>(i&7)))>>(7-(i&7));
+    for (int j = macro_segment; j < macro_segment_end; j++) {
+      temp = (input[j][i / 8] & (128 >> (i & 7))) >> (7 - (i & 7));
       //printf("c(%d,%d)=%d\n",j,i,temp);
       cc[i] |= (temp << (j-macro_segment));
     }
@@ -179,14 +178,15 @@ int nrLDPC_encod(unsigned char **input,unsigned char **output,int Zc,int Kb,shor
 
     for (int i=0;i<l1;i++)
       //for (j=0;j<n_segments;j++) ((simde__m256i *)output[j])[i] = simde_mm256_and_si256(simde_mm256_srai_epi16(c256p[i],j),masks[0]);
-    	for (int j=macro_segment; j < macro_segment_end; j++) ((simde__m256i *)output[j])[i] = simde_mm256_and_si256(simde_mm256_srai_epi16(c256p[i],j-macro_segment),masks[0]);
-
+      for (int j = macro_segment; j < macro_segment_end; j++)
+        ((simde__m256i *)output[j])[i] = simde_mm256_and_si256(simde_mm256_srai_epi16(c256p[i], j - macro_segment), masks[0]);
 
     //  if ((((nrows-no_punctured_columns) * Zc-removed_bit)&31)>0) l2++;
 
     for (int i1=0, i=l1;i1<l2;i1++,i++)
       //for (j=0;j<n_segments;j++) ((simde__m256i *)output[j])[i] = simde_mm256_and_si256(simde_mm256_srai_epi16(d256p[i1],j),masks[0]);
-    	for (int j=macro_segment; j < macro_segment_end; j++)  ((simde__m256i *)output[j])[i] = simde_mm256_and_si256(simde_mm256_srai_epi16(d256p[i1],j-macro_segment),masks[0]);
+      for (int j = macro_segment; j < macro_segment_end; j++)
+        ((simde__m256i *)output[j])[i] = simde_mm256_and_si256(simde_mm256_srai_epi16(d256p[i1], j - macro_segment), masks[0]);
   }
   else {
 #ifdef DEBUG_LDPC
@@ -196,11 +196,11 @@ int nrLDPC_encod(unsigned char **input,unsigned char **output,int Zc,int Kb,shor
     for (int i=0;i<(block_length-2*Zc);i++)
       //for (j=0; j<n_segments; j++)
       for (int j=macro_segment; j < macro_segment_end; j++)
-	output[j][i] = (cc[2*Zc+i]>>(j-macro_segment))&1;
+        output[j][i] = (cc[2 * Zc + i] >> (j - macro_segment)) & 1;
     for (int i=0;i<((nrows-no_punctured_columns) * Zc-removed_bit);i++)
       //for (j=0; j<n_segments; j++)
-    	  for (int j=macro_segment; j < macro_segment_end; j++)
-	output[j][block_length-2*Zc+i] = (dd[i]>>(j-macro_segment))&1;
+      for (int j = macro_segment; j < macro_segment_end; j++)
+        output[j][block_length - 2 * Zc + i] = (dd[i] >> (j - macro_segment)) & 1;
     }
 
   if(impp->toutput != NULL) stop_meas(impp->toutput);

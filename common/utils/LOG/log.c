@@ -97,14 +97,7 @@ static const char *const log_level_highlight_end[] =
     {LOG_RESET, LOG_RESET, LOG_RESET, LOG_RESET, LOG_RESET, LOG_RESET}; /*!< \brief Optional end-format strings for highlighting */
 static void log_output_memory(log_component_t *c, const char *file, const char *func, int line, int comp, int level, const char* format,va_list args);
 
-
-int write_file_matlab(const char *fname,
-		              const char *vname,
-					  void *data,
-					  int length,
-					  int dec,
-					  unsigned int format,
-            int multiVec)
+int write_file_matlab(const char *fname, const char *vname, void *data, int length, int dec, unsigned int format, int multiVec)
 {
   FILE *fp=NULL;
   int i;
@@ -128,28 +121,31 @@ int write_file_matlab(const char *fname,
   }
 
   if ( (format&MATLAB_RAW) == MATLAB_RAW ) {
-    int sz[16]={sizeof(short), 2*sizeof(short),
-		sizeof(int), 2*sizeof(int),
-		sizeof(char), 2*sizeof(char),
-		sizeof(long long), 
-		sizeof(double), 2*sizeof(double),
-		sizeof(unsigned char),
-		sizeof(short),
-		sizeof(short),
-		sizeof(short),
-		sizeof(short),
-		sizeof(short),
-		sizeof(short)
-    };
+    int sz[16] = {sizeof(short),
+                  2 * sizeof(short),
+                  sizeof(int),
+                  2 * sizeof(int),
+                  sizeof(char),
+                  2 * sizeof(char),
+                  sizeof(long long),
+                  sizeof(double),
+                  2 * sizeof(double),
+                  sizeof(unsigned char),
+                  sizeof(short),
+                  sizeof(short),
+                  sizeof(short),
+                  sizeof(short),
+                  sizeof(short),
+                  sizeof(short)};
     int eltSz= sz[format&~MATLAB_RAW];
     if (dec==1) 
       fwrite(data, eltSz, length, fp);
     else 
       for (i=0; i<length; i+=dec)
-	fwrite(data+i*eltSz, eltSz, 1, fp);
-    
+        fwrite(data + i * eltSz, eltSz, 1, fp);
+
     fclose(fp);
-    return(0);	
+    return (0);
   }
 
   if ((format != 10 && format !=11  && format != 12 && format != 13 && format != 14) || multiVec)
@@ -514,7 +510,7 @@ int logInit (void)
   }
 
   AssertFatal(!((g_log->flag & FLAG_TIME) && (g_log->flag & FLAG_REAL_TIME)),
-		   "Invalid log options: time and wall_clock both set but are mutually exclusive\n");
+              "Invalid log options: time and wall_clock both set but are mutually exclusive\n");
 
   g_log->flag =  g_log->flag | FLAG_INITIALIZED;
   printf("log init done\n");
@@ -528,13 +524,8 @@ void logTerm(void)
 }
 
 #include <sys/syscall.h>
-static inline int log_header(log_component_t *c,
-			     char *log_buffer,
-			     int buffsize,
-			     const char *file,
-			     const char *func,
-			     int line,
-			     int level)
+static inline int
+log_header(log_component_t *c, char *log_buffer, int buffsize, const char *file, const char *func, int line, int level)
 {
   int flag= g_log->flag | c->flag;
 
@@ -578,24 +569,19 @@ static inline int log_header(log_component_t *c,
   } else {
     threadIdString[0] = 0;
   }
-  return snprintf(log_buffer, buffsize, "%s%s%s[%s] %c %s%s",
-		   flag & FLAG_NOCOLOR ? "" : log_level_highlight_start[level],
-		   timeString,
-		   threadIdString,
-		   c->name,
-		   flag & FLAG_LEVEL ? g_log->level2string[level] : ' ',
-		   l,
-		   threadname
-		   );
+  return snprintf(log_buffer,
+                  buffsize,
+                  "%s%s%s[%s] %c %s%s",
+                  flag & FLAG_NOCOLOR ? "" : log_level_highlight_start[level],
+                  timeString,
+                  threadIdString,
+                  c->name,
+                  flag & FLAG_LEVEL ? g_log->level2string[level] : ' ',
+                  l,
+                  threadname);
 }
 
-void logRecord_mt(const char *file,
-		  const char *func,
-		  int line,
-		  int comp,
-		  int level,
-		  const char *format,
-		  ... )
+void logRecord_mt(const char *file, const char *func, int line, int comp, int level, const char *format, ...)
 {
   log_component_t *c = &g_log->log_component[comp];
   va_list args;
@@ -604,24 +590,13 @@ void logRecord_mt(const char *file,
   va_end(args);
 }
 
-void vlogRecord_mt(const char *file,
-		   const char *func,
-		   int line,
-		   int comp,
-		   int level,
-		   const char *format,
-		   va_list args )
+void vlogRecord_mt(const char *file, const char *func, int line, int comp, int level, const char *format, va_list args)
 {
   log_component_t *c = &g_log->log_component[comp];
   log_output_memory(c, file,func,line,comp,level, format,args);
 }
 
-void log_dump(int component,
-	      void *buffer,
-	      int buffsize,
-	      int datatype,
-	      const char *format,
-	      ... )
+void log_dump(int component, void *buffer, int buffsize, int datatype, const char *format, ...)
 {
   va_list args;
   char *wbuf;
@@ -666,8 +641,7 @@ void log_dump(int component,
   }
 }
 
-int set_log(int component,
-		    int level)
+int set_log(int component, int level)
 {
   /* Checking parameters */
   DevCheck((component >= MIN_LOG_COMPONENTS) && (component < MAX_LOG_COMPONENTS),
@@ -788,8 +762,7 @@ char *map_int_to_str(const mapping *map, const int val)
   }
 }
 
-int is_newline(char *str,
-		       int size)
+int is_newline(char *str, int size)
 {
   int i;
 

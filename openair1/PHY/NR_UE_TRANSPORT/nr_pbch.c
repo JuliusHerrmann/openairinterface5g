@@ -94,7 +94,7 @@ static uint16_t nr_pbch_extract(uint32_t rxdataF_sz,
             rxF_ext[j]=rxF[rx_offset];
 #ifdef DEBUG_PBCH
             printf("rxF ext[%d] = (%d,%d) rxF [%u]= (%d,%d)\n",
-		   (9*rb) + j,
+           (9*rb) + j,
                    rxF_ext[j].r, rxF_ext[j].i,
                    rx_offset,
                    rxF[rx_offset].r,rxF[rx_offset].j;
@@ -116,9 +116,9 @@ static uint16_t nr_pbch_extract(uint32_t rxdataF_sz,
               rxF_ext[j]=rxF[rx_offset];
 #ifdef DEBUG_PBCH
               printf("rxF ext[%d] = (%d,%d) rxF [%u]= (%d,%d)\n",(rb<4) ? (9*rb) + j : (9*(rb-12))+j,
-		     rxF_ext[j].r, rxF_ext[j].i,
+             rxF_ext[j].r, rxF_ext[j].i,
                      rx_offset,
-		     rxF[rx_offset].r,rxF[rx_offset].j;
+             rxF[rx_offset].r,rxF[rx_offset].j;
 #endif
               j++;
             }
@@ -192,9 +192,8 @@ static uint16_t nr_pbch_extract(uint32_t rxdataF_sz,
 //__m128i avg128;
 
 //compute average channel_level on each (TX,RX) antenna pair
-int nr_pbch_channel_level(struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER_SYMBOL],
-                          NR_DL_FRAME_PARMS *frame_parms,
-			  int nb_re) {
+int nr_pbch_channel_level(struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER_SYMBOL], NR_DL_FRAME_PARMS *frame_parms, int nb_re)
+{
   int16_t nb_rb=nb_re/12;
   simde__m128i avg128;
   simde__m128i *dl_ch128;
@@ -231,11 +230,12 @@ int nr_pbch_channel_level(struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER
 }
 
 static void nr_pbch_channel_compensation(struct complex16 rxdataF_ext[][PBCH_MAX_RE_PER_SYMBOL],
-					 struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER_SYMBOL],
-					 int nb_re,
-					 struct complex16 rxdataF_comp[][PBCH_MAX_RE_PER_SYMBOL],
-					 NR_DL_FRAME_PARMS *frame_parms,
-					 uint8_t output_shift) {
+                                         struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER_SYMBOL],
+                                         int nb_re,
+                                         struct complex16 rxdataF_comp[][PBCH_MAX_RE_PER_SYMBOL],
+                                         NR_DL_FRAME_PARMS *frame_parms,
+                                         uint8_t output_shift)
+{
   for (int aarx=0; aarx<frame_parms->nb_antennas_rx; aarx++) {
     simde__m128i *dl_ch128          = (simde__m128i *)dl_ch_estimates_ext[aarx];
     simde__m128i *rxdataF128        = (simde__m128i *)rxdataF_ext[aarx];
@@ -450,9 +450,7 @@ int nr_rx_pbch(PHY_VARS_NR_UE *ue,
         }
     */
     int nb=symbol==2 ? 144 : 360;
-    nr_pbch_quantize(pbch_e_rx+pbch_e_rx_idx,
-		     (short *)rxdataF_comp[0],
-		     nb);
+    nr_pbch_quantize(pbch_e_rx + pbch_e_rx_idx, (short *)rxdataF_comp[0], nb);
     memcpy(pbch_unClipped+pbch_e_rx_idx, rxdataF_comp[0], nb*sizeof(int16_t));
     pbch_e_rx_idx+=nb;
   }
@@ -472,8 +470,7 @@ int nr_rx_pbch(PHY_VARS_NR_UE *ue,
   uint32_t unscrambling_mask = (Lmax==64)?0x100006D:0x1000041;
   uint32_t pbch_a_interleaved=0;
   uint32_t pbch_a_prime=0;
-  nr_pbch_unscrambling(pbch_e_rx, frame_parms->Nid_cell, nushift, M, NR_POLAR_PBCH_E,
-		       0, 0,  pbch_a_prime, &pbch_a_interleaved);
+  nr_pbch_unscrambling(pbch_e_rx, frame_parms->Nid_cell, nushift, M, NR_POLAR_PBCH_E, 0, 0, pbch_a_prime, &pbch_a_interleaved);
   //polar decoding de-rate matching
   uint64_t tmp=0;
   decoderState = polar_decoder_int16(pbch_e_rx,(uint64_t *)&tmp,0,
@@ -499,8 +496,15 @@ int nr_rx_pbch(PHY_VARS_NR_UE *ue,
   M = (Lmax == 64)? (NR_POLAR_PBCH_PAYLOAD_BITS - 6) : (NR_POLAR_PBCH_PAYLOAD_BITS - 3);
   nushift = ((pbch_a_prime>>24)&1) ^ (((pbch_a_prime>>6)&1)<<1);
   pbch_a_interleaved=0;
-  nr_pbch_unscrambling(pbch_e_rx, frame_parms->Nid_cell, nushift, M, NR_POLAR_PBCH_PAYLOAD_BITS,
-		       1, unscrambling_mask, pbch_a_prime, &pbch_a_interleaved);
+  nr_pbch_unscrambling(pbch_e_rx,
+                       frame_parms->Nid_cell,
+                       nushift,
+                       M,
+                       NR_POLAR_PBCH_PAYLOAD_BITS,
+                       1,
+                       unscrambling_mask,
+                       pbch_a_prime,
+                       &pbch_a_interleaved);
   //printf("nushift %d sfn 3rd %d 2nd %d", nushift,((pbch_a_prime>>6)&1), ((pbch_a_prime>>24)&1) );
   //payload deinterleaving
   //uint32_t in=0;

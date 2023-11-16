@@ -178,9 +178,14 @@ void phy_procedures_gNB_TX(processingData_L1tx_t *msgTx,
   int num_pdcch_pdus = msgTx->num_ul_pdcch + msgTx->num_dl_pdcch;
 
   if (num_pdcch_pdus > 0) {
-    LOG_D(PHY, "[gNB %d] Frame %d slot %d Calling nr_generate_dci_top (number of UL/DL PDCCH PDUs %d/%d)\n",
-	  gNB->Mod_id, frame, slot, msgTx->num_ul_pdcch, msgTx->num_dl_pdcch);
-  
+    LOG_D(PHY,
+          "[gNB %d] Frame %d slot %d Calling nr_generate_dci_top (number of UL/DL PDCCH PDUs %d/%d)\n",
+          gNB->Mod_id,
+          frame,
+          slot,
+          msgTx->num_ul_pdcch,
+          msgTx->num_dl_pdcch);
+
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_PHY_gNB_PDCCH_TX,1);
 
     nr_generate_dci_top(msgTx, slot, (int32_t *)&gNB->common_vars.txdataF[0][txdataF_offset], gNB->TX_AMP, fp);
@@ -378,22 +383,25 @@ static int nr_ulsch_procedures(PHY_VARS_gNB *gNB, int frame_rx, int slot_rx, int
                         pusch_pdu->qam_mod_order,
                         pusch_pdu->nrOfLayers);
 
-  AssertFatal(G>0,"G is 0 : rb_size %u, number_symbols %d, nb_re_dmrs %d, number_dmrs_symbols %d, qam_mod_order %u, nrOfLayer %u\n",
-	      pusch_pdu->rb_size,
-	      number_symbols,
-	      nb_re_dmrs,
-	      number_dmrs_symbols, // number of dmrs symbols irrespective of single or double symbol dmrs
-	      pusch_pdu->qam_mod_order,
-	      pusch_pdu->nrOfLayers);
-  LOG_D(PHY,"rb_size %d, number_symbols %d, nb_re_dmrs %d, dmrs symbol positions %d, number_dmrs_symbols %d, qam_mod_order %d, nrOfLayer %d\n",
-	pusch_pdu->rb_size,
-	number_symbols,
-	nb_re_dmrs,
+  AssertFatal(G > 0,
+              "G is 0 : rb_size %u, number_symbols %d, nb_re_dmrs %d, number_dmrs_symbols %d, qam_mod_order %u, nrOfLayer %u\n",
+              pusch_pdu->rb_size,
+              number_symbols,
+              nb_re_dmrs,
+              number_dmrs_symbols, // number of dmrs symbols irrespective of single or double symbol dmrs
+              pusch_pdu->qam_mod_order,
+              pusch_pdu->nrOfLayers);
+  LOG_D(PHY,
+        "rb_size %d, number_symbols %d, nb_re_dmrs %d, dmrs symbol positions %d, number_dmrs_symbols %d, qam_mod_order %d, "
+        "nrOfLayer %d\n",
+        pusch_pdu->rb_size,
+        number_symbols,
+        nb_re_dmrs,
         pusch_pdu->ul_dmrs_symb_pos,
-	number_dmrs_symbols, // number of dmrs symbols irrespective of single or double symbol dmrs
-	pusch_pdu->qam_mod_order,
-	pusch_pdu->nrOfLayers);
-  
+        number_dmrs_symbols, // number of dmrs symbols irrespective of single or double symbol dmrs
+        pusch_pdu->qam_mod_order,
+        pusch_pdu->nrOfLayers);
+
   //----------------------------------------------------------
   //--------------------- ULSCH decoding ---------------------
   //----------------------------------------------------------
@@ -744,8 +752,9 @@ int phy_procedures_gNB_uespec_RX(PHY_VARS_gNB *gNB, int frame_rx, int slot_rx)
   if (gNB->frame_parms.frame_type == TDD)
     for(int symbol_count=0; symbol_count<NR_NUMBER_OF_SYMBOLS_PER_SLOT; symbol_count++) {
       if (gNB->gNB_config.tdd_table.max_tdd_periodicity_list[slot_rx].max_num_of_symbol_per_slot_list[symbol_count].slot_config.value==1) {
-	      if (num_symb==0) first_symb=symbol_count;
-	      num_symb++;
+        if (num_symb == 0)
+          first_symb = symbol_count;
+        num_symb++;
       }
     }
   else

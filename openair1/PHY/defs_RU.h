@@ -426,7 +426,7 @@ typedef enum {
 
 
 typedef struct RU_t_s {
-  /// ThreadPool for RU	
+  /// ThreadPool for RU
   tpool_t *threadPool;
   /// index of this ru
   uint32_t idx;

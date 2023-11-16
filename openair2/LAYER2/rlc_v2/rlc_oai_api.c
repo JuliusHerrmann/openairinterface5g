@@ -1018,14 +1018,7 @@ void du_rlc_data_req(const protocol_ctxt_t *const ctxt_pP,
                      confirm_t    confirmP,
                      sdu_size_t   sdu_sizeP,
                      mem_block_t *sdu_pP){
-  rlc_data_req (ctxt_pP,
-		srb_flagP,
-		MBMS_flagP,
-		rb_idP,
-		muiP,
-		confirmP,
-		sdu_sizeP,
-		sdu_pP, NULL, NULL);
+  rlc_data_req(ctxt_pP, srb_flagP, MBMS_flagP, rb_idP, muiP, confirmP, sdu_sizeP, sdu_pP, NULL, NULL);
 }
 
 /* HACK to be removed: nr_rlc_get_available_tx_space is needed by

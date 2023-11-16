@@ -48,81 +48,122 @@ uint32_t (*p_nr_ue_get_SR)(module_id_t module_idP,int CC_id,frame_t frameP,uint8
 
 lte_subframe_t subframe_select(LTE_DL_FRAME_PARMS *frame_parms,unsigned char subframe)
 {
-	return(0);
+  return (0);
 }
 
-PRACH_RESOURCES_t *ue_get_rach(module_id_t module_idP, int CC_id,
-			       frame_t frameP, uint8_t new_Msg3,
-			       sub_frame_t subframe){ return(NULL);}
+PRACH_RESOURCES_t *ue_get_rach(module_id_t module_idP, int CC_id, frame_t frameP, uint8_t new_Msg3, sub_frame_t subframe)
+{
+  return (NULL);
+}
 
-void ue_get_sdu(module_id_t module_idP, int CC_id, frame_t frameP,
-		sub_frame_t subframe, uint8_t eNB_index,
-		uint8_t * ulsch_buffer, uint16_t buflen,
-		uint8_t * access_mode){}
+void ue_get_sdu(module_id_t module_idP,
+                int CC_id,
+                frame_t frameP,
+                sub_frame_t subframe,
+                uint8_t eNB_index,
+                uint8_t *ulsch_buffer,
+                uint16_t buflen,
+                uint8_t *access_mode)
+{
+}
 
-void Msg1_transmitted(module_id_t module_idP, uint8_t CC_id,
-		      frame_t frameP, uint8_t eNB_id){}
+void Msg1_transmitted(module_id_t module_idP, uint8_t CC_id, frame_t frameP, uint8_t eNB_id)
+{
+}
 
-void Msg3_transmitted(module_id_t module_idP, uint8_t CC_id,
-		      frame_t frameP, uint8_t eNB_id){}
+void Msg3_transmitted(module_id_t module_idP, uint8_t CC_id, frame_t frameP, uint8_t eNB_id)
+{
+}
 
-uint32_t nr_ue_get_SR(module_id_t module_idP, int CC_id, frame_t frameP,
-		   uint8_t eNB_id, rnti_t rnti, sub_frame_t subframe){
-
-	uint32_t value = 0;
-	if (p_nr_ue_get_SR != NULL)
-	{
-	  value = (p_nr_ue_get_SR)(module_idP, CC_id, frameP, eNB_id, rnti, subframe);
-	}
-	return(value);}
+uint32_t nr_ue_get_SR(module_id_t module_idP, int CC_id, frame_t frameP, uint8_t eNB_id, rnti_t rnti, sub_frame_t subframe)
+{
+  uint32_t value = 0;
+  if (p_nr_ue_get_SR != NULL) {
+    value = (p_nr_ue_get_SR)(module_idP, CC_id, frameP, eNB_id, rnti, subframe);
+  }
+  return (value);
+}
 
 void rrc_out_of_sync_ind(module_id_t Mod_idP, frame_t frameP, uint16_t eNB_index)
 {}
 
 UE_L2_STATE_t ue_scheduler(const module_id_t module_idP,
-			   const frame_t rxFrameP,
-			   const sub_frame_t rxSubframe,
-			   const frame_t txFrameP,
-			   const sub_frame_t txSubframe,
-			   const lte_subframe_t direction,
-			   const uint8_t eNB_index, const int CC_id){ return(0);}
+                           const frame_t rxFrameP,
+                           const sub_frame_t rxSubframe,
+                           const frame_t txFrameP,
+                           const sub_frame_t txSubframe,
+                           const lte_subframe_t direction,
+                           const uint8_t eNB_index,
+                           const int CC_id)
+{
+  return (0);
+}
 
-void ue_decode_p(module_id_t module_idP, int CC_id, frame_t frame,
-		 uint8_t CH_index, void *pdu, uint16_t len){}
+void ue_decode_p(module_id_t module_idP, int CC_id, frame_t frame, uint8_t CH_index, void *pdu, uint16_t len)
+{
+}
 
-void ue_decode_si(module_id_t module_idP, int CC_id, frame_t frame,
-		  uint8_t CH_index, void *pdu, uint16_t len){}
+void ue_decode_si(module_id_t module_idP, int CC_id, frame_t frame, uint8_t CH_index, void *pdu, uint16_t len)
+{
+}
 
-void ue_send_sdu(module_id_t module_idP, uint8_t CC_id, frame_t frame,
-		 sub_frame_t subframe, uint8_t * sdu, uint16_t sdu_len,
-		 uint8_t CH_index){}
+void ue_send_sdu(module_id_t module_idP,
+                 uint8_t CC_id,
+                 frame_t frame,
+                 sub_frame_t subframe,
+                 uint8_t *sdu,
+                 uint16_t sdu_len,
+                 uint8_t CH_index)
+{
+}
 
-uint16_t
-ue_process_rar(const module_id_t module_idP,
-	       const int CC_id,
-	       const frame_t frameP,
-	       const rnti_t ra_rnti,
-	       uint8_t * const dlsch_buffer,
-	       rnti_t * const t_crnti,
-	       const uint8_t preamble_index,
-	       uint8_t * selected_rar_buffer){ return(0);}
+uint16_t ue_process_rar(const module_id_t module_idP,
+                        const int CC_id,
+                        const frame_t frameP,
+                        const rnti_t ra_rnti,
+                        uint8_t *const dlsch_buffer,
+                        rnti_t *const t_crnti,
+                        const uint8_t preamble_index,
+                        uint8_t *selected_rar_buffer)
+{
+  return (0);
+}
 
-void ue_send_mch_sdu(module_id_t module_idP, uint8_t CC_id, frame_t frameP,
-		     uint8_t * sdu, uint16_t sdu_len, uint8_t eNB_index,
-		     uint8_t sync_area){}
+void ue_send_mch_sdu(module_id_t module_idP,
+                     uint8_t CC_id,
+                     frame_t frameP,
+                     uint8_t *sdu,
+                     uint16_t sdu_len,
+                     uint8_t eNB_index,
+                     uint8_t sync_area)
+{
+}
 
-int ue_query_mch(module_id_t Mod_id, uint8_t CC_id, uint32_t frame,
-		 sub_frame_t subframe, uint8_t eNB_index,
-		 uint8_t * sync_area, uint8_t * mcch_active){ return(0);}
+int ue_query_mch(module_id_t Mod_id,
+                 uint8_t CC_id,
+                 uint32_t frame,
+                 sub_frame_t subframe,
+                 uint8_t eNB_index,
+                 uint8_t *sync_area,
+                 uint8_t *mcch_active)
+{
+  return (0);
+}
 
+int ue_query_mch_fembms(module_id_t Mod_id,
+                        uint8_t CC_id,
+                        uint32_t frame,
+                        sub_frame_t subframe,
+                        uint8_t eNB_index,
+                        uint8_t *sync_area,
+                        uint8_t *mcch_active)
+{
+  return (0);
+}
 
-int ue_query_mch_fembms(module_id_t Mod_id, uint8_t CC_id, uint32_t frame,
-		 sub_frame_t subframe, uint8_t eNB_index,
-		 uint8_t * sync_area, uint8_t * mcch_active){ return(0);}
-
-void dl_phy_sync_success(module_id_t module_idP,
-			 frame_t frameP,
-			 unsigned char eNB_index, uint8_t first_sync){}
+void dl_phy_sync_success(module_id_t module_idP, frame_t frameP, unsigned char eNB_index, uint8_t first_sync)
+{
+}
 
 uint64_t from_nrarfcn(int nr_bandP, uint32_t dl_nrarfcn) { return(0);}
 
@@ -169,28 +210,27 @@ int config_get(paramdef_t *params,int numparams, char *prefix)
 
   for (int i=0; i < numparams; i++)
   {
-	switch(step_log)
-	{
-	  case 1:
-	    p_log = log_first;
-	    params[i].strptr = calloc(1, MAX_STRING_SIZE);
-	    *(params[i].strptr) = p_log;
-	    break;
-	  case 2:
-	    p_log = log_first;
-	    params[i].strptr = calloc(1, MAX_STRING_SIZE);
-	    *(params[i].strptr) = p_log;
-	    break;
-	  case 3:
-	    params[i].uptr = calloc(1, sizeof(int));
-	    *(params[i].uptr) = 0;
-	    break;
-	  default:
-		p_log = log_default;
-		params[i].strptr = calloc(1, MAX_STRING_SIZE);
-		*(params[i].strptr) = p_log;
-		break;
-	}
+    switch (step_log) {
+      case 1:
+        p_log = log_first;
+        params[i].strptr = calloc(1, MAX_STRING_SIZE);
+        *(params[i].strptr) = p_log;
+        break;
+      case 2:
+        p_log = log_first;
+        params[i].strptr = calloc(1, MAX_STRING_SIZE);
+        *(params[i].strptr) = p_log;
+        break;
+      case 3:
+        params[i].uptr = calloc(1, sizeof(int));
+        *(params[i].uptr) = 0;
+        break;
+      default:
+        p_log = log_default;
+        params[i].strptr = calloc(1, MAX_STRING_SIZE);
+        *(params[i].strptr) = p_log;
+        break;
+    }
   }
 
   step_log++;
@@ -211,8 +251,8 @@ void * get_shlibmodule_fptr(char *modname, char *fname) { return(NULL) ; }
   undefined_function(__FUNCTION__);
 }*/
 
-uint32_t ue_get_SR(module_id_t module_idP, int CC_id, frame_t frameP,
-		          uint8_t eNB_id, rnti_t rnti, sub_frame_t subframe){
-	uint32_t value = 0;
-	return(value);
+uint32_t ue_get_SR(module_id_t module_idP, int CC_id, frame_t frameP, uint8_t eNB_id, rnti_t rnti, sub_frame_t subframe)
+{
+  uint32_t value = 0;
+  return (value);
 }

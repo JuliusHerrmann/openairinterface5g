@@ -204,11 +204,11 @@ void set_sequence_sss(PHY_VARS_NR_UE *PHY_vars_UE, int offset, int slot_offset)
 #if 0
 
   nr_generate_sss(data_sss,
-		          (int32_t **)&tmp,
+                  (int32_t **)&tmp,
                   AMP,
                   0,                        // symbol number
-				  &nfapi_config,
-				  frame_parms);
+                  &nfapi_config,
+                  frame_parms);
 
   /* get sss in the frequency domain by applying an inverse FFT */
   idft2048(synchroF_tmp,        /* complex input */

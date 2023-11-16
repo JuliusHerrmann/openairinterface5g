@@ -222,17 +222,14 @@ int ldpc_encoder_optim(unsigned char *test_input,unsigned char *channel_input,in
        nrows=46; //parity check bits
        ncols=22; //info bits
        rate=3;
-     }
-     //else if (block_length<=3840)
-    else if	(BG==2)
-     {
-       //BG=2;
-       nrows=42; //parity check bits
-       ncols=10; // info bits
-       rate=5;
-
-       }
-
+   }
+   // else if (block_length<=3840)
+   else if (BG == 2) {
+       // BG=2;
+       nrows = 42; // parity check bits
+       ncols = 10; // info bits
+       rate = 5;
+   }
 
 #ifdef DEBUG_LDPC
   LOG_D(PHY,"ldpc_encoder_optim_8seg: BG %d, Zc %d, Kb %d, block_length %d\n",BG,Zc,Kb,block_length);
@@ -269,16 +266,16 @@ int ldpc_encoder_optim(unsigned char *test_input,unsigned char *channel_input,in
     if(tprep != NULL) start_meas(tprep);
     for (i1=0; i1 < ncols; i1++)
       {
-	memcpy(&c_extension[2*i1*Zc], &c[i1*Zc], Zc*sizeof(unsigned char));
-	memcpy(&c_extension[(2*i1+1)*Zc], &c[i1*Zc], Zc*sizeof(unsigned char));
+    memcpy(&c_extension[2 * i1 * Zc], &c[i1 * Zc], Zc * sizeof(unsigned char));
+    memcpy(&c_extension[(2 * i1 + 1) * Zc], &c[i1 * Zc], Zc * sizeof(unsigned char));
       }
     for (i1=1;i1<simd_size;i1++) {
       memcpy(&c_extension[(2*ncols*Zc*i1)], &c_extension[i1], (2*ncols*Zc*sizeof(unsigned char))-i1);
       //    memset(&c_extension[(2*ncols*Zc*i1)],0,i1);
       /*
-	printf("shift %d: ",i1);
-	for (int j=0;j<64;j++) printf("%d ",c_extension[(2*ncols*Zc*i1)+j]);
-	printf("\n");
+    printf("shift %d: ",i1);
+    for (int j=0;j<64;j++) printf("%d ",c_extension[(2*ncols*Zc*i1)+j]);
+    printf("\n");
       */
     }
     if(tprep != NULL) stop_meas(tprep);
@@ -334,16 +331,14 @@ int ldpc_encoder_optim_8seg(unsigned char **test_input,unsigned char **channel_i
       nrows=46; //parity check bits
       ncols=22; //info bits
       rate=3;
-    }
-    //else if (block_length<=3840)
-   else if	(BG==2)
-    {
-      //BG=2;
-      nrows=42; //parity check bits
-      ncols=10; // info bits
-      rate=5;
-
-      }
+  }
+  // else if (block_length<=3840)
+  else if (BG == 2) {
+      // BG=2;
+      nrows = 42; // parity check bits
+      ncols = 10; // info bits
+      rate = 5;
+  }
 
 #ifdef DEBUG_LDPC
   LOG_D(PHY,"ldpc_encoder_optim_8seg: BG %d, Zc %d, Kb %d, block_length %d, segments %d\n",BG,Zc,Kb,block_length,n_segments);
@@ -405,16 +400,16 @@ int ldpc_encoder_optim_8seg(unsigned char **test_input,unsigned char **channel_i
     if(tprep != NULL) start_meas(tprep);
     for (i1=0; i1 < ncols; i1++)
       {
-	memcpy(&c_extension[2*i1*Zc], &c[i1*Zc], Zc*sizeof(unsigned char));
-	memcpy(&c_extension[(2*i1+1)*Zc], &c[i1*Zc], Zc*sizeof(unsigned char));
+      memcpy(&c_extension[2 * i1 * Zc], &c[i1 * Zc], Zc * sizeof(unsigned char));
+      memcpy(&c_extension[(2 * i1 + 1) * Zc], &c[i1 * Zc], Zc * sizeof(unsigned char));
       }
     for (i1=1;i1<simd_size;i1++) {
       memcpy(&c_extension[(2*ncols*Zc*i1)], &c_extension[i1], (2*ncols*Zc*sizeof(unsigned char))-i1);
       //    memset(&c_extension[(2*ncols*Zc*i1)],0,i1);
       /*
-	printf("shift %d: ",i1);
-	for (int j=0;j<64;j++) printf("%d ",c_extension[(2*ncols*Zc*i1)+j]);
-	printf("\n");
+    printf("shift %d: ",i1);
+    for (int j=0;j<64;j++) printf("%d ",c_extension[(2*ncols*Zc*i1)+j]);
+    printf("\n");
       */
     }
     if(tprep != NULL) stop_meas(tprep);
@@ -461,10 +456,10 @@ int ldpc_encoder_optim_8seg(unsigned char **test_input,unsigned char **channel_i
     // do non-SIMD version
     for (i=0;i<(block_length-2*Zc);i++) 
       for (j=0; j<n_segments; j++)
-	channel_input[j][i] = (c[2*Zc+i]>>j)&1;
+        channel_input[j][i] = (c[2 * Zc + i] >> j) & 1;
     for (i=0;i<((nrows-no_punctured_columns) * Zc-removed_bit);i++)
       for (j=0; j<n_segments; j++)
-	channel_input[j][block_length-2*Zc+i] = (d[i]>>j)&1;
+        channel_input[j][block_length - 2 * Zc + i] = (d[i] >> j) & 1;
     }
 
   if(toutput != NULL) stop_meas(toutput);
@@ -544,7 +539,7 @@ int ldpc_encoder_optim_8seg_multi(unsigned char **test_input,unsigned char **cha
   if(tinput != NULL) start_meas(tinput);
 #if 0
   for (i=0; i<block_length; i++) {
-	//for (j=0; j<n_segments; j++) {
+    //for (j=0; j<n_segments; j++) {
     for (j=macro_segment; j < macro_segment_end; j++) {
 
       temp = (test_input[j][i/8]&(1<<(i&7)))>>(i&7);
@@ -564,9 +559,8 @@ int ldpc_encoder_optim_8seg_multi(unsigned char **test_input,unsigned char **cha
 
   for (i=(block_length>>5)<<5;i<block_length;i++) {
     //for (j=0; j<n_segments; j++) {
-	  for (j=macro_segment; j < macro_segment_end; j++) {
-
-	    temp = (test_input[j][i/8]&(128>>(i&7)))>>(7-(i&7));
+    for (j = macro_segment; j < macro_segment_end; j++) {
+      temp = (test_input[j][i / 8] & (128 >> (i & 7))) >> (7 - (i & 7));
       //printf("c(%d,%d)=%d\n",j,i,temp);
       c[i] |= (temp << (j-macro_segment));
     }
@@ -580,16 +574,16 @@ int ldpc_encoder_optim_8seg_multi(unsigned char **test_input,unsigned char **cha
     if(tprep != NULL) start_meas(tprep);
     for (i1=0; i1 < ncols; i1++)
       {
-	memcpy(&c_extension[2*i1*Zc], &c[i1*Zc], Zc*sizeof(unsigned char));
-	memcpy(&c_extension[(2*i1+1)*Zc], &c[i1*Zc], Zc*sizeof(unsigned char));
+      memcpy(&c_extension[2 * i1 * Zc], &c[i1 * Zc], Zc * sizeof(unsigned char));
+      memcpy(&c_extension[(2 * i1 + 1) * Zc], &c[i1 * Zc], Zc * sizeof(unsigned char));
       }
     for (i1=1;i1<simd_size;i1++) {
       memcpy(&c_extension[(2*ncols*Zc*i1)], &c_extension[i1], (2*ncols*Zc*sizeof(unsigned char))-i1);
       //    memset(&c_extension[(2*ncols*Zc*i1)],0,i1);
       /*
-	printf("shift %d: ",i1);
-	for (int j=0;j<64;j++) printf("%d ",c_extension[(2*ncols*Zc*i1)+j]);
-	printf("\n");
+    printf("shift %d: ",i1);
+    for (int j=0;j<64;j++) printf("%d ",c_extension[(2*ncols*Zc*i1)+j]);
+    printf("\n");
       */
     }
     if(tprep != NULL) stop_meas(tprep);
@@ -643,11 +637,11 @@ int ldpc_encoder_optim_8seg_multi(unsigned char **test_input,unsigned char **cha
     for (i=0;i<(block_length-2*Zc);i++)
       //for (j=0; j<n_segments; j++)
       for (j=macro_segment; j < macro_segment_end; j++)
-	channel_input[j][i] = (c[2*Zc+i]>>(j-macro_segment))&1;
+        channel_input[j][i] = (c[2 * Zc + i] >> (j - macro_segment)) & 1;
     for (i=0;i<((nrows-no_punctured_columns) * Zc-removed_bit);i++)
       //for (j=0; j<n_segments; j++)
-    	  for (j=macro_segment; j < macro_segment_end; j++)
-	channel_input[j][block_length-2*Zc+i] = (d[i]>>(j-macro_segment))&1;
+      for (j = macro_segment; j < macro_segment_end; j++)
+        channel_input[j][block_length - 2 * Zc + i] = (d[i] >> (j - macro_segment)) & 1;
     }
 
   if(toutput != NULL) stop_meas(toutput);

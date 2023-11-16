@@ -286,13 +286,12 @@ void fh_if5_south_out(RU_t *ru, int frame, int slot, uint64_t timestamp) {
   LOG_D(PHY,"IF5 TX %d.%d, TS %llu, buffs[0] %p, buffs[1] %p ener0 %f dB, tx start %d\n",frame,slot,(unsigned long long)timestamp,buffs[0],buffs[1],
   10*log10((double)signal_energy(buffs[0],ru->nr_frame_parms->get_samples_per_slot(slot,ru->nr_frame_parms))),(int)txmeas.tv_nsec);
   ru->ifdevice.trx_write_func2(&ru->ifdevice,
-  		               timestamp,
+                               timestamp,
                                buffs,
-			       0,
-			       ru->nr_frame_parms->get_samples_per_slot(slot,ru->nr_frame_parms),
-			       0,
-			       ru->nb_tx); 
-
+                               0,
+                               ru->nr_frame_parms->get_samples_per_slot(slot, ru->nr_frame_parms),
+                               0,
+                               ru->nb_tx);
 }
 
 // southbound IF4p5 fronthaul
@@ -684,13 +683,17 @@ void rx_rf(RU_t *ru,int *frame,int *slot) {
   proc->frame_rx    = (proc->timestamp_rx / (fp->samples_per_subframe*10))&1023;
   proc->tti_rx = fp->get_slot_from_timestamp(proc->timestamp_rx,fp);
   // synchronize first reception to frame 0 subframe 0
-  LOG_D(PHY,"RU %d/%d TS %ld, GPS %f, SR %f, frame %d, slot %d.%d / %d\n",
+  LOG_D(PHY,
+        "RU %d/%d TS %ld, GPS %f, SR %f, frame %d, slot %d.%d / %d\n",
         ru->idx,
         0,
         ts, //(unsigned long long int)(proc->timestamp_rx+ru->ts_offset),
-	gps_sec,
-	cfg->sample_rate,
-        proc->frame_rx,proc->tti_rx,proc->tti_tx,fp->slots_per_frame);
+        gps_sec,
+        cfg->sample_rate,
+        proc->frame_rx,
+        proc->tti_rx,
+        proc->tti_tx,
+        fp->slots_per_frame);
 
   // dump VCD output for first RU in list
   if (ru == RC.ru[0]) {
@@ -1215,14 +1218,12 @@ void *ru_thread( void *param ) {
 
   // This is a forever while loop, it loops over subframes which are scheduled by incoming samples from HW devices
   struct timespec slot_start;
-	clock_gettime(CLOCK_MONOTONIC, &slot_start);
-  
-  struct timespec slot_duration; 
-	slot_duration.tv_sec = 0;
-	//slot_duration.tv_nsec = 0.5e6;
-	slot_duration.tv_nsec = 0.5e6;
+  clock_gettime(CLOCK_MONOTONIC, &slot_start);
 
-  
+  struct timespec slot_duration;
+  slot_duration.tv_sec = 0;
+  // slot_duration.tv_nsec = 0.5e6;
+  slot_duration.tv_nsec = 0.5e6;
 
   while (!oai_exit) {
     
@@ -1235,9 +1236,9 @@ void *ru_thread( void *param ) {
       struct timespec sleep_time;
       
       if((slot_start.tv_sec > curr_time.tv_sec) || (slot_start.tv_sec == curr_time.tv_sec && slot_start.tv_nsec > curr_time.tv_nsec)){
-	sleep_time = timespec_sub(slot_start,curr_time);
-	
-	usleep(sleep_time.tv_nsec * 1e-3); 
+        sleep_time = timespec_sub(slot_start, curr_time);
+
+        usleep(sleep_time.tv_nsec * 1e-3);
       }
     }
     

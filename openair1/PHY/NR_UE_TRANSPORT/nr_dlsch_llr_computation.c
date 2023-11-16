@@ -149,14 +149,14 @@ void nr_dlsch_16qam_llr(NR_DL_FRAME_PARMS *frame_parms,
 //----------------------------------------------------------------------------------------------
 
 void nr_dlsch_64qam_llr(NR_DL_FRAME_PARMS *frame_parms,
-			int32_t *rxdataF_comp,
-			int16_t *dlsch_llr,
-			int32_t *dl_ch_mag,
-			int32_t *dl_ch_magb,
-			uint8_t symbol,
-			uint32_t len,
-			uint8_t first_symbol_flag,
-			uint16_t nb_rb)
+                        int32_t *rxdataF_comp,
+                        int16_t *dlsch_llr,
+                        int32_t *dl_ch_mag,
+                        int32_t *dl_ch_magb,
+                        uint8_t symbol,
+                        uint32_t len,
+                        uint8_t first_symbol_flag,
+                        uint16_t nb_rb)
 {
   simde__m128i *rxF = (simde__m128i*)&rxdataF_comp[(symbol*nb_rb*12)];
   simde__m128i *ch_mag,*ch_magb;

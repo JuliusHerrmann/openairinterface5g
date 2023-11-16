@@ -199,10 +199,7 @@ void init_polar_deinterleaver_table(t_nrPolar_params *polarParams);
 
 void nr_polar_print_polarParams(void);
 
-t_nrPolar_params *nr_polar_params (int8_t messageType,
-                                   uint16_t messageLength,
-                                   uint8_t aggregation_level,
-				   int decoder_flag);
+t_nrPolar_params *nr_polar_params(int8_t messageType, uint16_t messageLength, uint8_t aggregation_level, int decoder_flag);
 
 uint16_t nr_polar_aggregation_prime (uint8_t aggregation_level);
 
@@ -319,32 +316,30 @@ void nr_free_double_2D_array(double **input, uint16_t xlen);
 
 #ifndef __cplusplus
 void updateLLR(uint8_t listSize,
-	       uint16_t row,
-	       uint16_t col,
-	        uint16_t xlen,
-	       uint8_t ylen,
-	       int zlen,
-	       double  llr[xlen][ylen][zlen],
-	       uint8_t llrU[xlen][ylen],
-	       uint8_t bit[xlen][ylen][zlen],
-	       uint8_t bitU[xlen][ylen]
-	       );
+               uint16_t row,
+               uint16_t col,
+               uint16_t xlen,
+               uint8_t ylen,
+               int zlen,
+               double llr[xlen][ylen][zlen],
+               uint8_t llrU[xlen][ylen],
+               uint8_t bit[xlen][ylen][zlen],
+               uint8_t bitU[xlen][ylen]);
 void updatePathMetric(double *pathMetric,
-		      uint8_t listSize,
-		      uint8_t bitValue,
-		      uint16_t row,
-		      int xlen,
-		      int ylen,
-		      int zlen,
-		      double llr[xlen][ylen][zlen]
-		      );
+                      uint8_t listSize,
+                      uint8_t bitValue,
+                      uint16_t row,
+                      int xlen,
+                      int ylen,
+                      int zlen,
+                      double llr[xlen][ylen][zlen]);
 void updatePathMetric2(double *pathMetric,
-		       uint8_t listSize,
-		       uint16_t row,
-		       int xlen,
-		       int ylen,
-		       int zlen,
-		       double llr[xlen][ylen][zlen]);
+                       uint8_t listSize,
+                       uint16_t row,
+                       int xlen,
+                       int ylen,
+                       int zlen,
+                       double llr[xlen][ylen][zlen]);
 #endif
 //Also nr_polar_rate_matcher
 static inline void nr_polar_interleaver(uint8_t *input,
@@ -355,12 +350,10 @@ static inline void nr_polar_interleaver(uint8_t *input,
   for (int i=0; i<size; i++) output[i]=input[pattern[i]];
 }
 
-static inline void nr_polar_deinterleaver(uint8_t *input,
-										  uint8_t *output,
-										  uint16_t *pattern,
-										  uint16_t size)
+static inline void nr_polar_deinterleaver(uint8_t *input, uint8_t *output, uint16_t *pattern, uint16_t size)
 {
-	for (int i=0; i<size; i++) output[pattern[i]]=input[i];
+  for (int i = 0; i < size; i++)
+    output[pattern[i]] = input[i];
 }
 void delete_decoder_tree(t_nrPolar_params *);
 

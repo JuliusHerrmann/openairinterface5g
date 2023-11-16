@@ -281,9 +281,10 @@ NR_ControlResourceSet_t *get_coreset(gNB_MAC_INST *nrmac,
       coreset = NULL;
     }
 
-    if (coreset) AssertFatal(coreset_id == coreset->controlResourceSetId,
-			     "ID of common ss coreset does not correspond to id set in the "
-			     "search space\n");
+    if (coreset)
+      AssertFatal(coreset_id == coreset->controlResourceSetId,
+                  "ID of common ss coreset does not correspond to id set in the "
+                  "search space\n");
     return coreset;
   } else {
     const int n = ((NR_BWP_DownlinkDedicated_t*)bwp)->pdcch_Config->choice.setup->controlResourceSetToAddModList->list.count;
@@ -701,8 +702,9 @@ void config_uldci(const NR_SIB1_t *sib1,
   dci_pdu_rel15->tpc = tpc;
   NR_PUSCH_Config_t *pusch_Config = ul_bwp->pusch_Config;
 
-  if (pusch_Config) AssertFatal(pusch_Config->resourceAllocation == NR_PUSCH_Config__resourceAllocation_resourceAllocationType1,
-			"Only frequency resource allocation type 1 is currently supported\n");
+  if (pusch_Config)
+    AssertFatal(pusch_Config->resourceAllocation == NR_PUSCH_Config__resourceAllocation_resourceAllocationType1,
+                "Only frequency resource allocation type 1 is currently supported\n");
   switch (dci_format) {
     case NR_UL_DCI_FORMAT_0_0:
       dci_pdu_rel15->format_indicator = 0;

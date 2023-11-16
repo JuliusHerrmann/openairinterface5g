@@ -254,11 +254,11 @@ int main() {
     while (parall) {
       tmp=pullTpool(&worker_back,&pool);
       if (tmp) {
-	parall--;
-	struct testData *dd=NotifiedFifoData(tmp);
-	if (dd->sleepTime > sleepmax)
-	  sleepmax=dd->sleepTime;
-	delNotifiedFIFO_elt(tmp);
+        parall--;
+        struct testData *dd = NotifiedFifoData(tmp);
+        if (dd->sleepTime > sleepmax)
+          sleepmax = dd->sleepTime;
+        delNotifiedFIFO_elt(tmp);
       }
     }
     cumulProcessTime+=sleepmax;
@@ -266,29 +266,32 @@ int main() {
   clock_gettime(CLOCK_MONOTONIC, &end);
   long long dur=(end.tv_sec-st.tv_sec)*1000*1000+(end.tv_nsec-st.tv_nsec)/1000;
   printf("In µs, Total time per group of %d job:%lld, work time per job %d, overhead per job %lld\n",
-	 nb_jobs, dur/1000, cumulProcessTime/1000, (dur-cumulProcessTime)/(1000*nb_jobs));
+         nb_jobs,
+         dur / 1000,
+         cumulProcessTime / 1000,
+         (dur - cumulProcessTime) / (1000 * nb_jobs));
 
-	/*	
-  for (int i=0; i <1000 ; i++) {
-    notifiedFIFO_elt_t *work=newNotifiedFIFO_elt(sizeof(struct testData), i, &worker_back, processing);
-    struct testData *x=(struct testData *)NotifiedFifoData(work);
-    x->id=i;
-    pushTpool(&pool, work);
-  }
+  /*
+for (int i=0; i <1000 ; i++) {
+  notifiedFIFO_elt_t *work=newNotifiedFIFO_elt(sizeof(struct testData), i, &worker_back, processing);
+  struct testData *x=(struct testData *)NotifiedFifoData(work);
+  x->id=i;
+  pushTpool(&pool, work);
+}
 
-  do {
-    tmp=pullTpool(&worker_back,&pool);
+do {
+  tmp=pullTpool(&worker_back,&pool);
 
-    if (tmp) {
-      struct testData *dd=NotifiedFifoData(tmp);
-      printf("Result: %s\n",dd->txt);
-      delNotifiedFIFO_elt(tmp);
-    } else
-      printf("Empty list \n");
+  if (tmp) {
+    struct testData *dd=NotifiedFifoData(tmp);
+    printf("Result: %s\n",dd->txt);
+    delNotifiedFIFO_elt(tmp);
+  } else
+    printf("Empty list \n");
 
-    abortTpoolJob(&pool,510);
-  } while(tmp);
-	*/
+  abortTpoolJob(&pool,510);
+} while(tmp);
+  */
   return 0;
 }
 #endif

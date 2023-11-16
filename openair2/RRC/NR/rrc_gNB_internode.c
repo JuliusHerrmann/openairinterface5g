@@ -115,16 +115,13 @@ int generate_CG_Config(gNB_RRC_INST *rrc,
   }
   
   enc_rval = uper_encode_to_buffer(&asn_DEF_NR_RadioBearerConfig, NULL, (void *)rbconfig, buffer, 1024);
-  AssertFatal (enc_rval.encoded > 0, "ASN1 message encoding failed (%s, %jd)!\n",
-	       enc_rval.failed_type->name, enc_rval.encoded);
-  cg_Config->criticalExtensions.choice.c1->choice.cg_Config->scg_RB_Config = calloc(1,sizeof(OCTET_STRING_t));
-  
+  AssertFatal(enc_rval.encoded > 0, "ASN1 message encoding failed (%s, %jd)!\n", enc_rval.failed_type->name, enc_rval.encoded);
+  cg_Config->criticalExtensions.choice.c1->choice.cg_Config->scg_RB_Config = calloc(1, sizeof(OCTET_STRING_t));
+
   OCTET_STRING_fromBuf(cg_Config->criticalExtensions.choice.c1->choice.cg_Config->scg_RB_Config,
-		       (const char *)buffer,
-		       (enc_rval.encoded+7)>>3);
+                       (const char *)buffer,
+                       (enc_rval.encoded + 7) >> 3);
 
-
-  
   if (get_softmodem_params()->phy_test==1 || get_softmodem_params()->do_ra > 0 || get_softmodem_params()->sa == 1) {
 
     LOG_I(RRC,"Dumping scg_RB_Config message (%jd bytes)\n",(enc_rval.encoded+7)>>3);

@@ -1459,11 +1459,11 @@ void *rrc_nrue(void *notUsed)
     
   case NR_RRC_MAC_RA_IND:
     LOG_D(NR_RRC,
-	  "[UE %ld] Received %s: frame %d RA %s\n",
-	  instance,
-	  ITTI_MSG_NAME(msg_p),
-	  NR_RRC_MAC_RA_IND(msg_p).frame,
-	  NR_RRC_MAC_RA_IND(msg_p).RA_succeeded ? "successful" : "failed");
+          "[UE %ld] Received %s: frame %d RA %s\n",
+          instance,
+          ITTI_MSG_NAME(msg_p),
+          NR_RRC_MAC_RA_IND(msg_p).frame,
+          NR_RRC_MAC_RA_IND(msg_p).RA_succeeded ? "successful" : "failed");
     nr_rrc_handle_ra_indication(rrc, NR_RRC_MAC_RA_IND(msg_p).RA_succeeded);
     break;
     
@@ -1484,11 +1484,11 @@ void *rrc_nrue(void *notUsed)
     /* PDCP messages */
   case NR_RRC_DCCH_DATA_IND:
     nr_rrc_ue_decode_dcch(instance,
-			  NR_RRC_DCCH_DATA_IND(msg_p).rnti,
-			  NR_RRC_DCCH_DATA_IND(msg_p).dcch_index,
-			  NR_RRC_DCCH_DATA_IND(msg_p).sdu_p,
-			  NR_RRC_DCCH_DATA_IND(msg_p).sdu_size,
-			  NR_RRC_DCCH_DATA_IND(msg_p).gNB_index);
+                          NR_RRC_DCCH_DATA_IND(msg_p).rnti,
+                          NR_RRC_DCCH_DATA_IND(msg_p).dcch_index,
+                          NR_RRC_DCCH_DATA_IND(msg_p).sdu_p,
+                          NR_RRC_DCCH_DATA_IND(msg_p).sdu_size,
+                          NR_RRC_DCCH_DATA_IND(msg_p).gNB_index);
     break;
     
   case NAS_KENB_REFRESH_REQ:

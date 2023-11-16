@@ -122,10 +122,10 @@ void polar_encoder(uint32_t *in,
   polarParams->nr_polar_U[247]=1;
   polarParams->nr_polar_U[253]=1;*/
   nr_matrix_multiplication_uint8_1D_uint8_2D(polarParams->nr_polar_U,
-		  	  	  	  	  	  	  	  	     polarParams->G_N,
-											 polarParams->nr_polar_D,
-											 polarParams->N,
-											 polarParams->N);
+                                             polarParams->G_N,
+                                             polarParams->nr_polar_D,
+                                             polarParams->N,
+                                             polarParams->N);
 
   for (uint16_t i = 0; i < polarParams->N; i++)
     polarParams->nr_polar_D[i] = (polarParams->nr_polar_D[i] % 2);
@@ -195,10 +195,10 @@ void polar_encoder_dci(uint32_t *in,
 #endif
   //Calculate CRC.
   nr_matrix_multiplication_uint8_1D_uint8_2D(polarParams->nr_polar_APrime,
-		  	  	  	  	  	  	  	  	  	 polarParams->crc_generator_matrix,
-											 polarParams->nr_polar_crc,
-											 polarParams->K,
-											 polarParams->crcParityBits);
+                                             polarParams->crc_generator_matrix,
+                                             polarParams->nr_polar_crc,
+                                             polarParams->K,
+                                             polarParams->crcParityBits);
 
   for (uint8_t i = 0; i < polarParams->crcParityBits; i++) polarParams->nr_polar_crc[i] = (polarParams->nr_polar_crc[i] % 2);
 
@@ -217,7 +217,8 @@ void polar_encoder_dci(uint32_t *in,
 
   //Scrambling (b to c)
   for (int i=0; i<16; i++)
-	polarParams->nr_polar_B[polarParams->payloadBits+8+i]=( polarParams->nr_polar_B[polarParams->payloadBits+8+i] + ((n_RNTI>>(15-i))&1) ) % 2;
+    polarParams->nr_polar_B[polarParams->payloadBits + 8 + i] =
+        (polarParams->nr_polar_B[polarParams->payloadBits + 8 + i] + ((n_RNTI >> (15 - i)) & 1)) % 2;
 
 #ifdef DEBUG_POLAR_ENCODER_DCI
   printf("[polar_encoder_dci] B: ");
@@ -236,10 +237,10 @@ void polar_encoder_dci(uint32_t *in,
                          polarParams->n_pc);
   //Encoding (u to d)
   nr_matrix_multiplication_uint8_1D_uint8_2D(polarParams->nr_polar_U,
-		  	  	  	  	  	  	  	  	  	 polarParams->G_N,
-											 polarParams->nr_polar_D,
-											 polarParams->N,
-											 polarParams->N);
+                                             polarParams->G_N,
+                                             polarParams->nr_polar_D,
+                                             polarParams->N,
+                                             polarParams->N);
   for (uint16_t i = 0; i < polarParams->N; i++) polarParams->nr_polar_D[i] = (polarParams->nr_polar_D[i] % 2);
 
   //Rate matching
@@ -340,7 +341,7 @@ static inline void polar_rate_matching(const t_nrPolar_params *polarParams,void 
       }
     }
 
-  }					     
+  }
   // These are based on LUTs for byte and short word groups
   else if (polarParams->groupsize == 8)
     for (int i=0; i<polarParams->encoderLength>>3; i++) ((uint8_t *)out)[i] = ((uint8_t *)in)[polarParams->rm_tab[i]];

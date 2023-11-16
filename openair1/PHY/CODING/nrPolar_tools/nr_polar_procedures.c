@@ -139,13 +139,7 @@ void nr_polar_uxG(uint64_t *D, const uint64_t *u, const uint64_t **G_N_tab, uint
   }
 }
 
-void nr_polar_bit_insertion(uint8_t *input,
-			    uint8_t *output,
-			    uint16_t N,
-			    uint16_t K,
-			    int16_t *Q_I_N,
-			    int16_t *Q_PC_N,
-			    uint8_t n_PC)
+void nr_polar_bit_insertion(uint8_t *input, uint8_t *output, uint16_t N, uint16_t K, int16_t *Q_I_N, int16_t *Q_PC_N, uint8_t n_PC)
 {
   uint16_t k=0;
   uint8_t flag;
@@ -158,26 +152,23 @@ void nr_polar_bit_insertion(uint8_t *input,
     for (int n=0; n<=N-1; n++) {
       flag=0;
       for (int m=0; m<=(K+n_PC)-1; m++) {
-	if ( n == Q_I_N[m]) {
-	  flag=1;
-	  break;
-	}
+        if (n == Q_I_N[m]) {
+          flag = 1;
+          break;
+        }
       }
       if (flag) { // n ϵ Q_I_N
-	output[n]=input[k];
-	k++;
+        output[n] = input[k];
+        k++;
       } else {
-	output[n] = 0;
+        output[n] = 0;
       }
     }
   }
 
 }
 
-
-uint32_t nr_polar_output_length(uint16_t K,
-				uint16_t E,
-				uint8_t n_max)
+uint32_t nr_polar_output_length(uint16_t K, uint16_t E, uint8_t n_max)
 {
   uint8_t n_1, n_2, n_min=5, n;
   double R_min=1.0/8;
@@ -196,15 +187,12 @@ uint32_t nr_polar_output_length(uint16_t K,
   if (n<n_min) n=n_min;
 
   /*printf("nr_polar_output_length: K %d, E %d, n %d (n_max %d,n_min %d, n_1 %d,n_2 %d)\n",
-	 K,E,n,n_max,n_min,n_1,n_2);
-	 exit(-1);*/
+     K,E,n,n_max,n_min,n_1,n_2);
+     exit(-1);*/
   return ((uint32_t) pow(2.0,n)); //=polar_code_output_length
 }
 
-
-void nr_polar_channel_interleaver_pattern(uint16_t *cip,
-					  uint8_t I_BIL,
-					  uint16_t E)
+void nr_polar_channel_interleaver_pattern(uint16_t *cip, uint8_t I_BIL, uint16_t E)
 {
   if (I_BIL == 1) {
     uint16_t T=0, k;
@@ -216,22 +204,22 @@ void nr_polar_channel_interleaver_pattern(uint16_t *cip,
     k=0;
     for (int i = 0; i <= T-1; i++) {
       for (int j = 0; j <= (T-1)-i; j++) {
-	if (k<E) {
-	  v[i][j] = k;
-	} else {
-	  v[i][j] = (-1);
-	}
-	k++;
+        if (k < E) {
+          v[i][j] = k;
+        } else {
+          v[i][j] = (-1);
+        }
+        k++;
       }
     }
     
     k=0;
     for (int j = 0; j <= T-1; j++) {
       for (int i = 0; i <= (T-1)-j; i++) {
-	if ( v[i][j] != (-1) ) {
-	  cip[k]=v[i][j];
-	  k++;
-	}
+        if (v[i][j] != (-1)) {
+          cip[k] = v[i][j];
+          k++;
+        }
       }
     }
     
@@ -368,11 +356,7 @@ void nr_polar_info_bit_pattern(uint8_t *ibp,
   free(Q_Itmp_N);
 }
 
-
-void nr_polar_info_bit_extraction(uint8_t *input,
-				  uint8_t *output,
-				  uint8_t *pattern,
-				  uint16_t size)
+void nr_polar_info_bit_extraction(uint8_t *input, uint8_t *output, uint8_t *pattern, uint16_t size)
 {
   uint16_t j = 0;
   for (int i = 0; i < size; i++) {
@@ -383,13 +367,7 @@ void nr_polar_info_bit_extraction(uint8_t *input,
   }
 }
 
-
-void nr_polar_rate_matching_pattern(uint16_t *rmp,
-				    uint16_t *J,
-				    const uint8_t *P_i_,
-				    uint16_t K,
-				    uint16_t N,
-				    uint16_t E)
+void nr_polar_rate_matching_pattern(uint16_t *rmp, uint16_t *J, const uint8_t *P_i_, uint16_t K, uint16_t N, uint16_t E)
 {
   uint8_t i;
   uint16_t *d, ind;
@@ -425,13 +403,7 @@ void nr_polar_rate_matching_pattern(uint16_t *rmp,
   free(y);
 }
 
-
-void nr_polar_rate_matching(double *input,
-			    double *output,
-			    uint16_t *rmp,
-			    uint16_t K,
-			    uint16_t N,
-			    uint16_t E)
+void nr_polar_rate_matching(double *input, double *output, uint16_t *rmp, uint16_t K, uint16_t N, uint16_t E)
 {
   if (E>=N) { //repetition
     for (int i=0; i<=N-1; i++) output[i]=0;

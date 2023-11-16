@@ -191,8 +191,7 @@ int mm_msg_encode(MM_msg *mm_msg, uint8_t *buffer, uint32_t len) {
       encode_result = encode_fgs_deregistration_request_ue_originating(&mm_msg->fgs_deregistration_request_ue_originating, buffer, len);
       break;
     default:
-      LOG_TRACE(ERROR, "EMM-MSG   - Unexpected message type: 0x%x",
-    		  mm_msg->header.message_type);
+      LOG_TRACE(ERROR, "EMM-MSG   - Unexpected message type: 0x%x", mm_msg->header.message_type);
       encode_result = TLV_ENCODE_WRONG_MESSAGE_TYPE;
       break;
       /* TODO: Handle not standard layer 3 messages: SERVICE_REQUEST */

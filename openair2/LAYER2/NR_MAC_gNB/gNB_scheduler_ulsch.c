@@ -1483,14 +1483,14 @@ static void nr_ue_max_mcs_min_rb(int mu,
 }
 
 static bool allocate_ul_retransmission(gNB_MAC_INST *nrmac,
-				       frame_t frame,
-				       sub_frame_t slot,
-				       uint16_t *rballoc_mask,
-				       int *n_rb_sched,
-				       NR_UE_info_t* UE,
-				       int harq_pid,
-				       const NR_ServingCellConfigCommon_t *scc,
-				       const int tda)
+                                       frame_t frame,
+                                       sub_frame_t slot,
+                                       uint16_t *rballoc_mask,
+                                       int *n_rb_sched,
+                                       NR_UE_info_t *UE,
+                                       int harq_pid,
+                                       const NR_ServingCellConfigCommon_t *scc,
+                                       const int tda)
 {
   const int CC_id = 0;
   NR_UE_sched_ctrl_t *sched_ctrl = &UE->UE_sched_ctrl;
@@ -1961,7 +1961,10 @@ static bool nr_fr1_ulsch_preprocessor(module_id_t module_id, frame_t frame, sub_
     NR_UE_sched_ctrl_t *sched_ctrl = &UE2->UE_sched_ctrl;
     AssertFatal(K2 == get_K2(tdaList, tda, mu),
                 "Different K2, %d(UE%d) != %ld(UE%04x)\n",
-		K2, 0, get_K2(tdaList, tda, mu), UE2->rnti);
+                K2,
+                0,
+                get_K2(tdaList, tda, mu),
+                UE2->rnti);
     sched_ctrl->sched_pusch.slot = sched_slot;
     sched_ctrl->sched_pusch.frame = sched_frame;
   }

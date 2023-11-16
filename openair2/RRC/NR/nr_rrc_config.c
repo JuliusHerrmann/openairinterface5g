@@ -1943,9 +1943,9 @@ NR_BCCH_DL_SCH_Message_t *get_SIB1_NR(const NR_ServingCellConfigCommon_t *scc, c
                                frequency_range);
 
   LOG_I(NR_RRC,
-	"SIB1 freq: offsetToPointA %d\n",
+        "SIB1 freq: offsetToPointA %d\n",
         (int)sib1->servingCellConfigCommon->downlinkConfigCommon.frequencyInfoDL.offsetToPointA);
-  
+
   for (int i = 0; i < frequencyInfoDL->scs_SpecificCarrierList.list.count; i++) {
     asn1cSeqAdd(&ServCellCom->downlinkConfigCommon.frequencyInfoDL.scs_SpecificCarrierList.list,
                 frequencyInfoDL->scs_SpecificCarrierList.list.array[i]);
@@ -2426,7 +2426,7 @@ NR_CellGroupConfig_t *get_initial_cellGroupConfig(int uid,
   cellGroupConfig->cellGroupId = 0;
 
   /* Rlc Bearer Config */
-  /* TS38.331 9.2.1	Default SRB configurations */
+  /* TS38.331 9.2.1    Default SRB configurations */
   cellGroupConfig->rlc_BearerToAddModList = calloc(1, sizeof(*cellGroupConfig->rlc_BearerToAddModList));
   NR_RLC_BearerConfig_t *rlc_BearerConfig =
       get_SRB_RLC_BearerConfig(1, 1, NR_LogicalChannelConfig__ul_SpecificParameters__bucketSizeDuration_ms1000);

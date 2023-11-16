@@ -75,8 +75,8 @@ softmodem_params_t *get_softmodem_params(void) {
 int32_t check_execmask(uint64_t execmask) {
   char *softmodemfunc=map_int_to_str(softmodem_funcs, execmask);
   if (softmodemfunc != NULL) {
-  	  set_softmodem_optmask(execmask);
-  	  return 0;
+    set_softmodem_optmask(execmask);
+    return 0;
   } 
   return -1;
 }
@@ -84,9 +84,9 @@ char *get_softmodem_function(uint64_t *sofmodemfunc_mask_ptr) {
   uint64_t fmask=(get_softmodem_optmask()&SOFTMODEM_FUNC_BITS);
   char *softmodemfunc=map_int_to_str(softmodem_funcs, fmask);
   if (sofmodemfunc_mask_ptr != NULL)
-  	  *sofmodemfunc_mask_ptr=fmask;
+    *sofmodemfunc_mask_ptr = fmask;
   if (softmodemfunc != NULL) {
-  	  return softmodemfunc;
+    return softmodemfunc;
   }
   return "???";
 }

@@ -180,10 +180,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
         //Start pilot
         ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
         ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-        multadd_real_vector_complex_scalar(fl,
-		    	       ch,
-		    	       ch_tmp,
-		    	       8);
+        multadd_real_vector_complex_scalar(fl, ch, ch_tmp, 8);
 
         // SNR & RSRP estimation
         rsrp += squaredMod(*((c16_t *)rxF));
@@ -204,17 +201,11 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
           ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
           if(pIdx == 1) // 2nd pilot
           {
-            multadd_real_vector_complex_scalar(fml,
-		        	       ch,
-		        	       ch_tmp,
-		        	       8);
+            multadd_real_vector_complex_scalar(fml, ch, ch_tmp, 8);
           }
           else
           {
-            multadd_real_vector_complex_scalar(fm,
-		        	       ch,
-		        	       ch_tmp,
-		        	       8);
+            multadd_real_vector_complex_scalar(fm, ch, ch_tmp, 8);
           }
 
           // SNR & RSRP estimation
@@ -233,17 +224,11 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
           ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
           if(pIdx == (num_pilots-3)) // 2nd last pilot
           {
-            multadd_real_vector_complex_scalar(fmr,
-		        	       ch,
-		        	       ch_tmp,
-		        	       8);
+            multadd_real_vector_complex_scalar(fmr, ch, ch_tmp, 8);
           }
           else
           {
-            multadd_real_vector_complex_scalar(fmm,
-		        	       ch,
-		        	       ch_tmp,
-		        	       8);
+            multadd_real_vector_complex_scalar(fmm, ch, ch_tmp, 8);
           }
 
           // SNR & RSRP estimation
@@ -263,10 +248,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
         //End pilot
         ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
         ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-        multadd_real_vector_complex_scalar(fr,
-	      	       ch,
-	      	       ch_tmp,
-	      	       8);
+        multadd_real_vector_complex_scalar(fr, ch, ch_tmp, 8);
 
         // SNR & RSRP estimation
         rsrp += squaredMod(*((c16_t *)rxF));
@@ -336,10 +318,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
         //Start pilot
         ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
         ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-        multadd_real_vector_complex_scalar(fl,
-	      	       ch,
-	      	       ch_tmp,
-	      	       16);
+        multadd_real_vector_complex_scalar(fl, ch, ch_tmp, 16);
 
         // SNR & RSRP estimation
         rsrp += squaredMod(*((c16_t *)rxF));
@@ -355,10 +334,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
 
         ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
         ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-        multadd_real_vector_complex_scalar(fml,
-	      	       ch,
-	      	       ch_tmp,
-	      	       16);
+        multadd_real_vector_complex_scalar(fml, ch, ch_tmp, 16);
 
         // SNR & RSRP estimation
         rsrp += squaredMod(*((c16_t *)rxF));
@@ -378,10 +354,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
         {
           ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
           ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-          multadd_real_vector_complex_scalar(fmm,
-	      	         ch,
-	      	         ch_tmp,
-	      	         16);
+          multadd_real_vector_complex_scalar(fmm, ch, ch_tmp, 16);
 
           // SNR & RSRP estimation
           rsrp += squaredMod(*((c16_t *)rxF));
@@ -400,10 +373,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
         //End pilot
         ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
         ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-        multadd_real_vector_complex_scalar(fmr,
-	      	       ch,
-	      	       ch_tmp,
-	      	       16);
+        multadd_real_vector_complex_scalar(fmr, ch, ch_tmp, 16);
 
         // SNR & RSRP estimation
         rsrp += squaredMod(*((c16_t *)rxF));
@@ -419,10 +389,7 @@ int nr_prs_channel_estimation(uint8_t gNB_id,
 
         ch[0] = (int16_t)(((int32_t)rxF[0]*pil[0] + (int32_t)rxF[1]*pil[1])>>15);
         ch[1] = (int16_t)(((int32_t)rxF[1]*pil[0] - (int32_t)rxF[0]*pil[1])>>15);
-        multadd_real_vector_complex_scalar(fr,
-	      	       ch,
-	      	       ch_tmp,
-	      	       16);
+        multadd_real_vector_complex_scalar(fr, ch, ch_tmp, 16);
 
         // SNR & RSRP estimation
         rsrp += squaredMod(*((c16_t *)rxF));
@@ -645,9 +612,7 @@ int nr_pbch_dmrs_correlation(PHY_VARS_NR_UE *ue,
   unsigned int  ssb_offset = ue->frame_parms.first_carrier_offset + ue->frame_parms.ssb_start_subcarrier;
   if (ssb_offset>= ue->frame_parms.ofdm_symbol_size) ssb_offset-=ue->frame_parms.ofdm_symbol_size;
 
-  AssertFatal(dmrss >= 0 && dmrss < 3,
-	      "symbol %d is illegal for PBCH DM-RS \n",
-	      dmrss);
+  AssertFatal(dmrss >= 0 && dmrss < 3, "symbol %d is illegal for PBCH DM-RS \n", dmrss);
 
   symbol_offset = ue->frame_parms.ofdm_symbol_size*symbol;
 
@@ -716,15 +681,14 @@ int nr_pbch_dmrs_correlation(PHY_VARS_NR_UE *ue,
     rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
 
     for (pilot_cnt=3; pilot_cnt<(3*20); pilot_cnt += 3) {
-
-      //	if (pilot_cnt == 30)
-      //	  rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k)];
+      //    if (pilot_cnt == 30)
+      //      rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k)];
 
       // in 2nd symbol, skip middle  REs (48 with DMRS,  144 for SSS, and another 48 with DMRS) 
       if (dmrss == 1 && pilot_cnt == 12) {
-	pilot_cnt=48;
-	re_offset = (re_offset+144) % ue->frame_parms.ofdm_symbol_size;
-	rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
+      pilot_cnt = 48;
+      re_offset = (re_offset + 144) % ue->frame_parms.ofdm_symbol_size;
+      rxF = (int16_t *)&rxdataF[aarx][(symbol_offset + k + re_offset)];
       }
       ch[0] = (int16_t)(((int32_t)pil[0]*rxF[0] - (int32_t)pil[1]*rxF[1])>>15);
       ch[1] = (int16_t)(((int32_t)pil[0]*rxF[1] + (int32_t)pil[1]*rxF[0])>>15);
@@ -805,9 +769,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
 
   ch_offset     = ue->frame_parms.ofdm_symbol_size*symbol;
 
-  AssertFatal(dmrss >= 0 && dmrss < 3,
-	      "symbol %d is illegal for PBCH DM-RS \n",
-	      dmrss);
+  AssertFatal(dmrss >= 0 && dmrss < 3, "symbol %d is illegal for PBCH DM-RS \n", dmrss);
 
   symbol_offset = ue->frame_parms.ofdm_symbol_size*symbol;
 
@@ -925,10 +887,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
     printf("ch 0 %d\n",((int32_t)pil[0]*rxF[0] - (int32_t)pil[1]*rxF[1]));
     printf("pilot 0 : rxF - > (%d,%d) addr %p  ch -> (%d,%d), pil -> (%d,%d) \n",rxF[0],rxF[1],&rxF[0],ch[0],ch[1],pil[0],pil[1]);
 #endif
-    multadd_real_vector_complex_scalar(fl,
-				       ch,
-				       dl_ch,
-				       16);
+    multadd_real_vector_complex_scalar(fl, ch, dl_ch, 16);
     pil += 2;
     re_offset = (re_offset+4) % ue->frame_parms.ofdm_symbol_size;
     rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
@@ -943,10 +902,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
 #ifdef DEBUG_PBCH
     printf("pilot 1 : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
-    multadd_real_vector_complex_scalar(fm,
-				       ch,
-				       dl_ch,
-				       16);
+    multadd_real_vector_complex_scalar(fm, ch, dl_ch, 16);
     pil += 2;
     re_offset = (re_offset+4) % ue->frame_parms.ofdm_symbol_size;
     rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
@@ -958,26 +914,22 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
     printf("pilot 2 : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
 
-    multadd_real_vector_complex_scalar(fr,
-				       ch,
-				       dl_ch,
-				       16);
+    multadd_real_vector_complex_scalar(fr, ch, dl_ch, 16);
     pil += 2;
     re_offset = (re_offset+4) % ue->frame_parms.ofdm_symbol_size;
     rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
     dl_ch += 24;
 
     for (pilot_cnt=3; pilot_cnt<(3*20); pilot_cnt += 3) {
+    //    if (pilot_cnt == 30)
+    //      rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k)];
 
-      //	if (pilot_cnt == 30)
-      //	  rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k)];
-
-      // in 2nd symbol, skip middle  REs (48 with DMRS,  144 for SSS, and another 48 with DMRS) 
-      if (dmrss == 1 && pilot_cnt == 12) {
-        pilot_cnt=48;
-        re_offset = (re_offset+144) % ue->frame_parms.ofdm_symbol_size;
-        rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
-        dl_ch += 288;
+    // in 2nd symbol, skip middle  REs (48 with DMRS,  144 for SSS, and another 48 with DMRS)
+    if (dmrss == 1 && pilot_cnt == 12) {
+      pilot_cnt = 48;
+      re_offset = (re_offset + 144) % ue->frame_parms.ofdm_symbol_size;
+      rxF = (int16_t *)&rxdataF[aarx][(symbol_offset + k + re_offset)];
+      dl_ch += 288;
       }
       ch[0] = (int16_t)(((int32_t)pil[0]*rxF[0] - (int32_t)pil[1]*rxF[1])>>15);
       ch[1] = (int16_t)(((int32_t)pil[0]*rxF[1] + (int32_t)pil[1]*rxF[0])>>15);
@@ -985,10 +937,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
 #ifdef DEBUG_PBCH
       printf("pilot %u : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",pilot_cnt,rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
-      multadd_real_vector_complex_scalar(fl,
-					 ch,
-					 dl_ch,
-					 16);
+      multadd_real_vector_complex_scalar(fl, ch, dl_ch, 16);
 
       //for (int i= 0; i<8; i++)
       //            printf("pilot_cnt %d dl_ch %d %d\n", pilot_cnt, dl_ch+i, *(dl_ch+i));
@@ -1004,10 +953,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
 #ifdef DEBUG_PBCH
       printf("pilot %u : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",pilot_cnt+1,rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
-      multadd_real_vector_complex_scalar(fm,
-					 ch,
-					 dl_ch,
-					 16);
+      multadd_real_vector_complex_scalar(fm, ch, dl_ch, 16);
       pil += 2;
       re_offset = (re_offset+4) % ue->frame_parms.ofdm_symbol_size;
       rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
@@ -1019,10 +965,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
       printf("pilot %u : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",pilot_cnt+2,rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
 
-      multadd_real_vector_complex_scalar(fr,
-					 ch,
-					 dl_ch,
-					 16);
+      multadd_real_vector_complex_scalar(fr, ch, dl_ch, 16);
       pil += 2;
       re_offset = (re_offset+4) % ue->frame_parms.ofdm_symbol_size;
       rxF   = (int16_t *)&rxdataF[aarx][(symbol_offset+k+re_offset)];
@@ -1034,10 +977,7 @@ int nr_pbch_channel_estimation(PHY_VARS_NR_UE *ue,
     {
       // do ifft of channel estimate
       LOG_D(PHY,"Channel Impulse Computation Slot %d Symbol %d ch_offset %d\n", Ns, symbol, ch_offset);
-      idft(idftsizeidx,
-	   (int16_t*) &dl_ch_estimates[aarx][ch_offset],
-	   (int16_t*) dl_ch_estimates_time[aarx],
-	   1);
+      idft(idftsizeidx, (int16_t *)&dl_ch_estimates[aarx][ch_offset], (int16_t *)dl_ch_estimates_time[aarx], 1);
     }
   }
 
@@ -1138,10 +1078,7 @@ void nr_pdcch_channel_estimation(PHY_VARS_NR_UE *ue,
     printf("ch 0 %d\n",((int32_t)pil[0]*rxF[0] - (int32_t)pil[1]*rxF[1]));
     printf("pilot 0 : rxF - > (%d,%d) addr %p  ch -> (%d,%d), pil -> (%d,%d) \n",rxF[0],rxF[1],&rxF[0],ch[0],ch[1],pil[0],pil[1]);
 #endif
-    multadd_real_vector_complex_scalar(fl,
-				       ch,
-				       dl_ch,
-				       16);
+    multadd_real_vector_complex_scalar(fl, ch, dl_ch, 16);
     pil += 2;
     rxF += 8;
     k   += 4;
@@ -1156,10 +1093,7 @@ void nr_pdcch_channel_estimation(PHY_VARS_NR_UE *ue,
 #ifdef DEBUG_PDCCH
     printf("pilot 1 : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
-    multadd_real_vector_complex_scalar(fm,
-				       ch,
-				       dl_ch,
-				       16);
+    multadd_real_vector_complex_scalar(fm, ch, dl_ch, 16);
     pil += 2;
     rxF += 8;
     k   += 4;
@@ -1176,10 +1110,7 @@ void nr_pdcch_channel_estimation(PHY_VARS_NR_UE *ue,
     printf("pilot 2 : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
 
-    multadd_real_vector_complex_scalar(fr,
-				       ch,
-				       dl_ch,
-				       16);
+    multadd_real_vector_complex_scalar(fr, ch, dl_ch, 16);
 #ifdef DEBUG_PDCCH
     for (int m =0; m<12; m++)
       printf("data :  dl_ch -> (%d,%d)\n",dl_ch[0+2*m],dl_ch[1+2*m]);
@@ -1202,10 +1133,7 @@ void nr_pdcch_channel_estimation(PHY_VARS_NR_UE *ue,
 #ifdef DEBUG_PDCCH
       printf("pilot %u : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",pilot_cnt,rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
-      multadd_real_vector_complex_scalar(fl,
-					 ch,
-					 dl_ch,
-					 16);
+      multadd_real_vector_complex_scalar(fl, ch, dl_ch, 16);
 
       //for (int i= 0; i<8; i++)
       //            printf("pilot_cnt %d dl_ch %d %d\n", pilot_cnt, dl_ch+i, *(dl_ch+i));
@@ -1224,10 +1152,7 @@ void nr_pdcch_channel_estimation(PHY_VARS_NR_UE *ue,
 #ifdef DEBUG_PDCCH
       printf("pilot %u : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",pilot_cnt+1,rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
-      multadd_real_vector_complex_scalar(fm,
-					 ch,
-					 dl_ch,
-					 16);
+      multadd_real_vector_complex_scalar(fm, ch, dl_ch, 16);
       pil += 2;
       rxF += 8;
       k   += 4;
@@ -1244,10 +1169,7 @@ void nr_pdcch_channel_estimation(PHY_VARS_NR_UE *ue,
       printf("pilot %u : rxF - > (%d,%d) ch -> (%d,%d), pil -> (%d,%d) \n",pilot_cnt+2,rxF[0],rxF[1],ch[0],ch[1],pil[0],pil[1]);
 #endif
 
-      multadd_real_vector_complex_scalar(fr,
-					 ch,
-					 dl_ch,
-					 16);
+      multadd_real_vector_complex_scalar(fr, ch, dl_ch, 16);
 #ifdef DEBUG_PDCCH
     for (int m =0; m<12; m++)
       printf("data :  dl_ch -> (%d,%d)\n",dl_ch[0+2*m],dl_ch[1+2*m]);

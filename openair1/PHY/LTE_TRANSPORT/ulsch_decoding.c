@@ -254,19 +254,17 @@ void processULSegment(void * arg) {
       LOG_E(PHY,"Adding HARQ data for segment: %d\n", r);
       // Store the result of HARQ combining in the last emtc repetitions of sequence 0,2,3,1
       for (int nn=0; nn<max_Ncb; nn++)
-	ulsch_harq->pusch_rep_buffer[r][nn] += ulsch_harq->w[r][nn] ;
+        ulsch_harq->pusch_rep_buffer[r][nn] += ulsch_harq->w[r][nn];
     }
 
     if (ulsch_harq->repetition_number == ulsch_harq->total_number_of_repetitions) {
       LOG_E(PHY,"Will use HARQ data sum up for segment: %d\n", r);
-      for (int nn=0; nn<max_Ncb; nn++) 
-	ulsch_harq->w[r][nn] =  ulsch_harq->pusch_rep_buffer[r][nn] ;
+      for (int nn = 0; nn < max_Ncb; nn++)
+        ulsch_harq->w[r][nn] = ulsch_harq->pusch_rep_buffer[r][nn];
     }
   }
   int16_t soft_bits[3*8*6144+12+96] __attribute__((aligned(32)));
-  sub_block_deinterleaving_turbo(4+rdata->Kr,
-				 soft_bits+96,
-				 ulsch_harq->w[r]);
+  sub_block_deinterleaving_turbo(4 + rdata->Kr, soft_bits + 96, ulsch_harq->w[r]);
   stop_meas(&eNB->ulsch_deinterleaving_stats);
   rdata->decodeIterations = rdata->function(soft_bits + 96,
                                             NULL,
@@ -359,7 +357,7 @@ static int ulsch_decoding_data(PHY_VARS_eNB *eNB, L1_rxtx_proc_t *proc, int UE_i
     proc->nbDecode++;
     LOG_D(PHY,"Added a block to decode, in pipe: %d\n",proc->nbDecode);
     r_offset+=E;
-    offset+=sz;	    
+    offset += sz;
   }
   return(ret);
 }
@@ -530,12 +528,13 @@ unsigned int  ulsch_decoding(PHY_VARS_eNB *eNB,
               subframe);
   // Compute Q_ri
   Qprime = ulsch_harq->O_RI*ulsch_harq->Msc_initial*ulsch_harq->Nsymb_initial * ulsch->beta_offset_ri_times8;
-  LOG_D(PHY, "Qprime %d, O_RI %d, Msc %d, Nym %d beta %d\n",
-		  Qprime,
-		  ulsch_harq->O_RI,
-		  ulsch_harq->Msc_initial,
-		  ulsch_harq->Nsymb_initial,
-		  ulsch->beta_offset_ri_times8);
+  LOG_D(PHY,
+        "Qprime %d, O_RI %d, Msc %d, Nym %d beta %d\n",
+        Qprime,
+        ulsch_harq->O_RI,
+        ulsch_harq->Msc_initial,
+        ulsch_harq->Nsymb_initial,
+        ulsch->beta_offset_ri_times8);
 
   if (Qprime > 0 ) {
     if ((Qprime % (8*sumKr)) > 0)
@@ -1106,16 +1105,18 @@ void dump_ulsch_stats(FILE *fd,PHY_VARS_eNB *eNB,int frame) {
             eNB->ulsch_stats[i].round_trials[2],
            (double)eNB->ulsch_stats[i].round_trials[3]/eNB->ulsch_stats[i].round_trials[0],
             eNB->ulsch_stats[i].round_trials[3]);
-      stroff+=sprintf(output+stroff,"ULSCH RNTI %x:  current_Qm %d, current_G %d, current_TBS %d, current_rate %f,current_RI %d, timing_offset %d, total_bytes RX/SCHED %d/%d\n",
-            eNB->ulsch_stats[i].rnti,
-            eNB->ulsch_stats[i].current_Qm,
-	    eNB->ulsch_stats[i].current_G,
-	    eNB->ulsch_stats[i].current_TBS,
-	    (double)eNB->ulsch_stats[i].current_G/eNB->ulsch_stats[i].current_TBS,
-            eNB->ulsch_stats[i].current_RI,
-	    eNB->ulsch_stats[i].timing_offset,
-            eNB->ulsch_stats[i].total_bytes_rx,
-            eNB->ulsch_stats[i].total_bytes_tx);
+      stroff += sprintf(output + stroff,
+                        "ULSCH RNTI %x:  current_Qm %d, current_G %d, current_TBS %d, current_rate %f,current_RI %d, timing_offset "
+                        "%d, total_bytes RX/SCHED %d/%d\n",
+                        eNB->ulsch_stats[i].rnti,
+                        eNB->ulsch_stats[i].current_Qm,
+                        eNB->ulsch_stats[i].current_G,
+                        eNB->ulsch_stats[i].current_TBS,
+                        (double)eNB->ulsch_stats[i].current_G / eNB->ulsch_stats[i].current_TBS,
+                        eNB->ulsch_stats[i].current_RI,
+                        eNB->ulsch_stats[i].timing_offset,
+                        eNB->ulsch_stats[i].total_bytes_rx,
+                        eNB->ulsch_stats[i].total_bytes_tx);
     }
   fprintf(fd,"%s",output);
 }

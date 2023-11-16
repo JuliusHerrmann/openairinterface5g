@@ -131,14 +131,7 @@ void nr_fill_rx_indication(fapi_nr_rx_indication_t *rx_ind,
     if  (pdu_type == FAPI_NR_RX_PDU_TYPE_SIB)
       t=WS_SI_RNTI;
     dl_harq0 = &ue->dl_harq_processes[0][dlsch0->dlsch_config.harq_process_nbr];
-    trace_NRpdu(DIRECTION_DOWNLINK,
-		b,
-		dlsch0->dlsch_config.TBS / 8,
-		t,
-		dlsch0->rnti,
-		proc->frame_rx,
-		proc->nr_slot_rx,
-		0,0);
+    trace_NRpdu(DIRECTION_DOWNLINK, b, dlsch0->dlsch_config.TBS / 8, t, dlsch0->rnti, proc->frame_rx, proc->nr_slot_rx, 0, 0);
   }
   switch (pdu_type){
     case FAPI_NR_RX_PDU_TYPE_SIB:
@@ -454,8 +447,10 @@ int nr_ue_pdcch_procedures(PHY_VARS_NR_UE *ue,
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_DCI_DECODING, VCD_FUNCTION_IN);
 
 #ifdef NR_PDCCH_SCHED_DEBUG
-  printf("<-NR_PDCCH_PHY_PROCEDURES_LTE_UE (nr_ue_pdcch_procedures)-> Entering function nr_dci_decoding_procedure for search space %d)\n",
-	 n_ss);
+  printf(
+      "<-NR_PDCCH_PHY_PROCEDURES_LTE_UE (nr_ue_pdcch_procedures)-> Entering function nr_dci_decoding_procedure for search space "
+      "%d)\n",
+      n_ss);
 #endif
 
   dci_cnt = nr_dci_decoding_procedure(ue, proc, pdcch_e_rx, &dci_ind, rel15);

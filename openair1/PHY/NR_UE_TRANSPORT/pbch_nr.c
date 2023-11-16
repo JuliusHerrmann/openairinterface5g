@@ -65,7 +65,7 @@ uint32_t *pseudo_random_gold_sequence(length M_PN, uint32_t cinit)
 
   if ((x1 == NULL) || (x2 == NULL)) {
     msg("Fatal memory allocation problem \n");
-	assert(0);
+    assert(0);
   }
   else {
     bzero(x1, size_x);

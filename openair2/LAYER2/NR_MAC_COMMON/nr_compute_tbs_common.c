@@ -98,10 +98,8 @@ uint32_t nr_compute_tbs(uint16_t Qm,
 }
 
 //tbslbrm calculation according to 5.4.2.1 of 38.212
-uint32_t nr_compute_tbslbrm(uint16_t table,
-			    uint16_t nb_rb,
-		            uint8_t Nl) {
-
+uint32_t nr_compute_tbslbrm(uint16_t table, uint16_t nb_rb, uint8_t Nl)
+{
   uint16_t R, nb_re;
   uint16_t nb_rb_lbrm=0;
   uint8_t Qm;

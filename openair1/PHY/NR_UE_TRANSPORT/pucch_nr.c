@@ -389,7 +389,7 @@ void nr_generate_pucch1(const PHY_VARS_NR_UE *ue,
                  z_dmrs_re[(mprime*12*N_SF_mprime0_PUCCH_1)+(m*12)+n],z_dmrs_im[(mprime*12*N_SF_mprime0_PUCCH_1)+(m*12)+n]);
 #endif
 //          printf("gNB entering l=%d\tdmrs_re=%d\tdmrs_im=%d\n",l,z_dmrs_re[(mprime*12*N_SF_mprime0_PUCCH_DMRS_1)+(m*12)+n],z_dmrs_re[(mprime*12*N_SF_mprime0_PUCCH_DMRS_1)+(m*12)+n]);
-	}
+        }
       }
     }
 
@@ -523,16 +523,17 @@ static inline void nr_pucch2_3_4_scrambling(uint16_t M_bit,uint16_t rnti,uint16_
     s = lte_gold_generic(&x1, &x2, (iprime==0) ? 1 : 0);
     B=((uint32_t*)B64)[iprime];
     for (int n=0;n<M_bit2;n+=8)
-      LOG_D(PHY,"PUCCH2 encoded %d : %d,%d,%d,%d,%d,%d,%d,%d\n",n,
-	    (B>>n)&1,
-	    (B>>(n+1))&1,
-	    (B>>(n+2))&1,
-	    (B>>(n+3))&1,
-	    (B>>(n+4))&1,
-	    (B>>(n+5))&1,
-	    (B>>(n+6))&1,
-	    (B>>(n+7))&1
-	    );
+      LOG_D(PHY,
+            "PUCCH2 encoded %d : %d,%d,%d,%d,%d,%d,%d,%d\n",
+            n,
+            (B >> n) & 1,
+            (B >> (n + 1)) & 1,
+            (B >> (n + 2)) & 1,
+            (B >> (n + 3)) & 1,
+            (B >> (n + 4)) & 1,
+            (B >> (n + 5)) & 1,
+            (B >> (n + 6)) & 1,
+            (B >> (n + 7)) & 1);
     for (i=0; i<M_bit2; i++) {
       c = (uint8_t)((s>>i)&1);
       btildep[i] = (((B>>i)&1) ^ c);

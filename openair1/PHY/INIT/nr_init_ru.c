@@ -56,8 +56,12 @@ int nr_phy_init_RU(RU_t *ru) {
     for (i=0; i<ru->nb_tx; i++) {
       // Allocate 10 subframes of I/Q TX signal data (time) if not
       ru->common.txdata[i]  = (int32_t*)malloc16_clear((ru->sf_extension + fp->samples_per_frame)*sizeof(int32_t));
-      LOG_I(PHY,"[INIT] common.txdata[%d] = %p (%lu bytes,sf_extension %d)\n",i,ru->common.txdata[i],
-	     (ru->sf_extension + fp->samples_per_frame)*sizeof(int32_t),ru->sf_extension);
+      LOG_I(PHY,
+            "[INIT] common.txdata[%d] = %p (%lu bytes,sf_extension %d)\n",
+            i,
+            ru->common.txdata[i],
+            (ru->sf_extension + fp->samples_per_frame) * sizeof(int32_t),
+            ru->sf_extension);
       ru->common.txdata[i] =  &ru->common.txdata[i][ru->sf_extension];
 
       LOG_I(PHY,"[INIT] common.txdata[%d] = %p \n",i,ru->common.txdata[i]);
@@ -88,8 +92,7 @@ int nr_phy_init_RU(RU_t *ru) {
 
     // allocate IFFT input buffers (TX)
     ru->common.txdataF_BF = (int32_t **)malloc16(ru->nb_tx*sizeof(int32_t*));
-    LOG_I(PHY,"[INIT] common.txdata_BF= %p (%lu bytes)\n",ru->common.txdataF_BF,
-	  ru->nb_tx*sizeof(int32_t*));
+    LOG_I(PHY, "[INIT] common.txdata_BF= %p (%lu bytes)\n", ru->common.txdataF_BF, ru->nb_tx * sizeof(int32_t *));
     for (i=0; i<ru->nb_tx; i++) {
       ru->common.txdataF_BF[i] = (int32_t*)malloc16_clear(fp->samples_per_subframe_wCP*sizeof(int32_t) );
       LOG_I(PHY,"txdataF_BF[%d] %p for RU %d\n",i,ru->common.txdataF_BF[i],ru->idx);
@@ -104,19 +107,18 @@ int nr_phy_init_RU(RU_t *ru) {
 
     /* number of elements of an array X is computed as sizeof(X) / sizeof(X[0]) */
     //    AssertFatal(ru->nb_rx <= sizeof(ru->prach_rxsigF) / sizeof(ru->prach_rxsigF[0]),
-    //		"nb_antennas_rx too large");
+    //        "nb_antennas_rx too large");
     for (j=0;j<NUMBER_OF_NR_RU_PRACH_OCCASIONS_MAX;j++) {
       ru->prach_rxsigF[j] = (int16_t**)malloc(ru->nb_rx * sizeof(int16_t*));
       
       for (i=0; i<ru->nb_rx; i++) {
-	// largest size for PRACH FFT is 4x98304 (16*24576)
-	ru->prach_rxsigF[j][i] = (int16_t*)malloc16_clear( 4*98304*2*sizeof(int16_t) );
-	LOG_D(PHY,"[INIT] prach_vars->rxsigF[%d] = %p\n",i,ru->prach_rxsigF[j][i]);
+        // largest size for PRACH FFT is 4x98304 (16*24576)
+        ru->prach_rxsigF[j][i] = (int16_t *)malloc16_clear(4 * 98304 * 2 * sizeof(int16_t));
+        LOG_D(PHY, "[INIT] prach_vars->rxsigF[%d] = %p\n", i, ru->prach_rxsigF[j][i]);
       }
     }
-    
-    AssertFatal(ru->num_gNB <= NUMBER_OF_gNB_MAX,"gNB instances %d > %d\n",
-		ru->num_gNB,NUMBER_OF_gNB_MAX);
+
+    AssertFatal(ru->num_gNB <= NUMBER_OF_gNB_MAX, "gNB instances %d > %d\n", ru->num_gNB, NUMBER_OF_gNB_MAX);
 
     LOG_I(PHY,"[INIT] %s() ru->num_gNB:%d \n", __FUNCTION__, ru->num_gNB);
 
@@ -201,7 +203,7 @@ void nr_phy_free_RU(RU_t *ru)
 
     for (j=0;j<NUMBER_OF_NR_RU_PRACH_OCCASIONS_MAX;j++) {
       for (i = 0; i < ru->nb_rx; i++)
-	free_and_zero(ru->prach_rxsigF[j][i]);
+        free_and_zero(ru->prach_rxsigF[j][i]);
       free_and_zero(ru->prach_rxsigF[j]);
     }
     if (ru->do_precoding == 1) {

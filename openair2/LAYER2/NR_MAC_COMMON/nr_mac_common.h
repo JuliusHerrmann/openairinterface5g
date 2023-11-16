@@ -179,12 +179,12 @@ uint8_t get_K_ptrs(uint32_t nrb0, uint32_t nrb1, uint32_t N_RB);
 
 uint32_t nr_compute_tbs(uint16_t Qm,
                         uint16_t R,
-			uint16_t nb_rb,
-			uint16_t nb_symb_sch,
-			uint16_t nb_dmrs_prb,
+                        uint16_t nb_rb,
+                        uint16_t nb_symb_sch,
+                        uint16_t nb_dmrs_prb,
                         uint16_t nb_rb_oh,
                         uint8_t tb_scaling,
-			uint8_t Nl);
+                        uint8_t Nl);
 
 /** \brief Computes Q based on I_MCS PDSCH and table_idx for downlink. Implements MCS Tables from 38.214. */
 uint8_t nr_get_Qm_dl(uint8_t Imcs, uint8_t table_idx);
@@ -202,9 +202,7 @@ int get_dlbw_tbslbrm(int scc_bwpsize,
 int get_ulbw_tbslbrm(int scc_bwpsize,
                      const NR_ServingCellConfig_t *servingCellConfig);
 
-uint32_t nr_compute_tbslbrm(uint16_t table,
-			    uint16_t nb_rb,
-		            uint8_t Nl);
+uint32_t nr_compute_tbslbrm(uint16_t table, uint16_t nb_rb, uint8_t Nl);
 
 void get_type0_PDCCH_CSS_config_parameters(NR_Type0_PDCCH_CSS_config_t *type0_PDCCH_CSS_config,
                                            frame_t frameP,

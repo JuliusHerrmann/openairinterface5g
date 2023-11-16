@@ -39,17 +39,11 @@ void nr_pdcch_scrambling(uint32_t *in,
 
 int16_t find_nr_pdcch(int frame,int slot, PHY_VARS_gNB *gNB,find_type_t type);
 
-void nr_fill_dci(PHY_VARS_gNB *gNB,
-                 int frame,
-                 int slot,
-		 nfapi_nr_dl_tti_pdcch_pdu *pdcch_pdu);
+void nr_fill_dci(PHY_VARS_gNB *gNB, int frame, int slot, nfapi_nr_dl_tti_pdcch_pdu *pdcch_pdu);
 
 int16_t find_nr_ul_dci(int frame,int slot, PHY_VARS_gNB *gNB,find_type_t type);
 
-void nr_fill_ul_dci(PHY_VARS_gNB *gNB,
-		    int frame,
-		    int slot,
-		    nfapi_nr_ul_dci_request_pdus_t *pdcch_pdu);
+void nr_fill_ul_dci(PHY_VARS_gNB *gNB, int frame, int slot, nfapi_nr_ul_dci_request_pdus_t *pdcch_pdu);
 
 void nr_fill_reg_list(int cce_list[MAX_DCI_CORESET][NR_MAX_PDCCH_AGG_LEVEL * NR_NB_REG_PER_CCE], nfapi_nr_dl_tti_pdcch_pdu_rel15_t *pdcch_pdu_rel15);
 

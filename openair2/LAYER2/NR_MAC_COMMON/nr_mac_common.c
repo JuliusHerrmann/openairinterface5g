@@ -108,11 +108,11 @@ static const uint16_t NCS_restricted_TypeB_delta_f_RA_5[14] =
 // Table 6.3.3.1-7 (38.211) NCS for preamble formats with delta_f_RA = 15 * 2mu KHz where mu = {0,1,2,3}
 static const uint16_t NCS_unrestricted_delta_f_RA_15[16] = {0, 2, 4, 6, 8, 10, 12, 13, 15, 17, 19, 23, 27, 34, 46, 69};
 
-//	specification mapping talbe, table_38$x_$y_$z_c$a
-//	- $x: specification
-//	- $y: subclause-major
-//	- $z: subclause-minor
-//	- $a: ($a)th of column in table, start from zero
+//    specification mapping talbe, table_38$x_$y_$z_c$a
+//    - $x: specification
+//    - $y: subclause-major
+//    - $z: subclause-minor
+//    - $a: ($a)th of column in table, start from zero
 const int32_t table_38213_13_1_c1[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, reserved}; // index 15 reserved
 const int32_t table_38213_13_1_c2[16] = {24, 24, 24, 24, 24, 24, 48, 48, 48, 48, 48, 48, 96, 96, 96, reserved}; // index 15 reserved
 const int32_t table_38213_13_1_c3[16] = { 2,  2,  2,  3,  3,  3,  1,  1,  2,  2,  3,  3,  1,  2,  3, reserved}; // index 15 reserved
@@ -163,10 +163,10 @@ const int32_t table_38213_13_10_c2[16] = {48, 48, 48, 48, 24, 24, 48, 48, reserv
 const int32_t table_38213_13_10_c3[16] = { 1,  1,  2,  2,  1,  1,  1,  1, reserved, reserved, reserved, reserved, reserved, reserved, reserved, reserved}; // index 08-15 reserved
 const int32_t table_38213_13_10_c4[16] = { 0,  8,  0,  8,-41, 25,-41, 49, reserved, reserved, reserved, reserved, reserved, reserved, reserved, reserved}; // index 08-15 reserved, condition A as default
 
-const float   table_38213_13_11_c1[16] = { 0,  0,  2,  2,  5,  5,  7,  7,  0,  5,  0,  0,  2,  2,  5,  5};	//	O
+const float table_38213_13_11_c1[16] = {0, 0, 2, 2, 5, 5, 7, 7, 0, 5, 0, 0, 2, 2, 5, 5}; //    O
 const int32_t table_38213_13_11_c2[16] = { 1,  2,  1,  2,  1,  2,  1,  2,  1,  1,  1,  1,  1,  1,  1,  1};
-const float   table_38213_13_11_c3[16] = { 1, 0.5f, 1, 0.5f, 1, 0.5f, 1, 0.5f,  2,  2,  1,  1,  1,  1,  1,  1};	//	M
-const int32_t table_38213_13_11_c4[16] = { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  2,  1,  2,  1,  2};	// i is even as default
+const float table_38213_13_11_c3[16] = {1, 0.5f, 1, 0.5f, 1, 0.5f, 1, 0.5f, 2, 2, 1, 1, 1, 1, 1, 1}; //    M
+const int32_t table_38213_13_11_c4[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 1, 2}; // i is even as default
 
 const float   table_38213_13_12_c1[16] = { 0, 0, 2.5f, 2.5f, 5, 5, 0, 2.5f, 5, 7.5f, 7.5f, 7.5f, 0, 5, reserved, reserved}; // O, index 14-15 reserved
 const int32_t table_38213_13_12_c2[16] = { 1,  2,  1,  2,  1,  2,  2,  2,  2,  1,  2,  2,  1,  1,  reserved,  reserved}; // index 14-15 reserved
@@ -651,9 +651,7 @@ NR_tda_info_t get_dl_tda_info(const NR_UE_DL_BWP_t *dl_BWP, int ss_type, int tda
 }
 
 uint16_t get_NCS(uint8_t index, uint16_t format0, uint8_t restricted_set_config) {
-
-  LOG_D(MAC,"get_NCS: indx %d,format0 %d, restriced_set_config %d\n",
-	index,format0,restricted_set_config);
+  LOG_D(MAC, "get_NCS: indx %d,format0 %d, restriced_set_config %d\n", index, format0, restricted_set_config);
 
   if (format0 < 3) {
     switch(restricted_set_config){
@@ -690,8 +688,8 @@ static const int16_t N_RA_RB[16] = {6, 3, 2, 24, 12, 6, 12, 6, 3, 24, 12, 6, 12,
 
 /* Function to get number of RBs required for prach occasion based on
  * 38.211 Table 6.3.3.2-1 */
-int16_t get_N_RA_RB (int delta_f_RA_PRACH,int delta_f_PUSCH) {
-	
+int16_t get_N_RA_RB(int delta_f_RA_PRACH, int delta_f_PUSCH)
+{
   int8_t index = 0;
   switch(delta_f_RA_PRACH) {
     case 0 :
@@ -718,7 +716,7 @@ int16_t get_N_RA_RB (int delta_f_RA_PRACH,int delta_f_PUSCH) {
         index += 0;
       else
         index += 1;
-      break;		
+      break;
     case 3:
       index = 13;
       if (delta_f_PUSCH == 2)
@@ -729,7 +727,7 @@ int16_t get_N_RA_RB (int delta_f_RA_PRACH,int delta_f_PUSCH) {
     default : index = 10;/*30khz prach scs and 30khz pusch scs*/
   }
   return N_RA_RB[index];
-}	
+}
 // Table 6.3.3.2-2: Random access configurations for FR1 and paired spectrum/supplementary uplink
 // the column 5, (SFN_nbr is a bitmap where we set bit to '1' in the position of the subframe where the RACH can be sent.
 // E.g. in row 4, and column 5 we have set value 512 ('1000000000') which means RACH can be sent at subframe 9.
@@ -1515,10 +1513,8 @@ static const int64_t table_6_3_3_2_4_prachConfig_Index[256][10] = {
     {0xa3, 0xb3, 1, 0, -1, 733007751850, 2, 1, 2, 6} // (subframe number :1,3,5,7,…,37,39)
 };
 
-int get_format0(uint8_t index,
-                uint8_t unpaired,
-		frequency_range_t frequency_range){
-
+int get_format0(uint8_t index, uint8_t unpaired, frequency_range_t frequency_range)
+{
   uint16_t format=0;
   if (unpaired) {
     if (frequency_range==FR1)
@@ -1768,7 +1764,9 @@ int get_nr_prach_occasion_info_from_index(uint8_t index,
         format2 = (uint8_t) table_6_3_3_2_4_prachConfig_Index[index][1];
         
       *format = ((uint8_t) table_6_3_3_2_4_prachConfig_Index[index][0]) | (format2<<8);
-      LOG_D(MAC,"Getting Total PRACH info from index %d absoluteFrequencyPointA %u mu %u frame_type %u start_symbol %u N_t_slot %u N_dur %u N_RA_sfn = %u\n",
+      LOG_D(MAC,
+            "Getting Total PRACH info from index %d absoluteFrequencyPointA %u mu %u frame_type %u start_symbol %u N_t_slot %u "
+            "N_dur %u N_RA_sfn = %u\n",
             index,
             pointa,
             mu,
@@ -1776,7 +1774,7 @@ int get_nr_prach_occasion_info_from_index(uint8_t index,
             *start_symbol,
             *N_t_slot,
             *N_dur,
-	    *N_RA_sfn);
+            *N_RA_sfn);
     }
     return 1;
  }
@@ -1785,10 +1783,10 @@ int get_nr_prach_occasion_info_from_index(uint8_t index,
     if (unpaired) {
       x = table_6_3_3_2_3_prachConfig_Index[index][2];
       s_map = table_6_3_3_2_3_prachConfig_Index[index][4];
-		  for(int i = 0; i < 64 ;i++) {
+      for (int i = 0; i < 64; i++) {
         if ( (s_map >> i) & 0x01) {
           (*N_RA_sfn)++;
-				}
+        }
       }
       *N_RA_slot = table_6_3_3_2_3_prachConfig_Index[index][6]; // Number of RACH slots within a subframe
       *max_association_period = 160/(x * 10); 
@@ -1799,19 +1797,21 @@ int get_nr_prach_occasion_info_from_index(uint8_t index,
         if (table_6_3_3_2_3_prachConfig_Index[index][1] != -1)
           format2 = (uint8_t) table_6_3_3_2_3_prachConfig_Index[index][1];
         *format = ((uint8_t) table_6_3_3_2_3_prachConfig_Index[index][0]) | (format2<<8);
-        LOG_D(NR_MAC,"Getting Total PRACH info from index %d (col %lu ) absoluteFrequencyPointA %u mu %u frame_type %u start_symbol %u N_t_slot %u N_dur %u N_RA_sfn = %u\n",
-              index, table_6_3_3_2_3_prachConfig_Index[index][6],
+        LOG_D(NR_MAC,
+              "Getting Total PRACH info from index %d (col %lu ) absoluteFrequencyPointA %u mu %u frame_type %u start_symbol %u "
+              "N_t_slot %u N_dur %u N_RA_sfn = %u\n",
+              index,
+              table_6_3_3_2_3_prachConfig_Index[index][6],
               pointa,
               mu,
               unpaired,
               *start_symbol,
               *N_t_slot,
               *N_dur,
-							*N_RA_sfn);
+              *N_RA_sfn);
       }
-		  return 1;
-	  }
-    else { // FDD
+      return 1;
+    } else { // FDD
       x = table_6_3_3_2_2_prachConfig_Index[index][2];
       s_map = table_6_3_3_2_2_prachConfig_Index[index][4];
       for(int i = 0; i < 64 ; i++) {
@@ -1841,7 +1841,6 @@ int get_nr_prach_occasion_info_from_index(uint8_t index,
   }
 }
 
-
 int get_nr_prach_info_from_index(uint8_t index,
                                  int frame,
                                  int slot,
@@ -1854,8 +1853,8 @@ int get_nr_prach_info_from_index(uint8_t index,
                                  uint8_t *N_dur,
                                  uint16_t *RA_sfn_index,
                                  uint8_t *N_RA_slot,
-				 uint8_t *config_period) {
-
+                                 uint8_t *config_period)
+{
   int x,y;
   int64_t s_map;
   uint8_t format2 = 0xff;
@@ -2049,8 +2048,8 @@ static const uint16_t table_63313[838] = {
 uint8_t compute_nr_root_seq(NR_RACH_ConfigCommon_t *rach_config,
                             uint8_t nb_preambles,
                             uint8_t unpaired,
-			    frequency_range_t frequency_range) {
-
+                            frequency_range_t frequency_range)
+{
   uint8_t config_index = rach_config->rach_ConfigGeneric.prach_ConfigurationIndex;
   uint8_t ncs_index = rach_config->rach_ConfigGeneric.zeroCorrelationZoneConfig;
   uint16_t format0 = get_format0(config_index, unpaired, frequency_range);
@@ -2256,14 +2255,19 @@ uint32_t to_nrarfcn(int nr_bandP,
   LOG_I(NR_MAC,"Searching for nr band %d DL Carrier frequency %llu bw %u\n",nr_bandP,(long long unsigned int)dl_CarrierFreq,bw);
 
   AssertFatal(dl_CarrierFreq_by_1k >= nr_bandtable[i].dl_min,
-        "Band %d, bw %u : DL carrier frequency %llu kHz < %llu\n",
-	      nr_bandP, bw, (long long unsigned int)dl_CarrierFreq_by_1k,
-	      (long long unsigned int)nr_bandtable[i].dl_min);
-  AssertFatal(dl_CarrierFreq_by_1k <= (nr_bandtable[i].dl_max - bw_kHz/2),
-        "Band %d, dl_CarrierFreq %llu bw %u: DL carrier frequency %llu kHz > %llu\n",
-	      nr_bandP, (long long unsigned int)dl_CarrierFreq,bw, (long long unsigned int)dl_CarrierFreq_by_1k,
-	      (long long unsigned int)(nr_bandtable[i].dl_max - bw_kHz/2));
- 
+              "Band %d, bw %u : DL carrier frequency %llu kHz < %llu\n",
+              nr_bandP,
+              bw,
+              (long long unsigned int)dl_CarrierFreq_by_1k,
+              (long long unsigned int)nr_bandtable[i].dl_min);
+  AssertFatal(dl_CarrierFreq_by_1k <= (nr_bandtable[i].dl_max - bw_kHz / 2),
+              "Band %d, dl_CarrierFreq %llu bw %u: DL carrier frequency %llu kHz > %llu\n",
+              nr_bandP,
+              (long long unsigned int)dl_CarrierFreq,
+              bw,
+              (long long unsigned int)dl_CarrierFreq_by_1k,
+              (long long unsigned int)(nr_bandtable[i].dl_max - bw_kHz / 2));
+
   int deltaFglobal = 60;
   uint32_t N_REF_Offs = 2016667;
   uint64_t F_REF_Offs_khz = 24250080;
@@ -2347,11 +2351,8 @@ uint64_t from_nrarfcn(int nr_bandP,
   return frequency;
 }
 
-void nr_get_tbs_dl(nfapi_nr_dl_tti_pdsch_pdu *pdsch_pdu,
-		   int x_overhead,
-                   uint8_t numdmrscdmgroupnodata,
-                   uint8_t tb_scaling) {
-
+void nr_get_tbs_dl(nfapi_nr_dl_tti_pdsch_pdu *pdsch_pdu, int x_overhead, uint8_t numdmrscdmgroupnodata, uint8_t tb_scaling)
+{
   LOG_D(MAC, "TBS calculation\n");
 
   nfapi_nr_dl_tti_pdsch_pdu_rel15_t *pdsch_rel15 = &pdsch_pdu->pdsch_pdu_rel15;
@@ -2381,14 +2382,9 @@ void nr_get_tbs_dl(nfapi_nr_dl_tti_pdsch_pdu *pdsch_pdu,
   uint16_t R = nr_get_code_rate_dl(Imcs, table_idx);
   uint8_t Qm = nr_get_Qm_dl(Imcs, table_idx);
 
-  TBS = nr_compute_tbs(Qm,
-                       R,
-                       pdsch_rel15->rbSize,
-                       N_sh_symb,
-                       N_PRB_DMRS*dmrs_length,
-                       N_PRB_oh,
-                       tb_scaling,
-		       pdsch_rel15->nrOfLayers)>>3;
+  TBS =
+      nr_compute_tbs(Qm, R, pdsch_rel15->rbSize, N_sh_symb, N_PRB_DMRS * dmrs_length, N_PRB_oh, tb_scaling, pdsch_rel15->nrOfLayers)
+      >> 3;
 
   pdsch_rel15->targetCodeRate[0] = R;
   pdsch_rel15->qamModOrder[0] = Qm;
@@ -3651,7 +3647,7 @@ bool is_nr_DL_slot(NR_TDD_UL_DL_ConfigCommon_t *tdd_UL_DL_ConfigurationCommon, s
     period1 = 3000+*tdd_UL_DL_ConfigurationCommon->pattern1.ext1->dl_UL_TransmissionPeriodicity_v1530;
   else
     period1 = tdd_period_to_num[tdd_UL_DL_ConfigurationCommon->pattern1.dl_UL_TransmissionPeriodicity];
-			       
+
   if (tdd_UL_DL_ConfigurationCommon->pattern2) {
     if (tdd_UL_DL_ConfigurationCommon->pattern2->ext1 &&
         tdd_UL_DL_ConfigurationCommon->pattern2->ext1->dl_UL_TransmissionPeriodicity_v1530)
@@ -3686,10 +3682,10 @@ bool is_nr_UL_slot(NR_TDD_UL_DL_ConfigCommon_t *tdd_UL_DL_ConfigurationCommon, s
     period1 = 3000 + *tdd_UL_DL_ConfigurationCommon->pattern1.ext1->dl_UL_TransmissionPeriodicity_v1530;
   else
     period1 = tdd_period_to_num[tdd_UL_DL_ConfigurationCommon->pattern1.dl_UL_TransmissionPeriodicity];
-			       
+
   if (tdd_UL_DL_ConfigurationCommon->pattern2) {
-    if (tdd_UL_DL_ConfigurationCommon->pattern2->ext1 &&
-	      tdd_UL_DL_ConfigurationCommon->pattern2->ext1->dl_UL_TransmissionPeriodicity_v1530)
+    if (tdd_UL_DL_ConfigurationCommon->pattern2->ext1
+        && tdd_UL_DL_ConfigurationCommon->pattern2->ext1->dl_UL_TransmissionPeriodicity_v1530)
       period2 = 3000 + *tdd_UL_DL_ConfigurationCommon->pattern2->ext1->dl_UL_TransmissionPeriodicity_v1530;
     else
       period2 = tdd_period_to_num[tdd_UL_DL_ConfigurationCommon->pattern2->dl_UL_TransmissionPeriodicity];

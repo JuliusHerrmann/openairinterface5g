@@ -52,14 +52,14 @@
   either we regenerate the channel (call again random_channel(desc,0)), or we keep it over subframes
   legacy: we regenerate each sub frame in UL, and each frame only in DL
 */
-void rxAddInput( const c16_t *input_sig,
-		 c16_t *after_channel_sig,
-                 int rxAnt,
-                 channel_desc_t *channelDesc,
-                 int nbSamples,
-                 uint64_t TS,
-                 uint32_t CirSize
-               ) {
+void rxAddInput(const c16_t *input_sig,
+                c16_t *after_channel_sig,
+                int rxAnt,
+                channel_desc_t *channelDesc,
+                int nbSamples,
+                uint64_t TS,
+                uint32_t CirSize)
+{
   // channelDesc->path_loss_dB should contain the total path gain
   // so, in actual RF: tx gain + path loss + rx gain (+antenna gain, ...)
   // UE and NB gain control to be added
@@ -108,4 +108,3 @@ void rxAddInput( const c16_t *input_sig,
           channelDesc->path_loss_dB,
           10*log10(noise_per_sample));
 }
-

@@ -71,10 +71,10 @@ void fill_default_reconfig(NR_ServingCellConfigCommon_t *servingcellconfigcommon
                            NR_UE_NR_Capability_t *uecap,
                            int uid);
 
-int generate_CG_Config(gNB_RRC_INST *rrc, 
-		       NR_CG_Config_t *cg_Config,
-		       NR_RRCReconfiguration_t *reconfig,
-		       NR_RadioBearerConfig_t *rbconfig);
+int generate_CG_Config(gNB_RRC_INST *rrc,
+                       NR_CG_Config_t *cg_Config,
+                       NR_RRCReconfiguration_t *reconfig,
+                       NR_RadioBearerConfig_t *rbconfig);
 
 int parse_CG_ConfigInfo(gNB_RRC_INST *rrc, NR_CG_ConfigInfo_t *CG_ConfigInfo, x2ap_ENDC_sgnb_addition_req_t *m);
 
