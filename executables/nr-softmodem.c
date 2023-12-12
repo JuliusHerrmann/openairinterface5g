@@ -329,6 +329,20 @@ static int create_gNB_tasks(ngran_node_t node_type, configmodule_interface_t *cf
     init_pdcp();
   }
 
+  if (RC.nrrrc[0]->measurementConfiguration.enableA2) {
+    LOG_E(GNB_APP, "  A2 Threshold RSRP %d\n", RC.nrrrc[0]->measurementConfiguration.a2_threshold);
+  }
+
+  if (RC.nrrrc[0]->measurementConfiguration.enableA3) {
+    LOG_E(GNB_APP, "  A3 TTT %d\n", RC.nrrrc[0]->measurementConfiguration.a3_time_to_trigger);
+  }
+
+  for (uint8_t nCell = 0; nCell < RC.nrrrc[0]->number_of_neighbours; ++nCell) {
+    LOG_E(GNB_APP, "  PHY Cell ID %d\n", RC.nrrrc[0]->neighbourConfiguration[nCell].physicalCellId);
+    LOG_E(GNB_APP, "  SCS of neighbour: %d \n", RC.nrrrc[0]->neighbourConfiguration[nCell].subcarrierSpacing);
+    LOG_E(GNB_APP, "  ABS SSB ARFCN of neighbour: %d\n", RC.nrrrc[0]->neighbourConfiguration[nCell].absoluteFrequencySSB);
+  }
+
   if (is_x2ap_enabled() ) { //&& !NODE_IS_DU(node_type)
 	  LOG_I(X2AP, "X2AP enabled \n");
 	  __attribute__((unused)) uint32_t x2_register_gnb_pending = gNB_app_register_x2 (gnb_id_start, gnb_id_end);
