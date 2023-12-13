@@ -2219,6 +2219,71 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
                                 && uplinkConfig->pusch_ServingCellConfig->choice.setup->ext1->maxMIMO_Layers
                             ? *uplinkConfig->pusch_ServingCellConfig->choice.setup->ext1->maxMIMO_Layers
                             : 1;
+  // Allocate memory for configuredGrantConfig
+  initialUplinkBWP->configuredGrantConfig = calloc(1, sizeof(*initialUplinkBWP->configuredGrantConfig));
+
+  // Check if the allocation was successful
+  if (initialUplinkBWP->configuredGrantConfig != NULL) {
+      // Perform additional configuration of configuredGrantConfig based on ASN.1 definition
+      initialUplinkBWP->configuredGrantConfig->frequencyHopping = NR_ConfiguredGrantConfig_frequencyHopping_mode1; // Example value
+
+      // Example: Configure cg-DMRS-Configuration (DMRS-UplinkConfig)
+      initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration = /* Set DMRS-UplinkConfig */;
+      
+      initialUplinkBWP->configuredGrantConfig->mcs_Table = NR_ConfiguredGrantConfig_mcs_Table_qam256; // Example value
+      initialUplinkBWP->configuredGrantConfig->mcs_TableTransformPrecoder = NR_ConfiguredGrantConfig_mcs_TableTransformPrecoder_qam256; // Example value
+
+      // Example: Configure UCI on PUSCH (CG-UCI-OnPUSCH)
+      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.present = NR_ConfiguredGrantConfig_uci_OnPUSCH_PR_dynamic;
+      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic = /* Set dynamic value */;
+      // ... continue configuring UCI on PUSCH
+
+      initialUplinkBWP->configuredGrantConfig->resourceAllocation = NR_ConfiguredGrantConfig_resourceAllocation_dynamicSwitch; // Example value
+      initialUplinkBWP->configuredGrantConfig->rbg_Size = NR_ConfiguredGrantConfig_rbg_Size_config2; // Example value
+      initialUplinkBWP->configuredGrantConfig->powerControlLoopToUse = NR_ConfiguredGrantConfig_powerControlLoopToUse_n0; // Example value
+      
+      // Example: Configure P0-PUSCH-AlphaSetId
+      initialUplinkBWP->configuredGrantConfig->p0_PUSCH_Alpha.present = NR_P0_PUSCH_AlphaSetId_PR_alpha;
+      initialUplinkBWP->configuredGrantConfig->p0_PUSCH_Alpha.choice.alpha = /* Set alpha value */;
+
+      initialUplinkBWP->configuredGrantConfig->transformPrecoder = NR_ConfiguredGrantConfig_transformPrecoder_enabled; // Example value
+      initialUplinkBWP->configuredGrantConfig->nrofHARQ_Processes = 8; // Example value
+      initialUplinkBWP->configuredGrantConfig->repK = NR_ConfiguredGrantConfig_repK_n1; // Example value
+      
+      // Example: Configure repK-RV (conditional on RepK)
+      if (initialUplinkBWP->configuredGrantConfig->repK == NR_ConfiguredGrantConfig_repK_n1) {
+          initialUplinkBWP->configuredGrantConfig->repK_RV = NR_ConfiguredGrantConfig_repK_RV_s1_0231; // Example value
+      }
+
+      // Example: Configure periodicity
+      initialUplinkBWP->configuredGrantConfig->periodicity = NR_ConfiguredGrantConfig_periodicity_sym2; // Example value
+
+      // Example: Configure configuredGrantTimer
+      initialUplinkBWP->configuredGrantConfig->configuredGrantTimer = 10; // Example value
+
+      // Example: Configure rrc-ConfiguredUplinkGrant
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.timeDomainOffset = 100; // Example value
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.timeDomainAllocation = 5; // Example value
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.buf = /* Set bit string value */;
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.size = /* Set bit string size */;
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.antennaPort = 1; // Example value
+
+      // Example: Configure dmrs_SeqInitialization (conditional on NoTransformPrecoder)
+      if (/* Condition for NoTransformPrecoder */) {
+          initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.present = NR_ConfiguredUplinkGrant_dmrs_SeqInitialization_PR_spare;
+          initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.choice.spare = /* Set spare value */;
+      }
+
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.precodingAndNumberOfLayers = 2; // Example value
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.srs_ResourceIndicator = 3; // Example value
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.mcsAndTBS = 15; // Example value
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyHoppingOffset = 5; // Example value
+      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.pathlossReferenceIndex = 0; // Example value
+      // ... continue configuring rrc-ConfiguredUplinkGrant
+  } else {
+      // Handle memory allocation failure
+      // This could include logging an error, freeing other allocated memory, etc.
+  }
 
   // We are using do_srs = 0 here because the periodic SRS will only be enabled in update_cellGroupConfig() if do_srs == 1
   initialUplinkBWP->srs_Config = calloc(1, sizeof(*initialUplinkBWP->srs_Config));
