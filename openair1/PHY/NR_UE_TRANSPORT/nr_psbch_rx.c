@@ -63,7 +63,6 @@ static void nr_psbch_extract(uint32_t rxdataF_sz,
   uint16_t rb;
   uint8_t i,j,aarx;
   struct complex16 *dl_ch0,*dl_ch0_ext,*rxF,*rxF_ext;
-  
   const uint8_t nb_rb = SL_NR_NUM_PSBCH_RBS_IN_ONE_SYMBOL; 
 
   AssertFatal((symbol == 0 || symbol >= 5), "SIDELINK: PSBCH DMRS not contained in symbol %d \n", symbol);
@@ -83,39 +82,30 @@ static void nr_psbch_extract(uint32_t rxdataF_sz,
 #endif
 
     for (rb=0; rb<nb_rb; rb++) {
-        j=0;
+      j=0;
 
-        for (i=0; i<NR_NB_SC_PER_RB; i++) {
-          
-            if (i%4 != 0) {
-            
-                rxF_ext[j]=rxF[rx_offset];
-                dl_ch0_ext[j]=dl_ch0[i];
+      for (i=0; i<NR_NB_SC_PER_RB; i++) {
+        if (i%4 != 0) {
+          rxF_ext[j]=rxF[rx_offset];
+          dl_ch0_ext[j]=dl_ch0[i];
 
 #ifdef  DEBUG_PSBCH
 
-                LOG_I(PHY,"rxF ext[%d] = (%d,%d) rxF [%u]= (%d,%d)\n",(9*rb) + j,
-                                                                      ((int16_t *)&rxF_ext[j])[0],
-                                                                      ((int16_t *)&rxF_ext[j])[1],
-                                                                      rx_offset,
-                                                                      ((int16_t *)&rxF[rx_offset])[0],
-                                                                      ((int16_t *)&rxF[rx_offset])[1]);
-
-                LOG_I(PHY,"dl ch0 ext[%d] = (%d,%d)  dl_ch0 [%d]= (%d,%d)\n", (9*rb) + j,
-                                                                              ((int16_t *)&dl_ch0_ext[j])[0],
-                                                                              ((int16_t *)&dl_ch0_ext[j])[1],
-                                                                              i,
-                                                                              ((int16_t *)&dl_ch0[i])[0],
-                                                                              ((int16_t *)&dl_ch0[i])[1]);
+          LOG_I(PHY,"rxF ext[%d] = (%d,%d) rxF [%u]= (%d,%d)\n",
+                                              (9*rb) + j,rxF_ext[j].r,rxF_ext[j].i,
+                                              rx_offset,rxF[rx_offset].r,rxF[rx_offset].i);
+          LOG_I(PHY,"dl ch0 ext[%d] = (%d,%d)  dl_ch0 [%d]= (%d,%d)\n",
+                                               (9*rb) + j,dl_ch0_ext[j].r,dl_ch0_ext[j].i,
+                                                i, dl_ch0[i].r,dl_ch0[i].i);
 #endif
-                j++;
-            }
-            rx_offset=(rx_offset+1)%(frame_params->ofdm_symbol_size);
+          j++;
         }
+        rx_offset=(rx_offset+1)%(frame_params->ofdm_symbol_size);
+      }
 
-        rxF_ext += SL_NR_NUM_PSBCH_DATA_RE_IN_ONE_RB;
-        dl_ch0_ext += SL_NR_NUM_PSBCH_DATA_RE_IN_ONE_RB;
-        dl_ch0 += NR_NB_SC_PER_RB; 
+      rxF_ext += SL_NR_NUM_PSBCH_DATA_RE_IN_ONE_RB;
+      dl_ch0_ext += SL_NR_NUM_PSBCH_DATA_RE_IN_ONE_RB;
+      dl_ch0 += NR_NB_SC_PER_RB;
     }
 
 #ifdef DEBUG_PSBCH

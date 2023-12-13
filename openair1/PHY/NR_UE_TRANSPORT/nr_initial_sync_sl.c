@@ -342,7 +342,8 @@ static void sl_nr_extract_sss(PHY_VARS_NR_UE *ue, UE_nr_rxtx_proc_t *proc,
 // Right now 2 frames worth of samples get processed for PSS in OAI.
 // For PSS in Sidelink, worst case 1 SSB in 16 frames can be present
 // Hence 16 frames worth of samples needs to be correlated to find the PSS.
-int sl_nr_slss_search(PHY_VARS_NR_UE *UE, UE_nr_rxtx_proc_t *proc, int num_frames) {
+int sl_nr_slss_search(PHY_VARS_NR_UE *UE, UE_nr_rxtx_proc_t *proc, int num_frames)
+{
 
   sl_nr_ue_phy_params_t *sl_ue = &UE->SL_UE_PHY_PARAMS;
   SL_NR_SYNC_PARAMS_t *sync_params = &sl_ue->sync_params;

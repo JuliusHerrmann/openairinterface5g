@@ -231,11 +231,12 @@ int nr_pbch_channel_level(struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER
 }
 
 void nr_pbch_channel_compensation(struct complex16 rxdataF_ext[][PBCH_MAX_RE_PER_SYMBOL],
-					 struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER_SYMBOL],
-					 int nb_re,
-					 struct complex16 rxdataF_comp[][PBCH_MAX_RE_PER_SYMBOL],
-					 NR_DL_FRAME_PARMS *frame_parms,
-					 uint8_t output_shift) {
+                                  struct complex16 dl_ch_estimates_ext[][PBCH_MAX_RE_PER_SYMBOL],
+                                  int nb_re,
+                                  struct complex16 rxdataF_comp[][PBCH_MAX_RE_PER_SYMBOL],
+                                  NR_DL_FRAME_PARMS *frame_parms,
+                                  uint8_t output_shift)
+{
   for (int aarx=0; aarx<frame_parms->nb_antennas_rx; aarx++) {
     simde__m128i *dl_ch128          = (simde__m128i *)dl_ch_estimates_ext[aarx];
     simde__m128i *rxdataF128        = (simde__m128i *)rxdataF_ext[aarx];

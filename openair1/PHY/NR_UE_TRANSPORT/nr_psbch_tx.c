@@ -24,6 +24,7 @@
 #include "PHY/NR_REFSIG/nr_mod_table.h"
 #include "PHY/NR_UE_TRANSPORT/nr_transport_proto_ue.h"
 #include "PHY/CODING/nrPolar_tools/nr_polar_psbch_defs.h"
+#include "PHY/MODULATION/nr_modulation.h"
 
 /*
 This function performs PSBCH SCrambling as described in 38.211.
@@ -92,8 +93,9 @@ re_offset = sample which points to first RE + SSB start RE
 scaling factor =  scaling factor used for PSS, SSS (determined according to PSBCH pwr)
 symbol size = OFDM symbol size used for RE Mapping
 */
-void sl_map_pss_or_sss(struct complex16 *txF, int16_t *sync_seq, uint16_t startsym,
-                       uint16_t re_offset, uint16_t scaling_factor, uint16_t symbol_size)
+void sl_map_pss_or_sss(c16_t *txF, int16_t *sync_seq, uint16_t startsym,
+                       uint16_t re_offset, uint16_t scaling_factor,
+                       uint16_t symbol_size)
 {
 
 
@@ -149,14 +151,15 @@ scaling factor =  scaling factor used for PSS, SSS (determined according to PSBC
 symbol size = OFDM symbol size used for RE Mapping
 */
 
-void sl_generate_and_map_psbch(struct complex16 *txF, uint32_t *payload, uint16_t id,
-                          uint16_t cp, uint16_t re_offset, uint16_t scaling_factor, uint16_t symbol_size,
-                          struct complex16 *psbch_dmrs)
+void sl_generate_and_map_psbch(c16_t *txF, uint32_t *payload, uint16_t id,
+                               uint16_t cp, uint16_t re_offset,
+                               uint16_t scaling_factor, uint16_t symbol_size,
+                               c16_t *psbch_dmrs)
 {
 
   uint64_t psbch_a_reversed = 0;
   uint16_t num_psbch_modsym = 0, numsym = 0;
-  uint8_t idx = 0;
+  const int mod_order = 2;//QPSK
   uint32_t encoder_output[SL_NR_POLAR_PSBCH_E_DWORD];
   struct complex16 psbch_modsym[SL_NR_NUM_PSBCH_MODULATED_SYMBOLS];
 
@@ -186,13 +189,13 @@ void sl_generate_and_map_psbch(struct complex16 *txF, uint32_t *payload, uint16_
   /// 38.211 Scrambling
   if (cp) { // EXT Cyclic prefix
     sl_psbch_scrambling(encoder_output, id, SL_NR_POLAR_PSBCH_E_EXT_CP); //for Extended Cyclic prefix
-    num_psbch_modsym = SL_NR_POLAR_PSBCH_E_EXT_CP/2;
+    num_psbch_modsym = SL_NR_POLAR_PSBCH_E_EXT_CP/mod_order;
     numsym = SL_NR_NUM_SYMBOLS_SSB_EXT_CP;
     AssertFatal(1==0, "EXT CP is not yet supported\n");
   }
   else { // Normal CP
     sl_psbch_scrambling(encoder_output, id, SL_NR_POLAR_PSBCH_E_NORMAL_CP); //for Cyclic prefix
-    num_psbch_modsym = SL_NR_POLAR_PSBCH_E_NORMAL_CP/2;
+    num_psbch_modsym = SL_NR_POLAR_PSBCH_E_NORMAL_CP/mod_order;
     numsym = SL_NR_NUM_SYMBOLS_SSB_NORMAL_CP;
   }
 
@@ -211,15 +214,7 @@ void sl_generate_and_map_psbch(struct complex16 *txF, uint32_t *payload, uint16_
 #endif
 
   /// 38.211 QPSK modulation
-  for (int j=0; j<num_psbch_modsym; j++) {
-    idx = ((encoder_output[(j<<1)>>5]>>((j<<1)&0x1f))&3);
-    psbch_modsym[j].r = nr_qpsk_mod_table[2*idx];
-    psbch_modsym[j].i = nr_qpsk_mod_table[(2*idx)+1];
-
-#ifdef SL_DEBUG
-    printf("idx %d, psbch_modsym[%d]-r:%d, i:%d\n", idx, j, psbch_modsym[j].r, psbch_modsym[j].i);
-#endif
-  }
+  nr_modulation(encoder_output, num_psbch_modsym*mod_order,mod_order,(int16_t *)psbch_modsym);
 
   // RE MApping of PSBCH and PSBCH DMRS
   int index = 0, dmrs_index = 0;
@@ -258,8 +253,8 @@ void sl_generate_and_map_psbch(struct complex16 *txF, uint32_t *payload, uint16_
 #endif
 
       if (m % 4 == 0) {
-        txF[offset].r = (psbch_dmrs[dmrs_index].r * scaling_factor) >> 15;
-        txF[offset].i = (psbch_dmrs[dmrs_index].i * scaling_factor) >> 15;
+
+        txF[offset] = c16xmulConstShift(psbch_dmrs[dmrs_index], scaling_factor, 15);
 
 #ifdef SL_DEBUG
         printf("txF[%d]:%d,%d, psbch_dmrs[%d]:%d,%d ", offset, txF[offset].r,
@@ -269,8 +264,7 @@ void sl_generate_and_map_psbch(struct complex16 *txF, uint32_t *payload, uint16_
         dmrs_index++;
 
       } else {
-        txF[offset].r = (psbch_modsym[index].r * scaling_factor) >> 15;
-        txF[offset].i = (psbch_modsym[index].i * scaling_factor) >> 15;
+        txF[offset] = c16xmulConstShift(psbch_modsym[index], scaling_factor, 15);
 
 #ifdef SL_DEBUG
         printf("txF[%d]:%d,%d, psbch_modsym[%d]:%d,%d\n", offset, txF[offset].r,

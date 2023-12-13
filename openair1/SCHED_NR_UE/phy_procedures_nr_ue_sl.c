@@ -148,7 +148,7 @@ static int nr_ue_psbch_procedures(PHY_VARS_NR_UE *ue,
   } else {
     result = decoded_pdu;
     sl_phy_params->psbch.rx_ok ++;
-    LOG_I(PHY,"%d:%d PSBCH RX: OK \n",proc->frame_rx, proc->nr_slot_rx);
+    LOG_D(PHY,"%d:%d PSBCH RX: OK \n",proc->frame_rx, proc->nr_slot_rx);
   }
 
   nr_fill_sl_indication(&sl_indication, &rx_ind, NULL, proc, ue, phy_data);
@@ -165,7 +165,8 @@ static int nr_ue_psbch_procedures(PHY_VARS_NR_UE *ue,
 
 void psbch_pscch_processing(PHY_VARS_NR_UE *ue,
                             UE_nr_rxtx_proc_t *proc,
-                            nr_phy_data_t *phy_data) {
+                            nr_phy_data_t *phy_data)
+{
 
   int frame_rx = proc->frame_rx;
   int nr_slot_rx = proc->nr_slot_rx;
