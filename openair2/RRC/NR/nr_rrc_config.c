@@ -2221,12 +2221,12 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
                             : 1;
   // Allocate memory for configuredGrantConfig
   initialUplinkBWP->configuredGrantConfig = calloc(1, sizeof(*initialUplinkBWP->configuredGrantConfig));
-/*
+
   // Check if the allocation was successful
   if (initialUplinkBWP->configuredGrantConfig != NULL) {
       // Perform additional configuration of configuredGrantConfig based on ASN.1 definition
       initialUplinkBWP->configuredGrantConfig->frequencyHopping = NR_ConfiguredGrantConfig_frequencyHopping_mode1; // enumerated type with two possible values: mode1 and mode2
-
+/*
       // Example: Configure cg-DMRS-Configuration (DMRS-UplinkConfig)
       initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_Type = NR_DMRS_Type_type1;
       initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_AdditionalPosition = NR_DMRS_AdditionalPosition_pos0; // Example value
