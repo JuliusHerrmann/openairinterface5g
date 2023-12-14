@@ -2221,7 +2221,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
                             : 1;
   // Allocate memory for configuredGrantConfig
   initialUplinkBWP->configuredGrantConfig = calloc(1, sizeof(*initialUplinkBWP->configuredGrantConfig));
-
+/*
   // Check if the allocation was successful
   if (initialUplinkBWP->configuredGrantConfig != NULL) {
       // Perform additional configuration of configuredGrantConfig based on ASN.1 definition
@@ -2262,7 +2262,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
       // If you have semiStatic UCI, you would similarly configure it
       // Example:
       initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.numBetaOffsets = /* Set number of betaOffsets for semiStatic */;
-      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets = calloc(initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.numBetaOffsets, sizeof(*initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets));
+/*      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets = calloc(initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.numBetaOffsets, sizeof(*initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets));
       //Check if the allocation was successful
       if (initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets != NULL) {
       //     // Example: Set specific values for betaOffsets in semiStatic
@@ -2311,26 +2311,26 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
       initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.timeDomainAllocation = 5; // Example value
       //initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.buf = /* Set bit string value */;
       //initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.size = /* Set bit string size */;
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.antennaPort = 1; // Example value
+//      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.antennaPort = 1; // Example value
 
       // Example: Configure dmrs_SeqInitialization (conditional on NoTransformPrecoder)
       //if (/* Condition for NoTransformPrecoder */) {
       //    initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.present = NR_ConfiguredUplinkGrant_dmrs_SeqInitialization_PR_spare;
       //    initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.choice.spare = /* Set spare value */;
       //}
-
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.precodingAndNumberOfLayers = 2; // Example value
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.srs_ResourceIndicator = 3; // Example value
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.mcsAndTBS = 15; // Example value
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyHoppingOffset = 5; // Example value
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.pathlossReferenceIndex = 0; // Example value
-      // ... continue configuring rrc-ConfiguredUplinkGrant
-  } else {
+//      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.precodingAndNumberOfLayers = 2; // Example value
+//      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.srs_ResourceIndicator = 3; // Example value
+//      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.mcsAndTBS = 15; // Example value
+//      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyHoppingOffset = 5; // Example value
+//      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.pathlossReferenceIndex = 0; // Example value
+     // ... continue configuring rrc-ConfiguredUplinkGrant
+//  } else {
       // Handle memory allocation failure
       // This could include logging an error, freeing other allocated memory, etc.
-      exit(EXIT_FAILURE);
-  }
-
+//      exit(EXIT_FAILURE);
+//  }
+*/
+*/
   // We are using do_srs = 0 here because the periodic SRS will only be enabled in update_cellGroupConfig() if do_srs == 1
   initialUplinkBWP->srs_Config = calloc(1, sizeof(*initialUplinkBWP->srs_Config));
   config_srs(scc, initialUplinkBWP->srs_Config, NULL, curr_bwp, uid, 0, maxMIMO_Layers, 0);
