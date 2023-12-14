@@ -41,19 +41,6 @@
 
 const uint8_t slotsperframe[5] = {10, 20, 40, 80, 160};
 
-static NR_SetupRelease_ConfiguredGrantConfig *clone_configuredgrantconfig(const NR_SetupRelease_ConfiguredGrantConfig *config) {
-    if (config == NULL || config->present == NR_SetupRelease_ConfiguredGrantConfig_PR_NOTHING)
-        return NULL;
-
-    NR_SetupRelease_ConfiguredGrantConfig *clone = calloc_or_fail(1, sizeof(*clone));
-    clone->present = config->present;
-
-    // Copy other fields based on the ASN.1 definition
-    clone->frequencyHopping = config->frequencyHopping;
-    // Copy other fields...
-
-    return clone;
-}
 
 
 static NR_BWP_t clone_generic_parameters(const NR_BWP_t *gp)
