@@ -2234,7 +2234,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
   
   if (initialUplinkBWP->configuredGrantConfig != NULL) {
       // Perform additional configuration of configuredGrantConfig based on ASN.1 definition
-      initialUplinkBWP->configuredGrantConfig->frequencyHopping = mode1; // enumerated type with two possible values: mode1 and mode2
+      initialUplinkBWP->configuredGrantConfig->frequencyHopping = mode2; // enumerated type with two possible values: mode1 and mode2
 /*
       // Example: Configure cg-DMRS-Configuration (DMRS-UplinkConfig)
       initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_Type = NR_DMRS_Type_type1;
