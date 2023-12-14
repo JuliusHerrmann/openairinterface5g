@@ -2225,18 +2225,63 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
   // Check if the allocation was successful
   if (initialUplinkBWP->configuredGrantConfig != NULL) {
       // Perform additional configuration of configuredGrantConfig based on ASN.1 definition
-      initialUplinkBWP->configuredGrantConfig->frequencyHopping = NR_ConfiguredGrantConfig_frequencyHopping_mode1; // Example value
+      initialUplinkBWP->configuredGrantConfig->frequencyHopping = NR_ConfiguredGrantConfig_frequencyHopping_mode1; // enumerated type with two possible values: mode1 and mode2
 
       // Example: Configure cg-DMRS-Configuration (DMRS-UplinkConfig)
-      initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration = /* Set DMRS-UplinkConfig */;
+      initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_Type = NR_DMRS_Type_type1;
+      initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_AdditionalPosition = NR_DMRS_AdditionalPosition_pos0; // Example value
+      initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.maxLength = NR_DMRS_MaxLength_type1; // Example value
       
       initialUplinkBWP->configuredGrantConfig->mcs_Table = NR_ConfiguredGrantConfig_mcs_Table_qam256; // Example value
       initialUplinkBWP->configuredGrantConfig->mcs_TableTransformPrecoder = NR_ConfiguredGrantConfig_mcs_TableTransformPrecoder_qam256; // Example value
 
       // Example: Configure UCI on PUSCH (CG-UCI-OnPUSCH)
       initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.present = NR_ConfiguredGrantConfig_uci_OnPUSCH_PR_dynamic;
-      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic = /* Set dynamic value */;
-      // ... continue configuring UCI on PUSCH
+      // Example: Configure dynamic UCI on PUSCH
+      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.numBetaOffsets = 2;  // Example value, you may need to adjust based on your requirements
+      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.betaOffsets = calloc(initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.numBetaOffsets, sizeof(*initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.betaOffsets));
+
+      // Check if the allocation was successful
+      if (initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.betaOffsets != NULL) {
+          // Example: Set specific values for betaOffsets
+          initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.betaOffsets[0] = 10; // This values need to be checked again
+          initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.betaOffsets[1] = 20;
+          // ... continue configuring other dynamic UCI parameters
+
+          // Clean up or free resources if necessary
+          free(initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.dynamic.betaOffsets);
+
+      } else {
+          // Example: Log an error
+          fprintf(stderr, "Error: Memory allocation failed for dynamic UCI betaOffsets.\n");
+
+          // Example: Cleanup and return an error code or exit the program
+          exit(EXIT_FAILURE);
+      }
+
+      // If you have semiStatic UCI, you would similarly configure it
+      // Example:
+      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.numBetaOffsets = /* Set number of betaOffsets for semiStatic */;
+      initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets = calloc(initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.numBetaOffsets, sizeof(*initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets));
+      //Check if the allocation was successful
+      if (initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets != NULL) {
+      //     // Example: Set specific values for betaOffsets in semiStatic
+          initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets[0] = 10; // The values need to be checked again
+          initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets[1] = 15;
+      //     // ... continue configuring other semiStatic UCI parameters
+      //
+      //     // Clean up or free resources if necessary
+          free(initialUplinkBWP->configuredGrantConfig->uci_OnPUSCH.choice.semiStatic.betaOffsets);
+      //
+      } else {
+         // Example: Log an error
+          fprintf(stderr, "Error: Memory allocation failed for dynamic UCI betaOffsets.\n");
+
+          // Example: Cleanup and return an error code or exit the program
+          exit(EXIT_FAILURE);
+      
+      }
+
 
       initialUplinkBWP->configuredGrantConfig->resourceAllocation = NR_ConfiguredGrantConfig_resourceAllocation_dynamicSwitch; // Example value
       initialUplinkBWP->configuredGrantConfig->rbg_Size = NR_ConfiguredGrantConfig_rbg_Size_config2; // Example value
@@ -2244,7 +2289,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
       
       // Example: Configure P0-PUSCH-AlphaSetId
       initialUplinkBWP->configuredGrantConfig->p0_PUSCH_Alpha.present = NR_P0_PUSCH_AlphaSetId_PR_alpha;
-      initialUplinkBWP->configuredGrantConfig->p0_PUSCH_Alpha.choice.alpha = /* Set alpha value */;
+      initialUplinkBWP->configuredGrantConfig->p0_PUSCH_Alpha.choice.alpha = 10; // the value need to be checked again
 
       initialUplinkBWP->configuredGrantConfig->transformPrecoder = NR_ConfiguredGrantConfig_transformPrecoder_enabled; // Example value
       initialUplinkBWP->configuredGrantConfig->nrofHARQ_Processes = 8; // Example value
@@ -2264,15 +2309,15 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
       // Example: Configure rrc-ConfiguredUplinkGrant
       initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.timeDomainOffset = 100; // Example value
       initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.timeDomainAllocation = 5; // Example value
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.buf = /* Set bit string value */;
-      initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.size = /* Set bit string size */;
+      //initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.buf = /* Set bit string value */;
+      //initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.frequencyDomainAllocation.size = /* Set bit string size */;
       initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.antennaPort = 1; // Example value
 
       // Example: Configure dmrs_SeqInitialization (conditional on NoTransformPrecoder)
-      if (/* Condition for NoTransformPrecoder */) {
-          initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.present = NR_ConfiguredUplinkGrant_dmrs_SeqInitialization_PR_spare;
-          initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.choice.spare = /* Set spare value */;
-      }
+      //if (/* Condition for NoTransformPrecoder */) {
+      //    initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.present = NR_ConfiguredUplinkGrant_dmrs_SeqInitialization_PR_spare;
+      //    initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.dmrs_SeqInitialization.choice.spare = /* Set spare value */;
+      //}
 
       initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.precodingAndNumberOfLayers = 2; // Example value
       initialUplinkBWP->configuredGrantConfig->rrc_ConfiguredUplinkGrant.srs_ResourceIndicator = 3; // Example value
@@ -2283,6 +2328,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
   } else {
       // Handle memory allocation failure
       // This could include logging an error, freeing other allocated memory, etc.
+      exit(EXIT_FAILURE);
   }
 
   // We are using do_srs = 0 here because the periodic SRS will only be enabled in update_cellGroupConfig() if do_srs == 1
