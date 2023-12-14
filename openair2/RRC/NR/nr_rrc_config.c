@@ -2329,8 +2329,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
       // This could include logging an error, freeing other allocated memory, etc.
 //      exit(EXIT_FAILURE);
 //  }
-*/
-*/
+
   // We are using do_srs = 0 here because the periodic SRS will only be enabled in update_cellGroupConfig() if do_srs == 1
   initialUplinkBWP->srs_Config = calloc(1, sizeof(*initialUplinkBWP->srs_Config));
   config_srs(scc, initialUplinkBWP->srs_Config, NULL, curr_bwp, uid, 0, maxMIMO_Layers, 0);
