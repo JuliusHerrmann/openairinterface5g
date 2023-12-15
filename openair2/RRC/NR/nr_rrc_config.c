@@ -35,7 +35,7 @@
 #include "executables/softmodem-common.h"
 #include "oai_asn1.h"
 #include "SIMULATION/TOOLS/sim.h" // for taus();
-
+#include "NR_ConfiguredGrantConfig.h"
 #include "uper_decoder.h"
 #include "uper_encoder.h"
 
@@ -2228,22 +2228,32 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
                             ? *uplinkConfig->pusch_ServingCellConfig->choice.setup->ext1->maxMIMO_Layers
                             : 1;
   // Allocate memory for configuredGrantConfig
-  //initialUplinkBWP->configuredGrantConfig = calloc(1, sizeof(*initialUplinkBWP->configuredGrantConfig));
+  initialUplinkBWP->configuredGrantConfig = calloc(1, sizeof(*initialUplinkBWP->configuredGrantConfig));
+  if (initialUplinkBWP->configuredGrantConfig != NULL) {
+      // Initialize configuredGrantConfig based on ASN.1 definition
+      initialUplinkBWP->configuredGrantConfig->present = NR_SetupRelease_ConfiguredGrantConfig_PR_setup;
+      NR_ConfiguredGrantConfig_t *configuredGrantConfig= calloc(1, sizeof(*configuredGrantConfig));
+      initialUplinkBWP->configuredGrantConfig->choice.setup = configuredGrantConfig;
+      // Check if the allocation was successful
+      if (configuredGrantConfig != NULL) {
+          configuredGrantConfig->frequencyHopping= calloc(1, sizeof(*configuredGrantConfig->frequencyHopping));
+          configuredGrantConfig->frequencyHopping= NR_ConfiguredGrantConfig__frequencyHopping_intraSlot;
+      } else {
+            // Handle memory allocation failure for frequencyHopping
+            // This could include logging an error, freeing other allocated memory, etc.
+            free(configuredGrantConfig);
+            free(initialUplinkBWP->configuredGrantConfig);
+            // Additional error handling as needed
+      }
 
-  // Check if the allocation was successful
-//  if (initialUplinkBWP->configuredGrantConfig != NULL) {
-      // Configure frequencyHopping field
-//      initialUplinkBWP->configuredGrantConfig->frequencyHopping = NR_ConfiguredGrantConfig_frequencyHopping_mode1; // Example value
-//  } else {
-      // Handle memory allocation failure
-      // This could include logging an error, freeing other allocated memory, etc.
-//      exit(EXIT_FAILURE);
-//  }
-
+  } else {
+    // Handle memory allocation failure for initialUplinkBWP->configuredGrantConfig
+    // This could include logging an error, freeing other allocated memory, etc.
+  }     
 
 
       // Example: Configure cg-DMRS-Configuration (DMRS-UplinkConfig)
-//      initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_Type = NR_DMRS_Type_type1;
+  //initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_Type = NR_DMRS_Type_type1;
 /*
       initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.dmrs_AdditionalPosition = NR_DMRS_AdditionalPosition_pos0; // Example value
       initialUplinkBWP->configuredGrantConfig->cg_DMRS_Configuration.maxLength = NR_DMRS_MaxLength_type1; // Example value
