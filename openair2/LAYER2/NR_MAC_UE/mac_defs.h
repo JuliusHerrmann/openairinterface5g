@@ -504,6 +504,7 @@ typedef struct NR_UE_MAC_INST_s {
   fapi_nr_csirs_measurements_t csirs_measurements;
 
   /// Last NDI of UL HARQ processes
+  int DL_ndi[NR_MAX_HARQ_PROCESSES];
   int UL_ndi[NR_MAX_HARQ_PROCESSES];
   ////	FAPI-like interface message
   fapi_nr_ul_config_request_t *ul_config_request;
