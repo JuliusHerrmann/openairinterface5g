@@ -319,6 +319,7 @@ int nas_config_mbms_s1(int interface_id, int thirdOctet, int fourthOctet, char *
 // non blocking full configuration of the interface (address, and the two lest octets of the address)
 int nas_config(int interface_id, int thirdOctet, int fourthOctet, char *ifname) {
   //char buf[5];
+  nas_getparams();
   char ipAddress[20];
   char broadcastAddress[20];
   char interfaceName[20];
