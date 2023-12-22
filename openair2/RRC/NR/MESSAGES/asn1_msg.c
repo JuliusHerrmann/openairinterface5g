@@ -446,7 +446,7 @@ void fill_nr_noS1_bearer_config(NR_RadioBearerConfig_t **rbconfig,
   /* the EPS bearer ID is arbitrary; the rb_id is 1/the first DRB, it needs to
    * match the one in get_DRB_RLC_BearerConfig(). No ciphering is to be
    * configured */
-  *rbconfig = get_default_rbconfig(10, 1, NR_CipheringAlgorithm_nea0, NR_SecurityConfig__keyToUse_master);
+  *rbconfig = get_default_rbconfig(1, 1, NR_CipheringAlgorithm_nea0, NR_SecurityConfig__keyToUse_master);
   AssertFatal(*rbconfig != NULL, "get_default_rbconfig() failed\n");
   /* LCID is 4 because the RLC layer requires it to be 3+rb_id; the rb_id 1 is
    * common with get_default_rbconfig() (first RB). We pre-configure RLC UM
