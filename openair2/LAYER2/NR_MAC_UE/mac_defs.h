@@ -45,7 +45,6 @@
 /* MAC */
 #include "LAYER2/NR_MAC_COMMON/nr_mac.h"
 #include "LAYER2/NR_MAC_COMMON/nr_mac_common.h"
-#include "LAYER2/MAC/mac.h"
 #include "NR_MAC_COMMON/nr_mac_extern.h"
 
 /* RRC */
@@ -180,8 +179,8 @@ typedef enum {
 typedef struct {
   // after multiplexing buffer remain for each lcid
   int32_t LCID_buffer_remain;
-  // buffer status for each lcid
-  uint8_t LCID_status;
+  // buffer status for each lcid (false: empty, true: not empty)
+  bool LCID_status;
   // Bj bucket usage per  lcid
   int32_t Bj;
   // Bucket size per lcid
@@ -439,6 +438,11 @@ typedef struct nr_lcordered_info_s {
   NR_LogicalChannelConfig_t *logicalChannelConfig_ordered;
 } nr_lcordered_info_t;
 
+
+typedef struct {
+  uint8_t payload[CCCH_PAYLOAD_SIZE_MAX];
+} __attribute__ ((__packed__)) NR_CCCH_PDU;
+
 typedef struct {
   NR_SearchSpace_t *otherSI_SS;
   NR_SearchSpace_t *ra_SS;
@@ -482,7 +486,7 @@ typedef struct {
 
   /* PDUs */
   /// Outgoing CCCH pdu for PHY
-  CCCH_PDU CCCH_pdu;
+  NR_CCCH_PDU CCCH_pdu;
 
   /* Random Access */
   /// CRNTI

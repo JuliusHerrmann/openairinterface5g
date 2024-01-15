@@ -1110,12 +1110,12 @@ void nr_ue_ul_scheduler(nr_uplink_indication_t *ul_info)
 
   // First check ReTxBSR Timer because it is always configured
   // Decrement ReTxBSR Timer if it is running and not null
-  if ((mac->scheduling_info.retxBSR_SF != MAC_UE_BSR_TIMER_NOT_RUNNING) && (mac->scheduling_info.retxBSR_SF != 0)) {
+  if ((mac->scheduling_info.retxBSR_SF != NR_MAC_UE_BSR_TIMER_NOT_RUNNING) && (mac->scheduling_info.retxBSR_SF != 0)) {
     mac->scheduling_info.retxBSR_SF--;
   }
 
   // Decrement Periodic Timer if it is running and not null
-  if ((mac->scheduling_info.periodicBSR_SF != MAC_UE_BSR_TIMER_NOT_RUNNING) && (mac->scheduling_info.periodicBSR_SF != 0)) {
+  if ((mac->scheduling_info.periodicBSR_SF != NR_MAC_UE_BSR_TIMER_NOT_RUNNING) && (mac->scheduling_info.periodicBSR_SF != 0)) {
     mac->scheduling_info.periodicBSR_SF--;
   }
 
@@ -1158,7 +1158,7 @@ bool nr_update_bsr(module_id_t module_idP, frame_t frameP, slot_t slotP, uint8_t
   for (int lcid = 1; lcid <= NR_MAX_NUM_LCID; lcid++) {
     // Reset transmission status
     lcid_bytes_in_buffer[lcid - 1] = 0;
-    mac->scheduling_info.lc_sched_info[lcid - 1].LCID_status = LCID_EMPTY;
+    mac->scheduling_info.lc_sched_info[lcid - 1].LCID_status = false;
   }
 
   for (int lcgid = 0; lcgid < NR_MAX_NUM_LCGID; lcgid++) {
@@ -1184,7 +1184,7 @@ bool nr_update_bsr(module_id_t module_idP, frame_t frameP, slot_t slotP, uint8_t
       if (rlc_status.bytes_in_buffer > 0) {
         LOG_D(NR_MAC,"[UE %d] PDCCH Tick : LCID%d LCGID%d has data to transmit =%d bytes at frame %d slot %d\n",
               module_idP, lcid,lcgid,rlc_status.bytes_in_buffer,frameP,slotP);
-        mac->scheduling_info.lc_sched_info[lcid - 1].LCID_status = LCID_NOT_EMPTY;
+        mac->scheduling_info.lc_sched_info[lcid - 1].LCID_status = true;
 
         //Update BSR_bytes and position in lcid_reordered_array only if Group is defined
         if (lcgid < NR_MAX_NUM_LCGID) {
@@ -2646,7 +2646,7 @@ int nr_ue_get_sdu_mac_ce_pre(module_id_t module_idP,
   }
 
   //Restart ReTxBSR Timer at new grant indication (38.321)
-  if (mac->scheduling_info.retxBSR_SF != MAC_UE_BSR_TIMER_NOT_RUNNING) {
+  if (mac->scheduling_info.retxBSR_SF != NR_MAC_UE_BSR_TIMER_NOT_RUNNING) {
     mac->scheduling_info.retxBSR_SF = nr_get_sf_retxBSRTimer(mac->scheduling_info.retxBSR_Timer);
   }
 
@@ -2865,7 +2865,7 @@ void nr_ue_get_sdu_mac_ce_post(module_id_t module_idP,
     }
 
     // Reset BSR Trigger flags
-    mac->BSR_reporting_active = BSR_TRIGGER_NONE;
+    mac->BSR_reporting_active = NR_BSR_TRIGGER_NONE;
   }
 }
 
