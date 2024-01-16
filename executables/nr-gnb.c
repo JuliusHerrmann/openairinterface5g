@@ -147,6 +147,12 @@ void tx_func(void *param)
   /* this thread is done with the sched_info, decrease the reference counter */
   deref_sched_response(info->sched_response_id);
   stop_meas(&gNB->phy_proc_tx);
+
+  //assert(info->elt->reponseFifo == &gNB->L1_tx_out);
+  if (info->elt->reponseFifo) 
+    pushNotifiedFIFO(info->elt->reponseFifo, info->elt);
+  else
+    delNotifiedFIFO_elt(info->elt);
 }
 
 
@@ -177,6 +183,7 @@ void *L1_tx_thread(void *arg) {
   return NULL;
 }
 */
+
 void rx_func(void *param)
 {
   processingData_L1_t *info = (processingData_L1_t *) param;
@@ -291,7 +298,12 @@ void rx_func(void *param)
       syncMsg->gNB = gNB;
       syncMsg->timestamp_tx = info->timestamp_tx;
       res->key = slot_tx;
-      pushTpool(&gNB->threadPool, res);
+
+      //assert(res->reponseFifo == &gNB->L1_tx_out);
+      //assert(res->processingFunc == tx_func);
+      syncMsg->elt = res;
+      task_t t = {.func = res->processingFunc, .args = syncMsg};
+      async_task_manager(&gNB->man_rx_tx_ru, t);
     }
   } else if (get_softmodem_params()->continuous_tx) {
     notifiedFIFO_elt_t *res = pullNotifiedFIFO(&gNB->L1_tx_free);
@@ -305,6 +317,12 @@ void rx_func(void *param)
     res->key = slot_tx;
     pushNotifiedFIFO(&gNB->L1_tx_out, res);
   }
+
+  //assert(info->elt->reponseFifo == &gNB->resp_L1);
+  if (info->elt->reponseFifo) 
+    pushNotifiedFIFO(info->elt->reponseFifo, info->elt);
+  else
+    delNotifiedFIFO_elt(info->elt);
 
 #if 0
   LOG_D(PHY, "rxtx:%lld nfapi:%lld phy:%lld tx:%lld rx:%lld prach:%lld ofdm:%lld ",
@@ -482,16 +500,16 @@ void init_gNB_Tpool(int inst) {
   PHY_VARS_gNB *gNB;
   gNB = RC.gNB[inst];
 
+  // ULSCH decoding threadpool
 #ifdef TASK_MANAGER_DECODING
   int const num_threads = parse_num_threads(get_softmodem_params()->threadPoolConfig);
   init_task_manager(&gNB->man, num_threads);
+  init_task_manager(&gNB->man_rx_tx_ru, 2);
 #endif
 
   gNB_L1_proc_t *proc = &gNB->proc;
   // PUSCH symbols per thread need to be calculated by how many threads we have
   gNB->num_pusch_symbols_per_thread = 1;
-  // ULSCH decoding threadpool
-  initTpool(get_softmodem_params()->threadPoolConfig, &gNB->threadPool, cpumeas(CPUMEAS_GETSTATE));
   // ULSCH decoder result FIFO
   initNotifiedFIFO(&gNB->respPuschSymb);
   initNotifiedFIFO(&gNB->respDecode);
@@ -550,6 +568,7 @@ void term_gNB_Tpool(int inst) {
 #ifdef TASK_MANAGER_DECODING
   void (*clean)(task_t*) = NULL;
   free_task_manager(&gNB->man , clean);
+  free_task_manager(&gNB->man_rx_tx_ru , clean);
 #else
   abortTpool(&gNB->threadPool);
 #endif

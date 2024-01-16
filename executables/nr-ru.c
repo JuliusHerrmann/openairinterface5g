@@ -1387,7 +1387,7 @@ void *ru_thread( void *param ) {
 
     // At this point, all information for subframe has been received on FH interface
     if (!get_softmodem_params()->reorder_thread_disable) {
-      res = pullTpool(&gNB->resp_L1, &gNB->threadPool);
+      res = pullNotifiedFIFO(&gNB->resp_L1);
       if (res == NULL)
         break; // Tpool has been stopped
     } else  {
@@ -1401,8 +1401,13 @@ void *ru_thread( void *param ) {
     syncMsg->slot_tx = proc->tti_tx;
     syncMsg->timestamp_tx = proc->timestamp_tx;
     res->key = proc->tti_rx;
-    if (!get_softmodem_params()->reorder_thread_disable) 
-      pushTpool(&gNB->threadPool, res);
+    if (!get_softmodem_params()->reorder_thread_disable){ 
+      //assert(res->reponseFifo == &gNB->resp_L1);
+      //assert(res->processingFunc == rx_func);
+      syncMsg->elt = res;
+      task_t t = {.func = res->processingFunc, .args = syncMsg };
+      async_task_manager(&gNB->man_rx_tx_ru, t);
+      }
     else 
       pushNotifiedFIFO(&gNB->resp_L1, res);
   }
