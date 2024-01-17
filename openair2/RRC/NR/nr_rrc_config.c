@@ -2227,6 +2227,7 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
                                 && uplinkConfig->pusch_ServingCellConfig->choice.setup->ext1->maxMIMO_Layers
                             ? *uplinkConfig->pusch_ServingCellConfig->choice.setup->ext1->maxMIMO_Layers
                             : 1;
+
   // Allocate memory for configuredGrantConfig
   initialUplinkBWP->configuredGrantConfig = calloc(1, sizeof(*initialUplinkBWP->configuredGrantConfig));
   if (initialUplinkBWP->configuredGrantConfig != NULL) {
@@ -2236,13 +2237,47 @@ static NR_SpCellConfig_t *get_initial_SpCellConfig(int uid,
       initialUplinkBWP->configuredGrantConfig->choice.setup = configuredGrantConfig;
       // Check if the allocation was successful
       if (configuredGrantConfig != NULL) {
-          //configuredGrantConfig->frequencyHopping= calloc(1, sizeof(*configuredGrantConfig->frequencyHopping));
+        configuredGrantConfig->frequencyHopping = malloc(sizeof(long));
+        *configuredGrantConfig->frequencyHopping = NR_ConfiguredGrantConfig__frequencyHopping_intraSlot;
+        configuredGrantConfig->mcs_Table=malloc(sizeof(long));
+        *configuredGrantConfig->mcs_Table = NR_ConfiguredGrantConfig__mcs_Table_qam256;
+        configuredGrantConfig->mcs_TableTransformPrecoder =malloc(sizeof(long));
+        *configuredGrantConfig->mcs_TableTransformPrecoder = NR_ConfiguredGrantConfig__mcs_TableTransformPrecoder_qam256;
 
-          configuredGrantConfig->frequencyHopping= NR_ConfiguredGrantConfig__frequencyHopping_intraSlot;
-          configuredGrantConfig->mcs_Table = NR_ConfiguredGrantConfig__mcs_Table_qam256;
-          configuredGrantConfig->mcs_Table = NR_ConfiguredGrantConfig__mcs_Table_qam64LowSE;
-          configuredGrantConfig->mcs_TableTransformPrecoder=NR_ConfiguredGrantConfig__mcs_TableTransformPrecoder_qam256;
-          configuredGrantConfig->mcs_TableTransformPrecoder=NR_ConfiguredGrantConfig__mcs_TableTransformPrecoder_qam64LowSE;                                                       
+        } else {
+            // Handle memory allocation failure for cg_DMRS_Configuration
+            // This could include logging an error, freeing other allocated memory, etc.
+            free(configuredGrantConfig->frequencyHopping);
+            free(configuredGrantConfig->mcs_Table);
+            free(configuredGrantConfig->mcs_TableTransformPrecoder);
+            free(configuredGrantConfig);
+            // Additional error handling as needed
+        }
+        // Set resourceAllocation field
+        configuredGrantConfig->resourceAllocation = NR_ConfiguredGrantConfig__resourceAllocation_resourceAllocationType0;
+
+        // Set rbg_Size field
+        configuredGrantConfig->rbg_Size = NR_ConfiguredGrantConfig__rbg_Size_config2;
+
+        // Set powerControlLoopToUse field
+        configuredGrantConfig->powerControlLoopToUse = NR_ConfiguredGrantConfig__powerControlLoopToUse_n0;
+
+        // Set transformPrecoder field
+        configuredGrantConfig->transformPrecoder = NR_ConfiguredGrantConfig__transformPrecoder_enabled;
+
+        // Set repK field
+        configuredGrantConfig->repK = NR_ConfiguredGrantConfig__repK_n1;
+
+        // Set repK_RV field
+        configuredGrantConfig->repK_RV = NR_ConfiguredGrantConfig__repK_RV_s1_0231;
+
+        // Set periodicity field
+        configuredGrantConfig->periodicity = NR_ConfiguredGrantConfig__periodicity_sym2;
+        
+
+
+
+
       } else {
             // Handle memory allocation failure for frequencyHopping
             // This could include logging an error, freeing other allocated memory, etc.
