@@ -19,32 +19,11 @@
  *      contact@openairinterface.org
  */
 
-#ifndef DLSCH_SCHEDULER_ALGOS
-#define DLSCH_SCHEDULER_ALGOS
+#ifndef QOS_AWARE_DLSCH_SCHEDULER
+#define QOS_AWARE_DLSCH_SCHEDULER
 
-#include "NR_MAC_gNB/nr_mac_gNB.h"
+#include "NR_MAC_gNB/gNB_scheduler_dlsch.h"
 
-typedef struct UEsched_s {
-  float coef;
-  NR_UE_info_t *UE;
-  uint16_t num_rbs_sched; // number of resource blocks scheduled
-  bool oh_status;
-} UEsched_t;
-
-typedef struct LCIDsched_s {
-  float coef;
-  NR_UE_info_t *UE;
-  uint8_t curr_lcid; // to specify the lcid of the current UE after sorting (not an optimum approach)
-  uint8_t curr_ue; // to keep track of to which UE this lcid belongs to
-  uint8_t lcid_priority; // calculated lcid priority based on qos flow priorities
-  uint16_t num_rbs_lcid_allocated; // number of resource blocks allocated for this LCID initially
-  uint16_t num_rbs_lcid_used;
-  uint16_t num_rbs_lcid_remain;
-  float factor;
-  uint32_t allocated_bytes;
-  uint32_t remaining_bytes;
-  uint16_t overhead;
-} LCIDsched_t;
 #define LC_iterator(BaSe, VaR)         \
   LCIDsched_t *VaR##pptr = BaSe, *VaR; \
   while ((VaR = (VaR##pptr++)))
@@ -66,5 +45,13 @@ uint8_t rb_allocation_lcid(module_id_t module_id,
                            int n_rb_sched,
                            uint16_t *rballoc_mask);
 void fill_lc_sched_list(NR_UE_info_t *UE, frame_t frame, int *lc_currid, int ue_currid, LCIDsched_t *lc_sched);
+
+void qos_aware_scheduler_dl(module_id_t module_id,
+                            frame_t frame,
+                            sub_frame_t slot,
+                            NR_UE_info_t **UE_list,
+                            int max_num_ue,
+                            int n_rb_sched,
+                            uint16_t *rballoc_mask);
 
 #endif

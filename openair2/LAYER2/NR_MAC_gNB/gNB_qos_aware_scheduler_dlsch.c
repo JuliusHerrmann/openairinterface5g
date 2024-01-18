@@ -19,7 +19,7 @@
  *      contact@openairinterface.org
  */
 
-/*! \file       gNB_scheduler_dlsch_algos.c
+/*! \file       gNB_qos_aware_scheduler_dlsch.c
  * \brief       procedures related to gNB scheduling for the DLSCH transport channel
  * \author      SriHarsha Korada
  * \date        2023
@@ -35,7 +35,7 @@
 #include "NR_MAC_gNB/nr_mac_gNB.h"
 #include "NR_MAC_COMMON/nr_mac_extern.h"
 #include "LAYER2/NR_MAC_gNB/mac_proto.h"
-#include "LAYER2/NR_MAC_gNB/gNB_scheduler_dlsch_algos.h"
+#include "LAYER2/NR_MAC_gNB/gNB_qos_aware_scheduler_dlsch.h"
 
 /*NFAPI*/
 #include "nfapi_nr_interface.h"
@@ -429,6 +429,233 @@ void fill_lc_sched_list(NR_UE_info_t *UE, frame_t frame, int *lc_currid, int ue_
     lc_sched[*lc_currid].curr_ue = ue_currid;
     lc_sched[*lc_currid].remaining_bytes = 1;
     (*lc_currid)++;
+  }
+}
+
+void qos_aware_scheduler_dl(module_id_t module_id,
+                            frame_t frame,
+                            sub_frame_t slot,
+                            NR_UE_info_t **UE_list,
+                            int max_num_ue,
+                            int n_rb_sched,
+                            uint16_t *rballoc_mask)
+{
+  gNB_MAC_INST *mac = RC.nrmac[module_id];
+  NR_ServingCellConfigCommon_t *scc = mac->common_channels[0].ServingCellConfigCommon;
+
+  // UEs that could be scheduled
+  UEsched_t UE_sched[MAX_MOBILES_PER_GNB] = {0};
+  LCIDsched_t LCID_sched[MAX_MOBILES_PER_GNB * NR_MAX_NUM_LCID] = {0};
+  int remainUEs = max_num_ue;
+  int curUE = 0;
+  int CC_id = 0;
+  int curLCID = 0;
+
+  /* Loop UE_info->list to check retransmission */
+  UE_iterator (UE_list, UE) {
+    if (UE->Msg4_ACKed != true)
+      continue;
+
+    NR_UE_sched_ctrl_t *sched_ctrl = &UE->UE_sched_ctrl;
+    NR_UE_DL_BWP_t *current_BWP = &UE->current_DL_BWP;
+
+    if (sched_ctrl->ul_failure)
+      continue;
+
+    const NR_mac_dir_stats_t *stats = &UE->mac_stats.dl;
+    NR_sched_pdsch_t *sched_pdsch = &sched_ctrl->sched_pdsch;
+    /* get the PID of a HARQ process awaiting retrnasmission, or -1 otherwise */
+    sched_pdsch->dl_harq_pid = sched_ctrl->retrans_dl_harq.head;
+
+    if (remainUEs == 0)
+      continue;
+
+    /* retransmission */
+    if (sched_pdsch->dl_harq_pid >= 0) {
+      /* Allocate retransmission */
+      bool r = allocate_dl_retransmission(module_id, frame, slot, rballoc_mask, &n_rb_sched, UE, sched_pdsch->dl_harq_pid);
+
+      if (!r) {
+        LOG_I(NR_MAC, "[UE %04x][%4d.%2d] DL retransmission could not be allocated\n", UE->rnti, frame, slot);
+        continue;
+      }
+      /* reduce max_num_ue once we are sure UE can be allocated, i.e., has CCE */
+      remainUEs--;
+
+    } else {
+      /* skip this UE if there are no free HARQ processes. This can happen e.g.
+       * if the UE disconnected in L2sim, in which case the gNB is not notified
+       * (this can be considered a design flaw) */
+      if (sched_ctrl->available_dl_harq.head < 0) {
+        LOG_I(NR_MAC, "[UE %04x][%4d.%2d] UE has no free DL HARQ process, skipping\n", UE->rnti, frame, slot);
+        continue;
+      }
+
+      /* Check DL buffer and skip this UE if no bytes and no TA necessary */
+      if (sched_ctrl->num_total_bytes == 0 && frame != (sched_ctrl->ta_frame + 10) % 1024)
+        continue;
+
+      const NR_bler_options_t *bo = &mac->dl_bler;
+      const int max_mcs_table = current_BWP->mcsTableIdx == 1 ? 27 : 28;
+      const int max_mcs = min(sched_ctrl->dl_max_mcs, max_mcs_table);
+      if (bo->harq_round_max == 1)
+        sched_pdsch->mcs = max_mcs;
+      else
+        sched_pdsch->mcs = get_mcs_from_bler(bo, stats, &sched_ctrl->dl_bler_stats, max_mcs, frame);
+      sched_pdsch->nrOfLayers = get_dl_nrOfLayers(sched_ctrl, current_BWP->dci_format);
+      sched_pdsch->pm_index =
+          mac->identity_pm ? 0 : get_pm_index(UE, sched_pdsch->nrOfLayers, mac->radio_config.pdsch_AntennaPorts.XP);
+
+      // for for each UE
+      fill_lc_sched_list(UE, frame, &curLCID, curUE, LCID_sched);
+
+      /* Create UE_sched list for UEs eligible for new transmission*/
+      UE_sched[curUE].UE = UE;
+      curUE++;
+    }
+  }
+
+  /*
+    sort out the lcid depending on the lcid priority and data available from transmission
+    buffer(only for DRBs and SRBs are always given higher priority before DRBs)
+  */
+  qsort((void *)LCID_sched, curLCID, sizeof(LCIDsched_t), lc_comparator);
+
+  if (true && !rb_allocation_lcid(module_id, frame, slot, LCID_sched, UE_sched, n_rb_sched, rballoc_mask))
+    return;
+
+  UEsched_t *iterator = UE_sched;
+  const int min_rbSize = 5;
+
+  /* Loop UE_sched to find max coeff and allocate transmission */
+  while (remainUEs > 0 && n_rb_sched >= min_rbSize && iterator->UE != NULL) {
+    NR_UE_sched_ctrl_t *sched_ctrl = &iterator->UE->UE_sched_ctrl;
+    const uint16_t rnti = iterator->UE->rnti;
+
+    NR_UE_DL_BWP_t *dl_bwp = &iterator->UE->current_DL_BWP;
+    NR_UE_UL_BWP_t *ul_bwp = &iterator->UE->current_UL_BWP;
+
+    if (sched_ctrl->available_dl_harq.head < 0) {
+      LOG_I(NR_MAC, "[UE %04x][%4d.%2d] UE has no free DL HARQ process, skipping\n", iterator->UE->rnti, frame, slot);
+      iterator++;
+      continue;
+    }
+
+    int CCEIndex = get_cce_index(mac,
+                                 CC_id,
+                                 slot,
+                                 iterator->UE->rnti,
+                                 &sched_ctrl->aggregation_level,
+                                 sched_ctrl->search_space,
+                                 sched_ctrl->coreset,
+                                 &sched_ctrl->sched_pdcch,
+                                 false);
+    if (CCEIndex < 0) {
+      LOG_D(NR_MAC, "[UE %04x][%4d.%2d] could not find free CCE for DL DCI\n", rnti, frame, slot);
+      iterator++;
+      continue;
+    }
+
+    /* Find PUCCH occasion: if it fails, undo CCE allocation (undoing PUCCH
+     * allocation after CCE alloc fail would be more complex) */
+
+    int r_pucch = nr_get_pucch_resource(sched_ctrl->coreset, ul_bwp->pucch_Config, CCEIndex);
+    const int alloc = nr_acknack_scheduling(mac, iterator->UE, frame, slot, r_pucch, 0);
+
+    if (alloc < 0) {
+      LOG_D(NR_MAC, "[UE %04x][%4d.%2d] could not find PUCCH for DL DCI\n", rnti, frame, slot);
+      iterator++;
+      continue;
+    }
+
+    sched_ctrl->cce_index = CCEIndex;
+    fill_pdcch_vrb_map(mac,
+                       /* CC_id = */ 0,
+                       &sched_ctrl->sched_pdcch,
+                       CCEIndex,
+                       sched_ctrl->aggregation_level);
+
+    /* MCS has been set above */
+    NR_sched_pdsch_t *sched_pdsch = &sched_ctrl->sched_pdsch;
+    sched_pdsch->time_domain_allocation = get_dl_tda(mac, scc, slot);
+    AssertFatal(sched_pdsch->time_domain_allocation >= 0, "Unable to find PDSCH time domain allocation in list\n");
+
+    const int coresetid = sched_ctrl->coreset->controlResourceSetId;
+    sched_pdsch->tda_info = get_dl_tda_info(dl_bwp,
+                                            sched_ctrl->search_space->searchSpaceType->present,
+                                            sched_pdsch->time_domain_allocation,
+                                            scc->dmrs_TypeA_Position,
+                                            1,
+                                            TYPE_C_RNTI_,
+                                            coresetid,
+                                            false);
+
+    NR_tda_info_t *tda_info = &sched_pdsch->tda_info;
+
+    const uint16_t slbitmap = SL_to_bitmap(tda_info->startSymbolIndex, tda_info->nrOfSymbols);
+
+    int rbStop = 0;
+    int rbStart = 0;
+    get_start_stop_allocation(mac, iterator->UE, &rbStart, &rbStop);
+    // Freq-demain allocation
+    while (rbStart < rbStop && (rballoc_mask[rbStart] & slbitmap) != slbitmap)
+      rbStart++;
+
+    uint16_t max_rbSize = 1;
+
+    while (rbStart + max_rbSize < rbStop && (rballoc_mask[rbStart + max_rbSize] & slbitmap) == slbitmap)
+      max_rbSize++;
+
+    sched_pdsch->dmrs_parms = get_dl_dmrs_params(scc, dl_bwp, tda_info, sched_pdsch->nrOfLayers);
+    sched_pdsch->Qm = nr_get_Qm_dl(sched_pdsch->mcs, dl_bwp->mcsTableIdx);
+    sched_pdsch->R = nr_get_code_rate_dl(sched_pdsch->mcs, dl_bwp->mcsTableIdx);
+    sched_pdsch->pucch_allocation = alloc;
+    uint32_t TBS = 0;
+    uint16_t rbSize;
+    // Fix me: currently, the RLC does not give us the total number of PDUs
+    // awaiting. Therefore, for the time being, we put a fixed overhead of 12
+    // (for 4 PDUs) and optionally + 2 for TA. Once RLC gives the number of
+    // PDUs, we replace with 3 * numPDUs
+    const int oh = 3 * 4 + 2 * (frame == (sched_ctrl->ta_frame + 10) % 1024);
+    // const int oh = 3 * sched_ctrl->dl_pdus_total + 2 * (frame == (sched_ctrl->ta_frame + 10) % 1024);
+
+    // calculate the TBS as per the prioritized number of bytes in each LCID bytes
+    uint32_t total_prioritized_bytes = nr_get_num_prioritized_bytes(max_rbSize, iterator, LCID_sched);
+    uint32_t num_bytes;
+    num_bytes = total_prioritized_bytes;
+
+    bool check_status = nr_find_nb_rb(sched_pdsch->Qm,
+                                      sched_pdsch->R,
+                                      1, // no transform precoding for DL
+                                      sched_pdsch->nrOfLayers,
+                                      tda_info->nrOfSymbols,
+                                      sched_pdsch->dmrs_parms.N_PRB_DMRS * sched_pdsch->dmrs_parms.N_DMRS_SLOT,
+                                      num_bytes + oh,
+                                      min_rbSize,
+                                      max_rbSize,
+                                      &TBS,
+                                      &rbSize);
+    LOG_D(NR_MAC, "Rb_start = %d, MaxRbSize = %d \n", rbStart, max_rbSize);
+    LOG_D(NR_MAC,
+          "check status = %d, TBS = %d, max_rbsize = %d, rbsize = %d, oh = %d\n",
+          check_status,
+          TBS,
+          max_rbSize,
+          rbSize,
+          oh);
+    AssertFatal(check_status == true && rbSize <= max_rbSize, "Algorithm implemenatation is not accurate\n");
+
+    sched_pdsch->rbSize = rbSize;
+    sched_pdsch->rbStart = rbStart;
+    sched_pdsch->tb_size = TBS;
+    /* transmissions: directly allocate */
+    n_rb_sched -= sched_pdsch->rbSize;
+
+    for (int rb = 0; rb < sched_pdsch->rbSize; rb++)
+      rballoc_mask[rb + sched_pdsch->rbStart] ^= slbitmap;
+
+    remainUEs--;
+    iterator++;
   }
 }
 
