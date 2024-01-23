@@ -930,10 +930,10 @@ rrc_gNB_generate_dedicatedRRCReconfiguration_release(
 static void rrc_gNB_process_RRCReconfigurationComplete(const protocol_ctxt_t *const ctxt_pP, rrc_gNB_ue_context_t *ue_context_pP, const uint8_t xid)
 {
   int                                 drb_id;
-  uint8_t kRRCenc[16] = {0};
-  uint8_t kRRCint[16] = {0};
-  uint8_t kUPenc[16] = {0};
-  uint8_t kUPint[16] = {0};
+  uint8_t kRRCenc[NR_K_KEY_SIZE] = {0};
+  uint8_t kRRCint[NR_K_KEY_SIZE] = {0};
+  uint8_t  kUPenc[NR_K_KEY_SIZE] = {0};
+  uint8_t  kUPint[NR_K_KEY_SIZE] = {0};
   gNB_RRC_UE_t *ue_p = &ue_context_pP->ue_context;
   NR_DRB_ToAddModList_t *DRB_configList = createDRBlist(ue_p, false);
 
@@ -1042,13 +1042,13 @@ static void rrc_gNB_generate_RRCReestablishment(rrc_gNB_ue_context_t *ue_context
 
   LOG_I(NR_RRC, "[RAPROC] UE %04x Logical Channel DL-DCCH, Generating NR_RRCReestablishment (bytes %d)\n", ue_p->rnti, size);
 
-  uint8_t kRRCenc[16] = {0};
-  uint8_t kRRCint[16] = {0};
-  uint8_t kUPenc[16] = {0};
+  /* Ciphering and Integrity according to TS 33.501 */
+  uint8_t kRRCenc[NR_K_KEY_SIZE] = {0};
+  uint8_t kRRCint[NR_K_KEY_SIZE] = {0};
+  uint8_t  kUPenc[NR_K_KEY_SIZE] = {0};
   /* Derive the keys from kgnb */
   if (ue_p->Srb[1].Active)
     nr_derive_key(UP_ENC_ALG, ue_p->ciphering_algorithm, ue_p->kgnb, kUPenc);
-
   nr_derive_key(RRC_ENC_ALG, ue_p->ciphering_algorithm, ue_p->kgnb, kRRCenc);
   nr_derive_key(RRC_INT_ALG, ue_p->integrity_algorithm, ue_p->kgnb, kRRCint);
   freeSRBlist(SRBs);
