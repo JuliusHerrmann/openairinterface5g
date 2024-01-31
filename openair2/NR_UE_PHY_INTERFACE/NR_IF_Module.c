@@ -1039,6 +1039,7 @@ static int handle_bcch_bch(module_id_t module_id,
                            uint32_t ssb_index,
                            uint32_t ssb_length,
                            uint16_t ssb_start_subcarrier,
+                           long ssb_arfcn,
                            uint16_t cell_id)
 {
   NR_UE_MAC_INST_t *mac = get_mac_inst(module_id);
@@ -1049,7 +1050,8 @@ static int handle_bcch_bch(module_id_t module_id,
     mac->frequency_range = FR2;
   else
     mac->frequency_range = FR1;
-  nr_mac_rrc_data_ind_ue(module_id, cc_id, gNB_index, 0, 0, 0, cell_id, NR_BCCH_BCH, (uint8_t *) pduP, 3);    //  fixed 3 bytes MIB PDU
+  //  fixed 3 bytes MIB PDU
+  nr_mac_rrc_data_ind_ue(module_id, cc_id, gNB_index, 0, 0, 0, cell_id, ssb_arfcn, NR_BCCH_BCH, (uint8_t *) pduP, 3);
   return 0;
 }
 
@@ -1227,6 +1229,7 @@ static uint32_t nr_ue_dl_processing(nr_downlink_indication_t *dl_info)
                                            rx_indication_body.ssb_pdu.ssb_index,
                                            rx_indication_body.ssb_pdu.ssb_length,
                                            rx_indication_body.ssb_pdu.ssb_start_subcarrier,
+                                           rx_indication_body.ssb_pdu.arfcn,
                                            rx_indication_body.ssb_pdu.cell_id)) << FAPI_NR_RX_PDU_TYPE_SSB;
             }
             break;
