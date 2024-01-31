@@ -47,13 +47,6 @@ static bool rrc_gNB_plmn_matches(const gNB_RRC_INST *rrc, const f1ap_served_cell
     && conf->mcc[0] == info->plmn.mcc
     && conf->mnc[0] == info->plmn.mnc;
 }
-static bool rrc_gNB_plmn_matches_generic(const gNB_RRC_INST *rrc, const f1ap_plmn_t *plmn)
-{
-  const gNB_RrcConfigurationReq *conf = &rrc->configuration;
-  return conf->num_plmn == 1 // F1 supports only one
-    && conf->mcc[0] == plmn->mcc
-    && conf->mnc[0] == plmn->mnc;
-}
 
 void rrc_gNB_process_f1_setup_req(f1ap_setup_req_t *req, sctp_assoc_t assoc_id)
 {
@@ -310,14 +303,9 @@ void rrc_gNB_process_f1_du_configuration_update(f1ap_gnb_du_configuration_update
     LOG_W(RRC, "du_configuration_update->cells_to_delete_list is not supported yet");
   }
 
-   served_cells_to_activate_t cell = {
-      .plmn = conf_up->cell_to_modify[0].info.plmn,
-      .nr_cellid = conf_up->cell_to_modify[0].info.nr_cellid,
-      .nrpci = 0,
-      .num_SI = 0,
-  };
+
   /* Send DU Configuration Acknowledgement */
-   f1ap_gnb_du_configuration_update_acknowledge_t ack = {.transaction_id = conf_up->transaction_id};
+  f1ap_gnb_du_configuration_update_acknowledge_t ack = {.transaction_id = conf_up->transaction_id};
 
   rrc->mac_rrc.f1_du_config_update_ack(assoc_id, &ack);
  }

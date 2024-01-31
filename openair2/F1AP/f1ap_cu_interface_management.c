@@ -333,7 +333,7 @@ int CU_send_F1_SETUP_RESPONSE(sctp_assoc_t assoc_id, f1ap_setup_resp_t *f1ap_set
   bs->size = 1;
   bs->bits_unused = 5;
 
-  F1AP_ProtocolExtensionContainer_10696P228_t *p = (F1AP_ProtocolExtensionContainer_10696P228_t*)calloc(1, sizeof(F1AP_ProtocolExtensionContainer_10696P228_t));    
+  F1AP_ProtocolExtensionContainer_10696P228_t *p = (F1AP_ProtocolExtensionContainer_10696P228_t*)calloc(1, sizeof(F1AP_ProtocolExtensionContainer_10696P228_t));
   asn1cSequenceAdd(p->list, F1AP_RRC_Version_ExtIEs_t, rrcv_ext);
   rrcv_ext->id = F1AP_ProtocolIE_ID_id_latest_RRC_Version_Enhanced;
   rrcv_ext->criticality = F1AP_Criticality_ignore;
