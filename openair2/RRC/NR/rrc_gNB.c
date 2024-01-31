@@ -1066,12 +1066,35 @@ static void rrc_gNB_generate_RRCReestablishment(rrc_gNB_ue_context_t *ue_context
     }
   }
 
-  // TODO: should send E1 UE Bearer Modification with PDCP Reestablishment flag
-  for (int drb_id = 1; drb_id <= MAX_DRBS_PER_UE; drb_id++) {
-    if (ue_p->established_drbs[drb_id - 1].status != DRB_INACTIVE)
-      nr_pdcp_reestablishment(ue_p->rrc_ue_id, drb_id, false);
+  /* PDCP Reestablishment over E1 */
+  e1ap_bearer_mod_req_t req = {0};
+  bool do_bearer_context_mod = false;
+  req.numPDUSessionsMod = ue_p->nb_of_pdusessions;
+  req.gNB_cu_cp_ue_id = ue_p->rrc_ue_id;
+  req.gNB_cu_up_ue_id = ue_p->rrc_ue_id;
+  for (int i = 0; i < req.numPDUSessionsMod; i++) {
+    for (int drb_id = 1; drb_id <= MAX_DRBS_PER_UE; drb_id++) {
+      if (ue_p->established_drbs[drb_id - 1].status != DRB_INACTIVE) {
+        /* PDCP Reestablishment */
+        nr_pdcp_reestablishment(ue_p->rrc_ue_id, drb_id, false);
+        /* E1 Bearear Context Modification Request */
+        req.pduSessionMod[i].numDRB2Modify += 1;
+        req.pduSessionMod[i].sessionId = ue_p->pduSession[i].param.pdusession_id;
+        req.pduSessionMod[i].DRBnGRanModList[drb_id - 1].id = drb_id;
+        /* PDCP configuration */
+        bearer_context_pdcp_config_t *pdcp_config = &req.pduSessionMod[i].DRBnGRanModList[drb_id - 1].pdcp_config;
+        default_pdcp_config(pdcp_config);
+        pdcp_config->pDCP_Reestablishment = true;
+        do_bearer_context_mod = true;
+      }
+    }
   }
-
+  /* Send E1 Bearer Context Modification Request (3GPP TS 38.463) */
+  if (do_bearer_context_mod) {
+    sctp_assoc_t assoc_id = get_existing_cuup_for_ue(rrc, ue_p);
+    rrc->cucp_cuup.bearer_context_mod(assoc_id, &req);
+  }
+  /* F1AP DL RRC Message Transfer */
   f1_ue_data_t ue_data = cu_get_f1_ue_data(ue_p->rrc_ue_id);
   RETURN_IF_INVALID_ASSOC_ID(ue_data);
   uint32_t old_gNB_DU_ue_id = old_rnti;
@@ -1956,11 +1979,12 @@ static void rrc_CU_process_ue_context_modification_response(MessageDef *msg_p, i
       for (int j = 0; j < resp->drbs_to_be_setup_length; j++) {
         f1ap_drb_to_be_setup_t *drb_f1 = resp->drbs_to_be_setup + j;
         DRB_nGRAN_to_setup_t *drb_e1 = req.pduSessionMod[i].DRBnGRanModList + j;
-
         drb_e1->id = drb_f1->drb_id;
         drb_e1->numDlUpParam = drb_f1->up_dl_tnl_length;
         drb_e1->DlUpParamList[0].tlAddress = drb_f1->up_dl_tnl[0].tl_address;
         drb_e1->DlUpParamList[0].teId = drb_f1->up_dl_tnl[0].teid;
+        /* PDCP configuration */
+        default_pdcp_config(&drb_e1->pdcp_config);
       }
     }
 

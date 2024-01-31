@@ -251,6 +251,10 @@ void e1_bearer_context_modif(const e1ap_bearer_mod_req_t *req)
       if (f1inst < 0) // no F1-U?
         continue; // nothing to do
 
+      if (to_modif->pdcp_config.pDCP_Reestablishment == true) {
+        nr_pdcp_reestablishment(req->gNB_cu_up_ue_id, to_modif->id, false);
+      }
+
       in_addr_t addr = {0};
       memcpy(&addr, &to_modif->DlUpParamList[0].tlAddress, sizeof(in_addr_t));
 

@@ -1209,6 +1209,7 @@ void nr_pdcp_reestablishment(ue_id_t ue_id, int rb_id, bool srb_flag)
   rb = nr_pdcp_get_rb(ue, rb_id, srb_flag);
 
   if (rb != NULL) {
+    LOG_D(PDCP, "UE %4.4lx re-establishment of %sRB %d\n", ue_id, srb_flag ? "S" : "D", rb_id);
     rb->reestablish_entity(rb);
   } else {
     LOG_W(PDCP, "UE %4.4lx cannot re-establish RB %d (is_srb %d), RB not found\n", ue_id, rb_id, srb_flag);
