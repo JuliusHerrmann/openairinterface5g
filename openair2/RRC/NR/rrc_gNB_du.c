@@ -47,6 +47,13 @@ static bool rrc_gNB_plmn_matches(const gNB_RRC_INST *rrc, const f1ap_served_cell
     && conf->mcc[0] == info->plmn.mcc
     && conf->mnc[0] == info->plmn.mnc;
 }
+static bool rrc_gNB_plmn_matches_generic(const gNB_RRC_INST *rrc, const f1ap_plmn_t *plmn)
+{
+  const gNB_RrcConfigurationReq *conf = &rrc->configuration;
+  return conf->num_plmn == 1 // F1 supports only one
+    && conf->mcc[0] == plmn->mcc
+    && conf->mnc[0] == plmn->mnc;
+}
 
 void rrc_gNB_process_f1_setup_req(f1ap_setup_req_t *req, sctp_assoc_t assoc_id)
 {
@@ -110,7 +117,6 @@ void rrc_gNB_process_f1_setup_req(f1ap_setup_req_t *req, sctp_assoc_t assoc_id)
     }
   }
 
-  // if there is no system info or no SIB1 and we run in SA mode, we cannot handle it
   const f1ap_gnb_du_system_info_t *sys_info = req->cell[0].sys_info;
   NR_BCCH_BCH_Message_t *mib = NULL;
   NR_SIB1_t *sib1 = NULL;
@@ -160,6 +166,8 @@ void rrc_gNB_process_f1_setup_req(f1ap_setup_req_t *req, sctp_assoc_t assoc_id)
     ASN_STRUCT_FREE(asn_DEF_NR_BCCH_BCH_MessageType, mib);
     du->sib1 = sib1;
   }
+  du->cell[0].info.nr_cellid = req->cell[0].info.nr_cellid;
+
   RB_INSERT(rrc_du_tree, &rrc->dus, du);
   rrc->num_dus++;
 
@@ -168,7 +176,7 @@ void rrc_gNB_process_f1_setup_req(f1ap_setup_req_t *req, sctp_assoc_t assoc_id)
       .nr_cellid = cell_info->nr_cellid,
       .nrpci = cell_info->nr_pci,
       .num_SI = 0,
-  };  
+  };
 
   f1ap_setup_resp_t resp = {.transaction_id = req->transaction_id,
                             .num_cells_to_activate = 1,
@@ -220,6 +228,102 @@ static int invalidate_du_connections(gNB_RRC_INST *rrc, sctp_assoc_t assoc_id)
   }
   return count;
 }
+
+void rrc_gNB_process_f1_du_configuration_update(f1ap_gnb_du_configuration_update_t *conf_up, sctp_assoc_t assoc_id){
+  AssertFatal(assoc_id != 0, "illegal assoc_id == 0: should be -1 (monolithic) or >0 (split)\n");
+  gNB_RRC_INST *rrc = RC.nrrrc[0];
+  DevAssert(rrc);
+
+  // check:
+  // - it is one cell
+  // - PLMN and Cell ID matches
+  // - no previous DU with the same ID
+  // else reject
+
+  /* Verify that the DU exists  TODO: replace with call to RBFIND*/
+  nr_rrc_du_container_t *du = NULL;
+  RB_FOREACH(du, rrc_du_tree, &rrc->dus){
+    if(du->assoc_id == assoc_id){
+      LOG_I(NR_RRC, "Received gNB DU Configuration Update from gNB_DU on assoc_id %d\n", assoc_id);
+      break;
+    }
+  }
+  const f1ap_served_cell_info_t *info = &du->cell[0].info;
+  if(conf_up->num_cells_to_add > 0){
+    // Here we check if the number of cell limit is respectet, otherwise send failure
+    LOG_W(RRC, "du_configuration_update->cells_to_add_list is not supported yet");
+  }
+
+  if(conf_up->num_cells_to_modify > 0){
+    // here the old nrcgi is used to find the cell information, if it exist then we modify consequently otherwise we fail
+
+    if (info->nr_cellid != conf_up->cell_to_modify[0].old_nr_cellid) {
+      return;
+    }
+
+    // verify the new plmn of the cell
+    if (!rrc_gNB_plmn_matches(rrc, &conf_up->cell_to_modify[0].info)) {
+    }
+
+//   Set the new cellId, if different */
+    //if (info->nr_cellid != conf_up->cell_to_modify[0].info.nr_cellid)
+      //info->nr_cellid = conf_up->cell_to_modify[0].info.nr_cellid;
+      /*TODO Update Cell ID*/
+
+    const f1ap_gnb_du_system_info_t *sys_info = conf_up->cell_to_modify[0].sys_info;
+    NR_MIB_t *mib = NULL;
+    NR_SIB1_t *sib1 = NULL;
+
+    if (sys_info != NULL && sys_info->mib != NULL && !(sys_info->sib1 == NULL && get_softmodem_params()->sa)) {
+      asn_dec_rval_t dec_rval =
+          uper_decode_complete(NULL, &asn_DEF_NR_MIB, (void **)&mib, sys_info->mib, sys_info->mib_length);
+      if (dec_rval.code != RC_OK) {
+        LOG_E(RRC, "Failed to decode NR_MIB (%zu bits) of DU, rejecting DU\n", dec_rval.consumed);
+        f1ap_setup_failure_t fail = {.cause = F1AP_CauseProtocol_semantic_error};
+        rrc->mac_rrc.f1_setup_failure(assoc_id, &fail);
+        ASN_STRUCT_FREE(asn_DEF_NR_BCCH_BCH_Message, mib);
+        return;
+      }
+      du->mib = mib;
+
+      /*TODO: verify that sib1 can be null*/
+      if (sys_info->sib1) {
+        dec_rval = uper_decode_complete(NULL, &asn_DEF_NR_SIB1, (void **)&sib1, sys_info->sib1, sys_info->sib1_length);
+        if (dec_rval.code != RC_OK) {
+          LOG_E(RRC, "Failed to decode NR_SIB1 (%zu bits) of DU, rejecting DU\n", dec_rval.consumed);
+          f1ap_setup_failure_t fail = {.cause = F1AP_CauseProtocol_semantic_error};
+          rrc->mac_rrc.f1_setup_failure(assoc_id, &fail);
+          ASN_STRUCT_FREE(asn_DEF_NR_SIB1, sib1);
+          return;
+        }
+        du->sib1 = sib1;
+
+        if (LOG_DEBUGFLAG(DEBUG_ASN1))
+          xer_fprint(stdout, &asn_DEF_NR_SIB1, sib1);
+
+      }
+    }
+  }
+
+  if(conf_up->num_cells_to_delete > 0){
+    // delete the cell and send cell to desactive IE in the response.
+    LOG_W(RRC, "du_configuration_update->cells_to_delete_list is not supported yet");
+  }
+
+   served_cells_to_activate_t cell = {
+      .plmn = conf_up->cell_to_modify[0].info.plmn,
+      .nr_cellid = conf_up->cell_to_modify[0].info.nr_cellid,
+      .nrpci = 0,
+      .num_SI = 0,
+  };
+  /* Send DU Configuration Acknowledgement */
+   f1ap_gnb_du_configuration_update_acknowledge_t ack = {.transaction_id = conf_up->transaction_id};
+
+  rrc->mac_rrc.f1_du_config_update_ack(assoc_id, &ack);
+ }
+
+
+
 
 void rrc_CU_process_f1_lost_connection(gNB_RRC_INST *rrc, f1ap_lost_connection_t *lc, sctp_assoc_t assoc_id)
 {

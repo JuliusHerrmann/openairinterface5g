@@ -351,6 +351,7 @@ typedef struct {
 typedef struct nr_mac_rrc_dl_if_s {
   f1_setup_response_func_t f1_setup_response;
   f1_setup_failure_func_t f1_setup_failure;
+  f1_du_configuration_update_ack_t f1_du_config_update_ack;
   ue_context_setup_request_func_t ue_context_setup_request;
   ue_context_modification_request_func_t ue_context_modification_request;
   ue_context_modification_confirm_func_t ue_context_modification_confirm;
@@ -373,6 +374,13 @@ typedef struct nr_rrc_du_container_t {
   f1ap_setup_req_t *setup_req;
   NR_MIB_t *mib;
   NR_SIB1_t *sib1;
+  /// number of DU cells available
+  uint16_t num_cells_available; //0< num_cells_available <= 512;
+  uint16_t num_cells_active;
+  struct {
+    f1ap_served_cell_info_t info;
+    f1ap_gnb_du_system_info_t *sys_info;
+  } cell[F1AP_MAX_NB_CELLS];
 } nr_rrc_du_container_t;
 
 typedef struct nr_rrc_cuup_container_t {
