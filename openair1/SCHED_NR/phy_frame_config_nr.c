@@ -116,36 +116,6 @@ int set_tdd_config_nr( nfapi_nr_config_request_scf_t *cfg,
     }
   }
 
-  /*
-  while(slot_number != nb_slots_to_set) {
-    for (int number_of_slot = 0; number_of_slot < nrofDownlinkSlots; number_of_slot++) {
-      frame_parms->tdd_uplink_nr[slot_number] = NR_TDD_DOWNLINK_SLOT;
-      printf("slot %d set as downlink\n",slot_number);
-      slot_number++;
-    }
-
-    if (nrofDownlinkSymbols != 0 || nrofUplinkSymbols != 0) {
-       frame_parms->tdd_uplink_nr[slot_number] = (1<<nrofUplinkSymbols) - 1;
-       printf("slot %d set as SL\n",slot_number);
-       slot_number++;
-    }
-
-    for (int number_of_slot = 0; number_of_slot < nrofUplinkSlots; number_of_slot++) {
-      frame_parms->tdd_uplink_nr[slot_number] = NR_TDD_UPLINK_SLOT;
-      printf("slot %d set as uplink\n",slot_number);
-      slot_number++;
-    }
-
-    if (p_tdd_ul_dl_configuration->nrofUplinkSymbols != 0) {
-      LOG_E(PHY,"set_tdd_configuration_nr: uplink symbol for slot is not supported for tdd configuration \n");
-      return (-1);
-    }
-  }
-
-  if (frame_parms->p_tdd_UL_DL_ConfigurationCommon2 != NULL) {
-    LOG_E(PHY,"set_tdd_configuration_nr: additionnal tdd configuration 2 is not supported for tdd configuration \n");
-    return (-1);
-  }*/
   return (nb_periods_per_frame);
 }
 
