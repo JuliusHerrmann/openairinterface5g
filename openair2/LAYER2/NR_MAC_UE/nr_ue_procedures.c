@@ -4051,7 +4051,7 @@ static void nr_ue_process_rar(nr_downlink_indication_t *dl_info, int pdu_id)
     ul_time_alignment->ta_command = 31 + ta;
     ul_time_alignment->ta_total = ta;
     ul_time_alignment->ta_apply = true;
-    LOG_W(MAC, "received TA command %d\n", 31 + ta);
+    LOG_W(MAC, "received Msg2 TA command %d\n", ta);
 #ifdef DEBUG_RAR
     // CSI
     csi_req = (unsigned char) (rar->UL_GRANT_4 & 0x01);
