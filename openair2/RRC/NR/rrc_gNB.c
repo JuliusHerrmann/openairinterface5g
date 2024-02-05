@@ -102,6 +102,10 @@
 #include "BIT_STRING.h"
 #include "assertions.h"
 
+#ifdef E2_AGENT
+#include "openair2/E2AP/RAN_FUNCTION/O-RAN/ran_func_rc_extern.h"
+#endif
+
 //#define XER_PRINT
 
 extern RAN_CONTEXT_t RC;
@@ -535,6 +539,10 @@ static void rrc_gNB_process_RRCSetupComplete(const protocol_ctxt_t *const ctxt_p
   } else {
     rrc_gNB_generate_SecurityModeCommand(ctxt_pP, ue_context_pP);
   }
+
+  #ifdef E2_AGENT
+  signal_rrc_state_changed_to(&ue_context_pP->ue_context, RC_SM_RRC_CONNECTED);
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -2638,6 +2646,10 @@ rrc_gNB_generate_RRCRelease(
     .gNB_cu_up_ue_id = UE->rrc_ue_id,
   };
   rrc->cucp_cuup.bearer_context_release(assoc_id, &cmd);
+
+  #ifdef E2_AGENT
+  signal_rrc_state_changed_to(UE, RC_SM_RRC_IDLE);
+  #endif
 
   /* UE will be freed after UE context release complete */
 }
