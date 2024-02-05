@@ -52,6 +52,8 @@ int e1apCUCP_handle_BEARER_CONTEXT_RELEASE_COMPLETE(sctp_assoc_t assoc_id, e1ap_
 
 int e1apCUUP_send_BEARER_CONTEXT_RELEASE_COMPLETE(sctp_assoc_t assoc_id, const e1ap_bearer_release_cplt_t *cplt);
 
+void default_pdcp_config(bearer_context_pdcp_config_t *pdcp_config);
+
 void *E1AP_CUUP_task(void *arg);
 
 void *E1AP_CUCP_task(void *arg);

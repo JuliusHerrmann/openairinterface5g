@@ -97,6 +97,7 @@
 #include "openair2/F1AP/f1ap_common.h"
 #include "openair2/F1AP/f1ap_ids.h"
 #include "openair2/SDAP/nr_sdap/nr_sdap_entity.h"
+#include "openair2/E1AP/e1ap.h"
 #include "cucp_cuup_if.h"
 
 #include "BIT_STRING.h"
@@ -2687,18 +2688,12 @@ void rrc_gNB_trigger_new_bearer(int rnti)
   DRB_nGRAN_to_setup_t *drb = &pdu->DRBnGRanList[0];
   int drb_id = 2;
   drb->id = drb_id;
-
-  drb->defaultDRB = E1AP_DefaultDRB_false;
-  drb->sDAP_Header_UL = !(rrc->configuration.enable_sdap);
-  drb->sDAP_Header_DL = !(rrc->configuration.enable_sdap);
-
-  drb->pDCP_SN_Size_UL = E1AP_PDCP_SN_Size_s_18;
-  drb->pDCP_SN_Size_DL = E1AP_PDCP_SN_Size_s_18;
-
-  drb->discardTimer = E1AP_DiscardTimer_infinity;
-  drb->reorderingTimer = E1AP_T_Reordering_ms0;
-
-  drb->rLC_Mode = E1AP_RLC_Mode_rlc_am;
+  /* SDAP */
+  drb->sdap_config.defaultDRB = E1AP_DefaultDRB_false;
+  drb->sdap_config.sDAP_Header_UL = !(rrc->configuration.enable_sdap);
+  drb->sdap_config.sDAP_Header_DL = !(rrc->configuration.enable_sdap);
+  /* PDCP */
+  default_pdcp_config(&drb->pdcp_config);
 
   drb->numCellGroups = 1; // assume one cell group associated with a DRB
 

@@ -60,6 +60,7 @@
 #include "f1ap_messages_types.h"
 #include "openair2/F1AP/f1ap_ids.h"
 #include "openair2/E1AP/e1ap_asnc.h"
+#include "openair2/E1AP/e1ap.h"
 #include "NGAP_asn_constant.h"
 #include "NGAP_PDUSessionResourceSetupRequestTransfer.h"
 #include "NGAP_PDUSessionResourceModifyRequestTransfer.h"
@@ -800,20 +801,12 @@ void rrc_gNB_process_NGAP_PDUSESSION_SETUP_REQ(MessageDef *msg_p, instance_t ins
       DRB_nGRAN_to_setup_t *drb = pdu->DRBnGRanList + j;
 
       drb->id = i + j + UE->nb_of_pdusessions;
-
-      drb->defaultDRB = true;
-
-      drb->sDAP_Header_UL = !(rrc->configuration.enable_sdap);
-      drb->sDAP_Header_DL = !(rrc->configuration.enable_sdap);
-
-      drb->pDCP_SN_Size_UL = E1AP_PDCP_SN_Size_s_18;
-      drb->pDCP_SN_Size_DL = E1AP_PDCP_SN_Size_s_18;
-
-      drb->discardTimer = E1AP_DiscardTimer_infinity;
-      drb->reorderingTimer = E1AP_T_Reordering_ms100;
-
-      drb->rLC_Mode = E1AP_RLC_Mode_rlc_am;
-
+      /* SDAP */
+      drb->sdap_config.defaultDRB = true;
+      drb->sdap_config.sDAP_Header_UL = !(rrc->configuration.enable_sdap);
+      drb->sdap_config.sDAP_Header_DL = !(rrc->configuration.enable_sdap);
+      /* PDCP */
+      default_pdcp_config(&drb->pdcp_config);
       drb->numCellGroups = 1; // assume one cell group associated with a DRB
 
       for (int k=0; k < drb->numCellGroups; k++) {
