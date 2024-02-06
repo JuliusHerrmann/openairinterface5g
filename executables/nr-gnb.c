@@ -203,22 +203,6 @@ void rx_func(void *param)
     start_meas(&nfapi_meas);
     handle_nr_slot_ind(frame_rx, slot_rx);
     stop_meas(&nfapi_meas);
-
-    /*if (gNB->UL_INFO.rx_ind.rx_indication_body.number_of_pdus||
-        gNB->UL_INFO.harq_ind.harq_indication_body.number_of_harqs ||
-        gNB->UL_INFO.crc_ind.crc_indication_body.number_of_crcs ||
-        gNB->UL_INFO.rach_ind.number_of_pdus ||
-        gNB->UL_INFO.cqi_ind.number_of_cqis
-       ) {
-      LOG_D(PHY, "UL_info[rx_ind:%05d:%d harqs:%05d:%d crcs:%05d:%d rach_pdus:%0d.%d:%d cqis:%d] RX:%04d%d TX:%04d%d \n",
-            NFAPI_SFNSF2DEC(gNB->UL_INFO.rx_ind.sfn_sf),   gNB->UL_INFO.rx_ind.rx_indication_body.number_of_pdus,
-            NFAPI_SFNSF2DEC(gNB->UL_INFO.harq_ind.sfn_sf), gNB->UL_INFO.harq_ind.harq_indication_body.number_of_harqs,
-            NFAPI_SFNSF2DEC(gNB->UL_INFO.crc_ind.sfn_sf),  gNB->UL_INFO.crc_ind.crc_indication_body.number_of_crcs,
-            gNB->UL_INFO.rach_ind.sfn, gNB->UL_INFO.rach_ind.slot,gNB->UL_INFO.rach_ind.number_of_pdus,
-            gNB->UL_INFO.cqi_ind.number_of_cqis,
-            frame_rx, slot_rx,
-            frame_tx, slot_tx);
-    }*/
   }
   // ****************************************
 
@@ -270,6 +254,7 @@ void rx_func(void *param)
   stop_meas(&gNB->ul_indication_stats);
 
   int tx_slot_type = nr_slot_select(cfg,frame_tx,slot_tx);
+  //LOG_I(PHY, "%s() %4u.%2d tx_slot_type %d\n", frame_rx, slot_rx, tx_slot_type);
   if ((tx_slot_type == NR_DOWNLINK_SLOT || tx_slot_type == NR_MIXED_SLOT) && NFAPI_MODE != NFAPI_MODE_PNF) {
     notifiedFIFO_elt_t *res;
     processingData_L1tx_t *syncMsg;

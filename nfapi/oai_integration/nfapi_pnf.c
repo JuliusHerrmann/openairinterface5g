@@ -1862,8 +1862,8 @@ int nr_start_request(nfapi_pnf_config_t *config, nfapi_pnf_phy_config_t *phy,  n
     pthread_mutex_unlock(&nfapi_sync_mutex);
   }
 
-  while(sync_var<0) {
-    usleep(5000000);
+  while(false) {
+    usleep(50000);
     printf("[PNF] waiting for OAI to be started\n");
   }
 
@@ -2270,7 +2270,9 @@ void oai_subframe_ind(uint16_t sfn, uint16_t sf) {
   }
 }
 
-void handle_nr_slot_ind(uint16_t sfn, uint16_t slot) {
+void handle_nr_slot_ind(uint16_t sfn, uint16_t slot)
+{
+  LOG_I(HW, "%s() %4d.%2d\n", __func__, sfn, slot);
 
     //send VNF slot indication, which is aligned with TX thread, so that it can call the scheduler
     nfapi_nr_slot_indication_scf_t *ind;

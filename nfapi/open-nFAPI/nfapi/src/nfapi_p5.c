@@ -30,6 +30,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include <nfapi_interface.h>
 #include <nfapi.h>
@@ -1838,6 +1839,19 @@ static uint8_t pack_nr_config_request(void *msg, uint8_t **ppWritePackedMsg, uin
   retval &=
       pack_nr_tlv(NFAPI_NR_CONFIG_TDD_PERIOD_TAG, &(pNfapiMsg->tdd_table.tdd_period), ppWritePackedMsg, end, &pack_uint8_tlv_value);
   numTLVs++;
+
+  assert(6 == pNfapiMsg->tdd_table.tdd_period.value);
+  for (int i = 0; i < 20; i++) {
+    for (int k = 0; k < 14; k++) {
+      pack_nr_tlv(NFAPI_NR_CONFIG_SLOT_CONFIG_TAG,
+                  &pNfapiMsg->tdd_table.max_tdd_periodicity_list[i].max_num_of_symbol_per_slot_list[k].slot_config,
+                  ppWritePackedMsg,
+                  end,
+                  &pack_uint8_tlv_value);
+      numTLVs++;
+    }
+  }
+  // probably near here
   // END TDD Table
 
   // START Measurement Config
@@ -3058,6 +3072,9 @@ static uint8_t unpack_config_request(uint8_t **ppReadPackedMsg, uint8_t *end, vo
 
 static uint8_t unpack_nr_config_request(uint8_t **ppReadPackedMsg, uint8_t *end, void *msg, nfapi_p4_p5_codec_config_t *config)
 {
+  for (uint8_t *p = *ppReadPackedMsg; p < end; ++p)
+    printf("%02x ", *p);
+  printf("\n");
   // Helper vars for indexed TLVs
   int prach_root_seq_idx = 0;
   int unused_root_seq_idx = 0;
@@ -3262,6 +3279,7 @@ static uint8_t unpack_nr_config_request(uint8_t **ppReadPackedMsg, uint8_t *end,
             config_beam_idx++;
             break;
           case NFAPI_NR_CONFIG_SLOT_CONFIG_TAG:
+            assert(0 && "we receive the slot configuration\n");
             pNfapiMsg->tdd_table.max_tdd_periodicity_list[tdd_periodicity_idx]
                 .max_num_of_symbol_per_slot_list[symbol_per_slot_idx]
                 .slot_config.tl.tag = generic_tl.tag;
@@ -3279,12 +3297,17 @@ static uint8_t unpack_nr_config_request(uint8_t **ppReadPackedMsg, uint8_t *end,
             }
             break;
           default:
+            /* unpack based on unpack_fns table above, this is a normal case */
+            printf("*** have tag %x, idx %ld\n", generic_tl.tag, idx);
+            assert(idx <= sizeof(unpack_fns) / sizeof(unpack_fns[0]));
             result = (*unpack_fns[idx].unpack_func)(tl, ppReadPackedMsg, end);
             break;
         }
 
-        if (result == 0)
+        if (result == 0) {
+          printf("return after tag %x idx %ld\n", generic_tl.tag, idx);
           return 0;
+        }
 
         // check if the length was right;
         if (tl->length != (((*ppReadPackedMsg)) - pStartOfValue))
@@ -3328,6 +3351,7 @@ static uint8_t unpack_nr_config_request(uint8_t **ppReadPackedMsg, uint8_t *end,
         }
       } else {
         NFAPI_TRACE(NFAPI_TRACE_ERROR, "Unknown TAG value: 0x%04x\n", generic_tl.tag);
+        assert(0);
         if (++numBadTags > MAX_BAD_TAG) {
           NFAPI_TRACE(NFAPI_TRACE_ERROR, "Supplied message has had too many bad tags\n");
           return 0;
