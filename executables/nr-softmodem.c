@@ -682,11 +682,13 @@ int main( int argc, char **argv ) {
 #endif
   LOG_I(HW, "Version: %s\n", PACKAGE_VERSION);
 
-  if (RC.nb_nr_L1_inst > 0)
-    RCconfig_NR_L1();
 
   // don't create if node doesn't connect to RRC/S1/GTP
   const ngran_node_t node_type = get_node_type();
+
+  if (RC.nb_nr_L1_inst > 0 && NFAPI_MODE == NFAPI_MODE_PNF)
+    RCconfig_NR_L1();
+
   if (NFAPI_MODE != NFAPI_MODE_PNF) {
     int ret = create_gNB_tasks(node_type, uniqCfg);
     AssertFatal(ret == 0, "cannot create ITTI tasks\n");
