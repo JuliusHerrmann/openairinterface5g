@@ -291,7 +291,7 @@ void rx_func(void *param)
       res->key = slot_tx;
       pushTpool(&gNB->threadPool, res);
     }
-  } else if (get_softmodem_params()->continuous_tx) {
+  } else if (get_softmodem_params()->continuous_tx || NFAPI_MODE == NFAPI_MODE_PNF) {
     notifiedFIFO_elt_t *res = pullNotifiedFIFO(&gNB->L1_tx_free);
     if (res == NULL)
       return; // Tpool has been stopped
